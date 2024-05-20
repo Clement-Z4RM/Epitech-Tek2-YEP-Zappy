@@ -6,9 +6,9 @@
 */
 
 #ifndef ZAPPY_SERVER_MAP_H_
-#define ZAPPY_SERVER_MAP_H_
+    #define ZAPPY_SERVER_MAP_H_
 
-#include <sys/types.h>
+    #include <sys/types.h>
 
 typedef struct cell_s {
     struct cell_s *up;
