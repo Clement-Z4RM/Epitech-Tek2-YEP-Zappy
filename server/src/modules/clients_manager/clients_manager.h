@@ -25,3 +25,17 @@ typedef struct client_manager_s {
 * @return client_manager_t the newly allocated instance
 * **/
 client_manager_t *client_manager_create(void);
+
+/**
+* @brief add a new client to the client manager's list
+* @param manager the client manager
+* @param client the client to add
+* **/
+void client_manager_add_client(client_manager_t *manager, client_t *client);
+
+/**
+* @brief remove a client from the client manager's list
+* @param manager the client manager
+* @param client the client to remove
+* **/
+void client_manager_remove_client(client_manager_t *manager, client_t *client);
