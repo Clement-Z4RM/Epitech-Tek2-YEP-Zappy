@@ -18,4 +18,7 @@ $(SERVER_NAME):
 	@cmake --build .
 	@cd ../..
 
-.PHONY:	$(SERVER_NAME)
+tests_run:
+	@echo "There is actually no tests to run for this project"
+
+.PHONY:	$(SERVER_NAME) tests_run
