@@ -5,27 +5,20 @@
 ## Makefile
 ##
 
-SRC :=	Main.cpp
+.ONESHELL:
 
-OBJ := $(SRC:.cpp=.o)
+SERVER_NAME	=	zappy_server
 
-NAME := zappy_ai
+all: $(SERVER_NAME)
 
-CXX := g++
-CXXFLAGS := -Wall -Wextra -Werror -I./include -std=c++17
-
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ)
+$(SERVER_NAME):
+	@mkdir -p server/build
+	@cd server/build
+	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+	@cmake --build .
+	@cd ../..
 
 tests_run:
 	@echo "There is actually no tests to run for this project"
 
-clean:
-	rm -f $(OBJ)
-
-fclean: clean
-	rm -f $(NAME)
-
-re: fclean all
+.PHONY:	$(SERVER_NAME) tests_run
