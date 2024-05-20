@@ -19,6 +19,9 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CXX) -o $(NAME) $(OBJ)
 
+tests_run:
+	@echo "There is actually no tests to run for this project"
+
 clean:
 	rm -f $(OBJ)
 
