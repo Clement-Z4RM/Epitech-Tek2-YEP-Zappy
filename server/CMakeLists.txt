@@ -10,4 +10,6 @@ set(CMAKE_C_STANDARD 17)
 include_directories(include)
 
 add_executable(zappy_server
-        src/main.c)
+        src/main.c
+        src/modules/clients_manager/clients_manager.c
+        src/modules/client/client.c)
