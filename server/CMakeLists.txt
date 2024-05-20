@@ -10,4 +10,5 @@ set(CMAKE_C_STANDARD 17)
 include_directories(include)
 
 add_executable(zappy_server
-        src/main.c)
+        src/main.c
+        src/models/map.h)
