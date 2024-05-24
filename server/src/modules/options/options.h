@@ -8,8 +8,25 @@
 #ifndef ZAPPY_SERVER_OPTIONS_H_
     #define ZAPPY_SERVER_OPTIONS_H_
 
-#include <sys/types.h>
-#include <sys/queue.h>
+    #include <sys/types.h>
+    #include <sys/queue.h>
+
+    /**
+     * @brief Options string for getopt
+     *
+     * @details The '-' means each non-option element is handled as
+     * (for example, if there is "-n name1 name2" in arguments, getopt will
+     * treat "name1" and "name2" as like as "-n")
+     * @details The ':' mean the option requires an argument
+     * @details All other characters are possible options
+     * ('h' is for help and will takes over all the others options)
+     */
+    #define OPTIONS_STRING "-hp:x:y:n:c:f:"
+
+    /**
+     * @brief Macro for get next option using getopt
+     */
+    #define NEXT_OPT(argc, argv) getopt(argc, argv, OPTIONS_STRING)
 
 /**
  * @brief Frequency type (simply an unsigned long)
