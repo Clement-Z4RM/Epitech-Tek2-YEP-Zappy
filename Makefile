@@ -17,6 +17,7 @@ $(SERVER_NAME):
 	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 	@cmake --build .
 	@cd ../..
+	@mv server/$(SERVER_NAME) .
 
 tests_run:
 	@echo "There is actually no tests to run for this project"
