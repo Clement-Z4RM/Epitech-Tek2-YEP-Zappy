@@ -11,6 +11,7 @@
     #include <sys/types.h>
     #include <sys/queue.h>
     #include <stdbool.h>
+    #include <stddef.h>
 
     /**
      * @brief Options string for getopt
@@ -81,6 +82,9 @@ extern void options_destructor(options_t *options);
  * @brief Option parser structure
  */
 typedef struct option_parser_s {
+    /** @brief The option name */
+    const char *name;
+
     /** @brief True if the option requires an argument, false otherwise */
     bool argument_required;
 
@@ -108,15 +112,27 @@ extern bool parse_frequency(options_t *options, char *argv[]);
  * @brief Option parsers list. Indexes are option characters
  */
 static const option_parser_t OPTION_PARSERS[] = {
-    ['?'] = {false, parse_unknown},
-    ['h'] = {false, parse_usage},
-    ['p'] = {true, parse_port},
-    ['x'] = {true, parse_world_width},
-    ['y'] = {true, parse_world_height},
-    ['n'] = {true, parse_teams},
-    ['c'] = {true, parse_clients},
-    ['f'] = {true, parse_frequency},
+    ['?'] = {NULL, false, parse_unknown},
+    ['h'] = {NULL, false, parse_usage},
+    ['p'] = {"port", true, parse_port},
+    ['x'] = {"world width", true, parse_world_width},
+    ['y'] = {"world height", true, parse_world_height},
+    ['n'] = {"team names", true, parse_teams},
+    ['c'] = {"clients number", true, parse_clients},
+    ['f'] = {"frequency", true, parse_frequency}
 };
 //endregion
+
+/**
+ * @brief Option validator structure (for validate_options)
+ */
+typedef struct option_validator_s {
+    /** @brief The option parser */
+    const option_parser_t *parser;
+
+    /** @brief The option argument from options_t
+     * (will be 0 if invalid, so false) */
+    bool valid;
+} option_validator_t;
 
 #endif /* !ZAPPY_SERVER_OPTIONS_H_ */

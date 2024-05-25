@@ -22,6 +22,30 @@ static options_t *options_constructor(void)
     return options;
 }
 
+static options_t *validate_options(options_t *options, const char *program_name)
+{
+    const char flags[] = "pxyncf";
+    const option_validator_t validators[] = {
+        {&OPTION_PARSERS['p'], options->port},
+        {&OPTION_PARSERS['x'], options->world.x},
+        {&OPTION_PARSERS['y'], options->world.y},
+        {&OPTION_PARSERS['n'], !SLIST_EMPTY(&options->teams)},
+        {&OPTION_PARSERS['c'], options->clients},
+        {&OPTION_PARSERS['f'], options->freq},
+        {NULL, false}
+    };
+
+    for (u_int8_t i = 0; validators[i].parser; ++i)
+        if (!validators[i].valid) {
+            fprintf(stderr, "Option %s (-%c) is missing or invalid.\n"
+                "Use %s -help for usage.\n",
+                validators[i].parser->name, flags[i], program_name);
+            options_destructor(options);
+            return NULL;
+        }
+    return options;
+}
+
 /**
  * @brief Options structure destructor
  *
@@ -71,6 +95,8 @@ options_t *parse_options(int argc, char *argv[])
             options_destructor(options);
             return NULL;
         }
+        if (options->usage)
+            return options;
     }
-    return options;
+    return validate_options(options, *argv);
 }
