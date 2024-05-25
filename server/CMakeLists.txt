@@ -7,11 +7,14 @@ add_compile_options(-W -Wall -Wextra -Wpedantic -Werror)
 
 set(CMAKE_C_STANDARD 17)
 
-include_directories(include)
+include_directories(src/include)
 
 add_executable(zappy_server
-        include/macros.h
+        src/include/macros.h
+        src/include/utilities.h
         src/main.c
+        src/utilities/str_to_num.c
+        src/utilities/str_to_port.c
         src/modules/options/options.c
         src/modules/options/options.h
         src/modules/options/parsers/unknown.c

@@ -10,4 +10,6 @@
 
     #define UNUSED __attribute__((unused))
 
+    #define ERROR (-1)
+
 #endif /* !ZAPPY_SERVER_MACROS_H_ */
