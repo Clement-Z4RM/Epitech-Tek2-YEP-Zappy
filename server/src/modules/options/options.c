@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "options.h"
 
@@ -21,6 +22,11 @@ static options_t *options_constructor(void)
     return options;
 }
 
+/**
+ * @brief Options structure destructor
+ *
+ * @param options The options structure to destroy
+ */
 void options_destructor(options_t *options)
 {
     team_name_t *team_name;
@@ -36,9 +42,16 @@ void options_destructor(options_t *options)
 }
 
 /**
- * @param argc
- * @param argv
- * @return
+ * @brief Parse the program options
+ *
+ * @param argc Program arguments count
+ * @param argv Program arguments vector
+ *
+ * @return The program options as an options_t pointer,
+ * or NULL if an error occurred
+ *
+ * @warning The returned pointer is allocated
+ * and must be destroyed using options_destructor
  */
 options_t *parse_options(int argc, char *argv[])
 {
@@ -48,12 +61,15 @@ options_t *parse_options(int argc, char *argv[])
     if (!options)
         return NULL;
     for (opt = NEXT_OPT(argc, argv); -1 != opt; opt = NEXT_OPT(argc, argv)) {
-        if ('?' == opt) {
+        if (OPTION_PARSERS[opt].argument_required && '-' == optarg[0]) {
+            fprintf(stderr, "%s: option requires an argument -- '%c'\n",
+                    *argv, opt);
             options_destructor(options);
             return NULL;
         }
-        if (1 == opt) {
-            // TODO
+        if (!OPTION_PARSERS[opt].parser(options, argv)) {
+            options_destructor(options);
+            return NULL;
         }
     }
     return options;

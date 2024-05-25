@@ -10,18 +10,18 @@
 
     #include <sys/types.h>
     #include <sys/queue.h>
+    #include <stdbool.h>
 
     /**
      * @brief Options string for getopt
      *
-     * @details The '-' means each non-option element is handled as
-     * (for example, if there is "-n name1 name2" in arguments, getopt will
-     * treat "name1" and "name2" as like as "-n")
      * @details The ':' mean the option requires an argument
      * @details All other characters are possible options
      * ('h' is for help and will takes over all the others options)
+     *
+     * @warning All characters in this string must be in OPTION_PARSERS
      */
-    #define OPTIONS_STRING "-hp:x:y:n:c:f:"
+    #define OPTIONS_STRING "hp:x:y:n:c:f:"
 
     /**
      * @brief Macro for get next option using getopt
@@ -50,6 +50,8 @@ typedef SLIST_HEAD(team_names_s, team_name_s) team_names_t;
  * @brief Program options structure
  */
 typedef struct options_s {
+    /** @brief The usage flag (-h). Takes over all other options */
+    bool usage;
     /** @brief The port number of the server */
     ushort port;
     /** @brief The world size */
@@ -68,5 +70,48 @@ typedef struct options_s {
      * the reciprocal of time unit for execution of actions */
     freq_t freq;
 } options_t;
+
+//region Option parsers
+/**
+ * @brief Option parser structure
+ */
+typedef struct option_parser_s {
+    /** @brief True if the option requires an argument, false otherwise */
+    bool argument_required;
+
+    /**
+     * @brief Option parser function
+     *
+     * @param options The options structure to fill
+     * @param argv The arguments vector
+     *
+     * @return true if the option was successfully parsed, false otherwise
+     */
+    bool (*parser)(options_t *options, char *argv[]);
+} option_parser_t;
+
+extern bool parse_unknown(options_t *options, char *argv[]);
+extern bool parse_usage(options_t *options, char *argv[]);
+extern bool parse_port(options_t *options, char *argv[]);
+extern bool parse_world_width(options_t *options, char *argv[]);
+extern bool parse_world_height(options_t *options, char *argv[]);
+extern bool parse_teams(options_t *options, char *argv[]);
+extern bool parse_clients(options_t *options, char *argv[]);
+extern bool parse_frequency(options_t *options, char *argv[]);
+
+/**
+ * @brief Option parsers list. Indexes are option characters
+ */
+static const option_parser_t OPTION_PARSERS[] = {
+    ['?'] = {false, parse_unknown},
+    ['h'] = {false, parse_usage},
+    ['p'] = {true, parse_port},
+    ['x'] = {true, parse_world_width},
+    ['y'] = {true, parse_world_height},
+    ['n'] = {true, parse_teams},
+    ['c'] = {true, parse_clients},
+    ['f'] = {true, parse_frequency},
+};
+//endregion
 
 #endif /* !ZAPPY_SERVER_OPTIONS_H_ */
