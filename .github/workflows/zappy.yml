@@ -6,7 +6,7 @@ on:
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-josephine.chicouras.git"
-  EXECUTABLES: ""
+  EXECUTABLES: "zappy_server"
   CXX_EXECUTABLES: ""
   MAX_REPO_SIZE: "15"
 
