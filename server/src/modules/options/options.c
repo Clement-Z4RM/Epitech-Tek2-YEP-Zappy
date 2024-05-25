@@ -22,7 +22,10 @@ static options_t *options_constructor(void)
     return options;
 }
 
-static options_t *validate_options(options_t *options, const char *program_name)
+static options_t *validate_options(
+    options_t *options,
+    const char *program_name
+)
 {
     const char flags[] = "pxyncf";
     const option_validator_t validators[] = {
