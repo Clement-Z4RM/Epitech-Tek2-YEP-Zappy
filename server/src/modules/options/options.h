@@ -44,7 +44,8 @@ typedef struct team_name_s {
 /**
  * @brief Team names list
  */
-typedef SLIST_HEAD(team_names_s, team_name_s) team_names_t;
+SLIST_HEAD(team_names_s, team_name_s);
+typedef struct team_names_s team_names_t;
 
 /**
  * @brief Program options structure
