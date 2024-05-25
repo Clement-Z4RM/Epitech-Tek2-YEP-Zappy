@@ -71,6 +71,10 @@ typedef struct options_s {
     freq_t freq;
 } options_t;
 
+extern options_t *parse_options(int argc, char *argv[]);
+
+extern void options_destructor(options_t *options);
+
 //region Option parsers
 /**
  * @brief Option parser structure
