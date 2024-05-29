@@ -30,7 +30,7 @@ LIGHT_CYAN="\e[96m"
 
 all:
 	@ $(ECHO) $(MAGEN_C) "Making GUI" $(DEFAULT)
-	cd GUI && mkdir -p ./build/ && cd ./build/ && cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && cmake --build . ; cd ..
+	cd GUI && rm -rf build && mkdir -p ./build/ && cd ./build/ && cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && cmake --build . ; cd ..
 	mv GUI/zappy_gui .
 	@ $(ECHO) $(GREEN_C) $(BOLD_T)"GUI is make" $(DEFAULT)
 

@@ -11,16 +11,7 @@ int main() {
     gui::Renderer renderer(12);
 
     while (renderer.isOpen()) {
-        sf::Event event;
-        if (renderer.getWindow().pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                renderer.getWindow().close();
-            }
-            if (event.key.code == sf::Keyboard::Escape && event.type == sf::Event::KeyReleased) {
-                renderer.getWindow().close();
-                return 0;
-            }
-        }
+        renderer.handleEvent();
         renderer.clearWindow();
         renderer.drawWindow();
     }

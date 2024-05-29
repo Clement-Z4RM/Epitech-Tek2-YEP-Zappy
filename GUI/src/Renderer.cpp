@@ -19,7 +19,9 @@ namespace gui {
                 }
             }
             initVertices();
-            Bresenham();
+            Bresenham(_vertices.at(0), _vertices.at(1));
+            Bresenham(_vertices.at(1), _vertices.at(2));
+            Bresenham(_vertices.at(2), _vertices.at(0));
         }
 
         Renderer::~Renderer()
@@ -49,8 +51,50 @@ namespace gui {
             _vertices.push_back(vertice3);
         }
 
-        void Renderer::Bresenham()
+        void Renderer::Bresenham(std::shared_ptr<Vertices> v1, std::shared_ptr<Vertices> v2)
         {
+            int x0 = v1->getCoordinates().x;
+            int y0 = v1->getCoordinates().y;
+            int x1 = v2->getCoordinates().x;
+            int y1 = v2->getCoordinates().y;
+            int dx = abs(x1 - x0);
+            int dy = abs(y1 - y0);
+            int sx = (x0 < x1) ? 1 : -1;
+            int sy = (y0 < y1) ? 1 : -1;
+            int err = dx - dy;
+            std::vector<std::shared_ptr<Vertices>> verticeList;
+
+            while (true) {
+                if (x0 == x1 && y0 == y1)
+                    break;
+                int e2 = 2 * err;
+                if (e2 > -dy) {
+                    err -= dy;
+                    x0 += sx;
+                }
+                if (e2 < dx) {
+                    err += dx;
+                    y0 += sy;
+                }
+                Coordinates coo(x0, y0);
+                std::shared_ptr<Vertices> new_vertice = std::make_shared<Vertices>();
+                new_vertice->setCoordinates(coo);
+                verticeList.push_back(new_vertice);
+            }
+
+            int len = verticeList.size();
+            int index = 0;
+            for (auto &vertice : verticeList) {
+                Color a = v1->getColor();
+                Color b = v2->getColor();
+                int r = a.r + (b.r - a.r) * index / len;
+                int g = a.g + (b.g - a.g) * index / len;
+                int bl = a.b + (b.b - a.b) * index / len;
+                Color color(r, g, bl, 255);
+                vertice->setColor(color);
+                _vertices.push_back(vertice);
+                index++;
+            }
             return;
         }
 
@@ -60,6 +104,9 @@ namespace gui {
                 for (auto &vertice : _vertices) {
                     if (node->getCoordinates() == vertice->getCoordinates()) {
                         node->getRect()->setFillColor(vertice->getColor().getSFMColor());
+                        break;
+                    } else {
+                        node->getRect()->setFillColor({255, 255, 255, 255});
                     }
                 }
                 _window.draw(*node->getRect());
@@ -76,4 +123,20 @@ namespace gui {
         {
             _window.clear();
         }
+
+        void Renderer::handleEvent()
+        {
+            int select = 0;
+            sf::Event event;
+            if (_window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    _window.close();
+                }
+                if (event.key.code == sf::Keyboard::Escape && event.type == sf::Event::KeyReleased) {
+                    _window.close();
+                    return;
+                }
+            }
+        }
+
 } // gui

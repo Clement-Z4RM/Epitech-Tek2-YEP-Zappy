@@ -51,12 +51,15 @@ namespace gui {
         void drawWindow();
         bool isOpen();
         void clearWindow();
+        void handleEvent();
 
         sf::RenderWindow &getWindow() { return _window; }
 
         void initVertices();
 
-        void Bresenham();
+        void Bresenham(std::shared_ptr<Vertices> v1, std::shared_ptr<Vertices> v2);
+
+        std::deque<std::shared_ptr<Vertices>> &getVertices() { return _vertices; }
 
     private:
         sf::RenderWindow _window;
