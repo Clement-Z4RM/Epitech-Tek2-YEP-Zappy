@@ -71,11 +71,12 @@ typedef struct options_s {
     /** @brief The frequency,
      * the reciprocal of time unit for execution of actions */
     freq_t freq;
+
+    /** @brief Structure destructor */
+    void (*destroy)(struct options_s *options);
 } options_t;
 
 extern options_t *parse_options(int argc, char *argv[]);
-
-extern void options_destructor(options_t *options);
 
 //region Option parsers
 /**
@@ -100,12 +101,19 @@ typedef struct option_parser_s {
 } option_parser_t;
 
 extern bool parse_unknown(options_t *options, char *argv[]);
+
 extern bool parse_usage(options_t *options, char *argv[]);
+
 extern bool parse_port(options_t *options, char *argv[]);
+
 extern bool parse_world_width(options_t *options, char *argv[]);
+
 extern bool parse_world_height(options_t *options, char *argv[]);
+
 extern bool parse_teams(options_t *options, char *argv[]);
+
 extern bool parse_clients(options_t *options, char *argv[]);
+
 extern bool parse_frequency(options_t *options, char *argv[]);
 
 /**

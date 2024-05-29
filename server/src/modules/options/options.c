@@ -11,6 +11,28 @@
 #include <string.h>
 #include "options.h"
 
+/**
+ * @brief Options structure destructor
+ *
+ * @param options The options structure to destroy
+ */
+static void options_destructor(options_t *options)
+{
+    team_name_t *team_name;
+
+    if (!options)
+        return;
+    while (!SLIST_EMPTY(&options->teams)) {
+        team_name = SLIST_FIRST(&options->teams);
+        SLIST_REMOVE_HEAD(&options->teams, next);
+        free(team_name);
+    }
+    free(options);
+}
+
+/**
+ * @brief Options structure constructor
+ */
 static options_t *options_constructor(void)
 {
     options_t *options = malloc(sizeof(options_t));
@@ -19,9 +41,20 @@ static options_t *options_constructor(void)
         return NULL;
     memset(options, 0, sizeof(options_t));
     SLIST_INIT(&options->teams);
+    options->destroy = options_destructor;
     return options;
 }
 
+/**
+ * @brief Options structure validator.
+ * It checks if all the required options are present and valid
+ *
+ * @param options The options structure to validate
+ * @param program_name The program name
+ *
+ * @return The options structure if it is valid,
+ * NULL otherwise (options will be destroyed)
+ */
 static options_t *validate_options(
     options_t *options,
     const char *program_name
@@ -47,25 +80,6 @@ static options_t *validate_options(
             return NULL;
         }
     return options;
-}
-
-/**
- * @brief Options structure destructor
- *
- * @param options The options structure to destroy
- */
-void options_destructor(options_t *options)
-{
-    team_name_t *team_name;
-
-    if (!options)
-        return;
-    while (!SLIST_EMPTY(&options->teams)) {
-        team_name = SLIST_FIRST(&options->teams);
-        SLIST_REMOVE_HEAD(&options->teams, next);
-        free(team_name);
-    }
-    free(options);
 }
 
 /**

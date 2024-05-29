@@ -13,7 +13,10 @@ include_directories(src/modules)
 add_executable(zappy_server
         include/macros.h
         include/utilities.h
+        include/zappy_server.h
         src/main.c
+        src/zappy_server.c
+        src/utilities/usage.c
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
         src/modules/options/options.c
