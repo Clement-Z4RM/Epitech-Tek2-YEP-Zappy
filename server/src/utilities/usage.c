@@ -21,7 +21,8 @@ bool usage(options_t *options)
 {
     if (!options->usage)
         return false;
-    printf("USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c clientsNb -f freq\n");
+    printf("USAGE: ./zappy_server -p port -x width -y height"
+        " -n name1 name2 ... -c clientsNb -f freq\n");
     options->destroy(options);
     return true;
 }
