@@ -15,6 +15,7 @@ CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -I./include -std=c++17
 
 all: $(NAME)
+	cd GUI && rm -rf build && mkdir build && cd build && cmake .. && make
 
 $(NAME): $(OBJ)
 	$(CXX) -o $(NAME) $(OBJ)
