@@ -36,7 +36,7 @@ void read_socket(int sfd)
     fd_set rfds;
     struct timeval tv;
     int retval;
-    std::string buff;
+    char buff[4096];
 
     FD_ZERO(&rfds);
     FD_SET(0, &rfds);
@@ -44,7 +44,7 @@ void read_socket(int sfd)
     tv.tv_usec = 0;
 
     ssize_t bytes_received;
-    bytes_received = read(sfd, buff.c_str(), 4096);
+    bytes_received = read(sfd, buff, 4096);
     if (bytes_received == -1)
         perror("No buffer");
     std::cout << "Server: " << buff << std::endl;
