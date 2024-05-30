@@ -9,9 +9,6 @@
     #define ZAPPY_SERVER_UTILITIES_H_
 
     #include <stdbool.h>
-    #include "options/options.h"
-
-extern bool usage(options_t *options);
 
 //region Numbers
 extern long str_to_num(const char *str, long min, long max, bool *error);

@@ -16,11 +16,11 @@ add_executable(zappy_server
         include/zappy_server.h
         src/main.c
         src/zappy_server.c
-        src/utilities/usage.c
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
-        src/modules/options/options.c
         src/modules/options/options.h
+        src/modules/options/options.c
+        src/modules/options/usage.c
         src/modules/options/parsers/unknown.c
         src/modules/options/parsers/usage.c
         src/modules/options/parsers/port.c

@@ -5,7 +5,7 @@
 ** zappy_server.c
 */
 
-#include "utilities.h"
+#include "options/options.h"
 
 /**
  * @brief The main function of the Zappy server
