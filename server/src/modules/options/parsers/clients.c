@@ -16,7 +16,7 @@ bool parse_clients(options_t *options, UNUSED char *argv[])
 {
     bool error = false;
 
-    options->clients = str_to_num(optarg, 6, LONG_MAX, &error);
+    options->clients = str_to_num(optarg, 1, LONG_MAX, &error);
     if (error) {
         fprintf(stderr, "%s: Invalid clients number\n", optarg);
         return false;
