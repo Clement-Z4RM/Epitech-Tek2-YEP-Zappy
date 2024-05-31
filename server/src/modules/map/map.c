@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "map.h"
@@ -37,11 +38,11 @@ static void link_cell(map_t *map, size_t y, size_t x)
     size_t cells[4][2] = {{x, y - 1}, {x - 1, y}, {x + 1, y}, {x, y + 1}};
 
     for (u_int8_t i = 0; i < 4; ++i) {
-        if (cells[i][0] < 0)
+        if (cells[i][0] >= ULONG_MAX)
             cells[i][0] = map->width - 1;
         if (cells[i][0] >= map->width)
             cells[i][0] = 0;
-        if (cells[i][1] < 0)
+        if (cells[i][1] >= ULONG_MAX)
             cells[i][1] = map->height - 1;
         if (cells[i][1] >= map->height)
             cells[i][1] = 0;
