@@ -8,7 +8,9 @@ add_compile_options(-W -Wall -Wextra -Wpedantic -Werror)
 set(CMAKE_C_STANDARD 17)
 
 include_directories(include)
+include_directories(src/modules)
 
 add_executable(zappy_server
         src/main.c
-        src/models/map.h)
+        src/modules/map/map.h
+        src/modules/map/map.c)
