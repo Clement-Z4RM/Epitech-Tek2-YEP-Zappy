@@ -28,6 +28,6 @@ add_executable(zappy_server
         src/modules/options/parsers/world_height.c
         src/modules/options/parsers/teams.c
         src/modules/options/parsers/clients.c
-        src/modules/options/parsers/frequency.c)
+        src/modules/options/parsers/frequency.c
         src/modules/clients_manager/clients_manager.c
         src/modules/client/client.c)
