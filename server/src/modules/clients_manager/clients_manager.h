@@ -8,7 +8,7 @@
 #pragma once
 #include "../client/client.h"
 
-/** @brief represent a node of the client list (containing a client instance module) **/
+/** @brief represent a node of the client list **/
 typedef struct client_node_s {
     client_t *client;
     struct client_node_s *next;
