@@ -31,6 +31,7 @@ void client_manager_remove_client(client_manager_t *manager, client_t *client)
                 prev->next = current->next;
             else
                 manager->clients_list = current->next;
+            client_destroy(current->client);
             free(current);
             manager->nb_clients--;
             return;
@@ -38,6 +39,17 @@ void client_manager_remove_client(client_manager_t *manager, client_t *client)
         prev = current;
         current = current->next;
     }
+}
+
+void client_manager_destroy(client_manager_t *manager)
+{
+    for (client_node_t *current = manager->clients_list; current;) {
+        client_node_t *next = current->next;
+        client_destroy(current->client);
+        free(current);
+        current = next;
+    }
+    free(manager);
 }
 
 client_manager_t *client_manager_create(void)

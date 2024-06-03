@@ -27,6 +27,12 @@ typedef struct client_manager_s {
 client_manager_t *client_manager_create(void);
 
 /**
+ * @brief destroy a client manager instance and all its clients
+ * @param manager the client manager to destroy
+ */
+void client_manager_destroy(client_manager_t *manager);
+
+/**
 * @brief add a new client to the client manager's list
 * @param manager the client manager
 * @param client the client to add

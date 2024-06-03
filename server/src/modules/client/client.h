@@ -10,6 +10,7 @@
 /** @brief represent a client module **/
 typedef struct client_s {
     int socket; //< the socket of the client
+    char *team_name;
 } client_t;
 
 /**
@@ -18,3 +19,9 @@ typedef struct client_s {
 * @return client_t the newly allocated instance
 * **/
 client_t *client_create(int socket);
+
+/**
+* @brief destroy a client instance
+* @param client  the client to destroy
+*/
+void client_destroy(client_t *client);
