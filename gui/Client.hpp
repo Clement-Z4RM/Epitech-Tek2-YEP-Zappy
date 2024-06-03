@@ -17,8 +17,7 @@
 #include <memory>
 #include <cstring>
 #include <deque>
-#include <iterator>
-#include <regex>
+#include <sstream>
 #include "Parameters.hpp"
 
 namespace gui {
@@ -33,21 +32,21 @@ namespace gui {
 
         void parseMsg(std::string &msg);
 
-        bool iter(std::sregex_token_iterator &it, std::sregex_token_iterator &end);
-
         void getMapSize(std::string &msg);
         void getFrequency(std::string &msg);
         void getCases(std::string &msg);
-        void createCase(std::sregex_token_iterator &it, std::sregex_token_iterator &end);
-        void completeCase(std::sregex_token_iterator &it, std::sregex_token_iterator &end);
 
         bool isConnected = false;
         bool getParam = true;
+        bool isMapFinished = false;
+
+        std::deque<std::string> &getMap() { return _map; }
 
     private:
         int _sfd;
         Parameters _param;
         std::deque<std::string> _map;
+        bool _incompleteCase = false;
     };
 
 } // gui

@@ -50,7 +50,6 @@ namespace gui {
         if (bytes_received == -1)
             perror("No buffer");
         str = buff;
-//        std::cout << buff << std::endl;
         parseMsg(str);
     }
 
@@ -87,15 +86,15 @@ namespace gui {
             getMapSize(msg);
         if (_param._freq < 0)
             getFrequency(msg);
-        if (msg.find("bct"))
-            getCases(msg);
+        getCases(msg);
     }
 
     void Client::getMapSize(std::string &msg)
     {
         int size = msg.find("msz") + 4;
-        if (size <= 4)
+        if (size < 4) {
             return;
+        }
         std::string x = msg.substr(size, msg.find(" ", size) - size);
         size = msg.find(" ", size) + 1;
         std::string y = msg.substr(size, msg.find("\n", size) - size);
@@ -114,146 +113,40 @@ namespace gui {
 
     void Client::getCases(std::string &msg)
     {
-        std::regex reg("\n", std::regex_constants::ECMAScript);
-        std::sregex_token_iterator iter(msg.begin(), msg.end(), reg, -1);
-        std::sregex_token_iterator end;
-        for (; iter != end; ++iter) {
-            std::regex reg2(" ", std::regex_constants::ECMAScript);
-            std::sregex_token_iterator iter2(iter->first, iter->second, reg2, -1);
-            std::sregex_token_iterator end2;
-            if (iter2->str() == "bct" || (!_param._map.empty() && !_param._map.back().isComplete())) {
-                if (!_param._map.empty() && !_param._map.back().isComplete()) {
-                    std::cout << "Complete case" << std::endl;
-                    completeCase(iter2, end2);
+        for (int i = 0; i < msg.size(); i++) {
+            if (msg[i] == '\n') {
+                if (_incompleteCase) {
+                    _map.back().append(msg.substr(0, i));
+                    _incompleteCase = false;
+                    msg = msg.substr(i + 1);
+                    i = 0;
                     continue;
                 }
-                if (!this->iter(iter2, end2))
-                    continue;
-                createCase(iter2, end2);
+                _map.push_back(msg.substr(0, i));
+                msg = msg.substr(i + 1);
+                i = 0;
             }
-            std::cout << std::endl;
         }
-    }
-
-    bool Client::iter(std::sregex_token_iterator &it, std::sregex_token_iterator &end)
-    {
-        it++;
-        if (it == end)
-            return false;
-        return true;
-    }
-
-    void Client::createCase(std::sregex_token_iterator &it, std::sregex_token_iterator &end)
-    {
-        std::cout << "Case: ";
-        Case c;
-        c._x = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
+        if (!msg.empty()) {
+            _map.push_back(msg);
+            _incompleteCase = true;
         }
-        c._y = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
+        if (_map.empty())
             return;
+        for (auto &line : _map) {
+            std::stringstream s(line);
+            std::string btc;
+            std::string x;
+            std::string y;
+            s >> btc;
+            s >> x;
+            s >> y;
+            if (btc != "bct" || std::atoi(x.c_str()) != _param._width - 1 ||
+                std::atoi(y.c_str()) != _param._height - 1) {
+            } else {
+                this->isMapFinished = true;
+                this->getParam = false;
+            }
         }
-        c._food = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
-        }
-        c._linemate = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
-        }
-        c._deraumere = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
-        }
-        c._sibur = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
-        }
-        c._mendiane = std::stoi(it->str());
-        if (!iter(it, end))
-            return;
-        c._phiras = std::stoi(it->str());
-        if (!iter(it, end)) {
-            _param._map.push_back(c);
-            return;
-        }
-        c._thystame = std::stoi(it->str());
-        std::cout << c._x << " " << c._y << " " << c._food << " " << c._linemate << " " << c._deraumere << " " << c._sibur << " " << c._mendiane << " " << c._phiras << " " << c._thystame << std::endl;
-        _param._map.push_back(c);
-    }
-
-    void Client::completeCase(std::sregex_token_iterator &it, std::sregex_token_iterator &end)
-    {
-        std::cout << "Case: ";
-        Case c = _param._map.back();
-        if (c._x == -1)
-            c._x = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._y == -1)
-            c._y = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._food == -1)
-            c._food = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._linemate == -1)
-            c._linemate = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._deraumere == -1)
-            c._deraumere = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._sibur == -1)
-            c._sibur = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._mendiane == -1)
-            c._mendiane = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._phiras == -1)
-            c._phiras = std::stoi(it->str());
-        if (!iter(it, end)) {
-            // _param._map.pop_back();
-            _param._map.push_back(c);
-            return;
-        }
-        if (c._thystame == -1)
-            c._thystame = std::stoi(it->str());
-        std::cout << c._x << " " << c._y << " " << c._food << " " << c._linemate << " " << c._deraumere << " " << c._sibur << " " << c._mendiane << " " << c._phiras << " " << c._thystame << std::endl;
-        // _param._map.pop_back();
-        _param._map.push_back(c);
     }
 } // gui

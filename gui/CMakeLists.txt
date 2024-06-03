@@ -8,4 +8,6 @@ add_executable(Epitech_Tek2_YEP_Zappy
         Client.hpp
         Client.cpp
         Parameters.hpp
+        Gui.hpp
+        Gui.cpp
 )
