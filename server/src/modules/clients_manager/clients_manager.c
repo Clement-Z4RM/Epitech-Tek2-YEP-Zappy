@@ -26,25 +26,25 @@ void client_manager_remove_client(client_manager_t *manager, client_t *client)
     client_node_t *prev = NULL;
 
     while (current) {
-        if (current->client == client) {
-            if (prev)
-                prev->next = current->next;
-            else
-                manager->clients_list = current->next;
-            client_destroy(current->client);
-            free(current);
-            manager->nb_clients--;
-            return;
-        }
+        if (current->client == client)
+            break;
         prev = current;
         current = current->next;
     }
+    if (!current)
+        return;
+    if (prev)
+        prev->next = current->next;
+    else
+        manager->clients_list = current->next;
 }
 
 void client_manager_destroy(client_manager_t *manager)
 {
+    client_node_t *next = NULL;
+
     for (client_node_t *current = manager->clients_list; current;) {
-        client_node_t *next = current->next;
+        next = current->next;
         client_destroy(current->client);
         free(current);
         current = next;
