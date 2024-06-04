@@ -25,6 +25,6 @@ network_t *network_constructor(char *ip, int port)
         free(network);
         return NULL;
     }
-    network->clients_manager = client_manager_constructor();
+    network->clients_manager = clients_manager_constructor();
     return network;
 }
