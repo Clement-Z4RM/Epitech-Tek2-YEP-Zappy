@@ -9,8 +9,8 @@
 
 /** @brief represent a client module **/
 typedef struct client_s {
-    int socket; //< the socket of the client
-    char *team_name;
+    int socket; ///< the socket of the client
+    char *team_name; ///< the team name of the client
 } client_t;
 
 /**
