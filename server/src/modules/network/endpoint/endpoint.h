@@ -19,7 +19,7 @@
 **/
 typedef enum endpoint_type {
     SERVER,
-    CLIENT // for scaling purposes(if the server need to connect another server)
+    CLIENT // for scaling purposes (case of need to connect another server)
 } endpoint_type_t;
 
 /**
