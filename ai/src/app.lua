@@ -1,5 +1,6 @@
-local ZappyAI = require("ai/src/classes/zappy_ai")
-local Config = require("ai/src/config")
+local Socket <const> = require("socket")
+local ZappyAI <const> = require("ai/src/classes/zappy_ai")
+local Config <const> = require("ai/src/config")
 
 --- @module App
 local App = {}
