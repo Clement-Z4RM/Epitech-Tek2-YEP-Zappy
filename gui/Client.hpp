@@ -36,11 +36,15 @@ namespace gui {
         void getFrequency(std::string &msg);
         void getCases(std::string &msg);
 
+        void parseMap();
+
         bool isConnected = false;
-        bool getParam = true;
+        bool isParamGet = true;
         bool isMapFinished = false;
 
         std::deque<std::string> &getMap() { return _map; }
+
+        Parameters &getParam() { return _param; }
 
     private:
         int _sfd;

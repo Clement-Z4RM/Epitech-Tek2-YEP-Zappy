@@ -37,8 +37,8 @@ namespace gui {
         fd_set rfds;
         struct timeval tv;
         int retval;
-        char buff[4096];
-        memset(buff, 0, 4096);
+        char buff[8192];
+        memset(buff, 0, 8192);
 
         std::string str;
 
@@ -46,7 +46,7 @@ namespace gui {
             return;
 
         ssize_t bytes_received;
-        bytes_received = read(_sfd, buff, 4096);
+        bytes_received = read(_sfd, buff, 8192);
         if (bytes_received == -1)
             perror("No buffer");
         str = buff;
@@ -145,8 +145,26 @@ namespace gui {
                 std::atoi(y.c_str()) != _param._height - 1) {
             } else {
                 this->isMapFinished = true;
-                this->getParam = false;
+                this->isParamGet = false;
             }
+        }
+    }
+
+    void Client::parseMap()
+    {
+        std::deque<std::string> tmpMap;
+        std::deque<std::string> otherParam;
+        for (auto &i : _map) {
+            if (i.find("bct") != std::string::npos)
+                tmpMap.push_back(i);
+            else
+                otherParam.push_back(i);
+        }
+        for (auto &coo : tmpMap) { // TODO: check bct 17 6 with /032 /032
+            std::stringstream s(coo);
+            std::shared_ptr<Case> new_case = std::make_shared<Case>();
+            new_case->createCase(s);
+            _param._map.push_back(new_case);
         }
     }
 } // gui

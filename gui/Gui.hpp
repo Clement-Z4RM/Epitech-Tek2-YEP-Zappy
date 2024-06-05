@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Client.hpp"
+#include "Window.hpp"
 
 namespace gui {
 
@@ -15,7 +16,8 @@ namespace gui {
         void run();
 
     private:
-        gui::Client _graphic;
+        gui::Client _client;
+        Window _window;
     };
 
 } // gui

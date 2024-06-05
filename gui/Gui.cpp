@@ -6,25 +6,25 @@
 
 namespace gui {
 
-        GUI::GUI(std::string &ip, std::string &port) : _graphic(ip, atoi(port.c_str()))
+        GUI::GUI(std::string &ip, std::string &port) : _client(ip, atoi(port.c_str()))
         {
-            _graphic.readSocket();
-            if (!_graphic.isConnected)
+            _client.readSocket();
+            if (!_client.isConnected)
                 exit(84);
             std::string id = "GRAPHIC\n";
-            _graphic.sendMsg(id);
-            while (_graphic.isReady() && _graphic.getParam) {
-                _graphic.readSocket();
+            _client.sendMsg(id);
+            while (_client.isReady() && _client.isParamGet) {
+                _client.readSocket();
             }
             std::cout << "Got all parameters" << std::endl;
+            _client.parseMap();
         }
 
         GUI::~GUI() = default;
 
         void GUI::run()
         {
-            for (auto &i : _graphic.getMap()) {
-                std::cout << i << std::endl;
-            }
+            _window.rendMap(_client.getParam());
+            _window.run();
         }
 } // gui

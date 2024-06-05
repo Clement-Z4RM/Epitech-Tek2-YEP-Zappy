@@ -8,6 +8,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
+#include <sstream>
+#include <deque>
 
 class Egg {
     public:
@@ -30,6 +33,29 @@ class Case {
             if (_x == -1 || _y == -1 || _food == -1 || _linemate == -1 || _deraumere == -1 || _sibur == -1 || _mendiane == -1 || _phiras == -1 || _thystame == -1)
                 return false;
             return true;
+        }
+
+        void createCase(std::stringstream &s) {
+            std::string tmp;
+            s >> tmp;
+            s >> tmp;
+            _x = std::stoi(tmp);
+            s >> tmp;
+            _y = std::stoi(tmp);
+            s >> tmp;
+            _food = std::stoi(tmp);
+            s >> tmp;
+            _linemate = std::stoi(tmp);
+            s >> tmp;
+            _deraumere = std::stoi(tmp);
+            s >> tmp;
+            _sibur = std::stoi(tmp);
+            s >> tmp;
+            _mendiane = std::stoi(tmp);
+            s >> tmp;
+            _phiras = std::stoi(tmp);
+            s >> tmp;
+            _thystame = std::stoi(tmp);
         }
 
         int _x {-1};
@@ -57,5 +83,5 @@ class Parameters {
         int _clientsNb {-1};
         int _freq {-1};
         std::vector<std::string> _teams;
-        std::deque<Case> _map;
+        std::deque<std::shared_ptr<Case>> _map;
 };
