@@ -32,11 +32,9 @@ void Window::run()
 
 void Window::rendMap(Parameters &params)
 {
-    sf::RectangleShape rect(sf::Vector2f(25, 25));
-    rect.setFillColor(sf::Color::Green);
     for (auto &i : params._map) {
         std::shared_ptr<sf::RectangleShape> new_rect = std::make_shared<sf::RectangleShape>();
-        new_rect->setFillColor(sf::Color::Green);
+        new_rect->setFillColor(sf::Color::Red);
         new_rect->setSize(sf::Vector2f(25, 25));
         new_rect->setPosition(i->_x * 25 + 25, i->_y * 25 + 25);
         new_rect->setOutlineColor(sf::Color::White);

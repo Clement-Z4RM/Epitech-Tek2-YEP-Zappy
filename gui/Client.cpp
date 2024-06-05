@@ -10,17 +10,17 @@
 namespace gui {
     Client::Client(std::string &ip, int port)
     {
-        int sfd = socket(AF_INET, SOCK_STREAM, 0);
+        int sfd = Socket::create(AF_INET, SOCK_STREAM, 0);
         if (sfd == -1)
-            perror("Socket error");
+            std::cerr << "Socket error" << std::endl;
         struct sockaddr_in client;
         client.sin_family = AF_INET;
-        client.sin_port = htons(port);
-        client.sin_addr.s_addr = inet_addr(ip.c_str());
-        if (connect(sfd, (struct sockaddr *)&client, (socklen_t)sizeof(client)) == -1)
+        client.sin_port = Socket::network(port);
+        client.sin_addr.s_addr = Socket::adress(ip);
+        if (Socket::connection(sfd, (struct sockaddr *)&client, (socklen_t)sizeof(client)) == -1)
         {
-            perror("Don't connect");
-            exit(84);
+            std::cerr << "Don't connect" << std::endl;
+            std::exit(84);
         }
         _sfd = sfd;
         _param._port = port;
@@ -29,7 +29,7 @@ namespace gui {
 
     Client::~Client()
     {
-        close(_sfd);
+        Socket::close_socket(_sfd);
     }
 
     void Client::readSocket()
@@ -38,7 +38,7 @@ namespace gui {
         struct timeval tv;
         int retval;
         char buff[8192];
-        memset(buff, 0, 8192);
+        std::memset(buff, 0, 8192);
 
         std::string str;
 
@@ -46,9 +46,9 @@ namespace gui {
             return;
 
         ssize_t bytes_received;
-        bytes_received = read(_sfd, buff, 8192);
+        bytes_received = Socket::read_socket(_sfd, buff, 8192);
         if (bytes_received == -1)
-            perror("No buffer");
+            std::cerr << "No buffer" << std::endl;
         str = buff;
         parseMsg(str);
     }
@@ -63,9 +63,9 @@ namespace gui {
         FD_SET(_sfd, &readfds);
         timeout.tv_sec = 0.1;
         timeout.tv_usec = 0;
-        ready = select(_sfd + 1, &readfds, NULL, NULL, &timeout);
+        ready = Socket::select_socket(_sfd + 1, &readfds, NULL, NULL, &timeout);
         if (ready == -1) {
-            printf("select");
+            std::cout << "select" << std::endl;
             return false;
         }
         return true;
@@ -73,7 +73,7 @@ namespace gui {
 
     void Client::sendMsg(std::string &msg)
     {
-        send(_sfd, msg.c_str(), msg.size(), 0);
+        Socket::send_socket(_sfd, msg.c_str(), msg.size(), 0);
     }
 
     void Client::parseMsg(std::string &msg)
