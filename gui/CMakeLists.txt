@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.28)
-project(Epitech_Tek2_YEP_Zappy)
+cmake_minimum_required(VERSION 3.26.4)
+project(zappy_gui)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Epitech_Tek2_YEP_Zappy
+add_executable(zappy_gui
         main.cpp
         Client.hpp
         Client.cpp
@@ -14,4 +14,4 @@ add_executable(Epitech_Tek2_YEP_Zappy
         Window.cpp
 )
 
-target_link_libraries(Epitech_Tek2_YEP_Zappy PRIVATE config++ sfml-graphics sfml-window sfml-system)
+target_link_libraries(zappy_gui PRIVATE config++ sfml-graphics sfml-window sfml-system)
