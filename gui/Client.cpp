@@ -160,7 +160,7 @@ namespace gui {
             else
                 otherParam.push_back(i);
         }
-        for (auto &coo : tmpMap) { // TODO: check bct 17 6 with /032 /032
+        for (auto &coo : tmpMap) {
             std::stringstream s(coo);
             std::shared_ptr<Case> new_case = std::make_shared<Case>();
             new_case->createCase(s);
