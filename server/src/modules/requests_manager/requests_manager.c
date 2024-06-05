@@ -23,7 +23,7 @@ void request_manager_handle_request(char *request, client_t *client,
     char **args = request_manager_parse_args(request);
     handler_data_t handler_data = {client, args, clients_manager};
 
-    for (int i = 0; i < handlers_count; i++) {
+    for (int i = 0; i < HANDLERS_COUNT; i++) {
         if (strcmp(request_handlers[i].command_name, args[0]) == 0) {
             request_handlers[i].handler(&handler_data);
             break;
