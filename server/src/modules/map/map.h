@@ -23,7 +23,7 @@ typedef struct cell_s {
     /** @brief The cell's y position */
     uint y;
 
-    // TODO: Add elements on cell (players and resources)
+    // TODO: Add elements on cell (players, eggs, foods and resources)
 
     /** @brief The cell's right neighbor */
     struct cell_s *right;

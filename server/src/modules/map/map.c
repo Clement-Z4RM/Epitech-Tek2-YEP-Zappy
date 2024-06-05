@@ -38,11 +38,11 @@ static void link_cell(map_t *map, size_t y, size_t x)
     size_t cells[4][2] = {{x, y - 1}, {x - 1, y}, {x + 1, y}, {x, y + 1}};
 
     for (u_int8_t i = 0; i < 4; ++i) {
-        if (cells[i][0] >= ULONG_MAX)
+        if ((int)cells[i][0] < 0)
             cells[i][0] = map->width - 1;
         if (cells[i][0] >= map->width)
             cells[i][0] = 0;
-        if (cells[i][1] >= ULONG_MAX)
+        if ((int)cells[i][1] < 0)
             cells[i][1] = map->height - 1;
         if (cells[i][1] >= map->height)
             cells[i][1] = 0;
@@ -108,8 +108,13 @@ static bool initialize_map_cells(map_t *map)
  */
 map_t *create_map(size_t width, size_t height)
 {
-    map_t *map = malloc(sizeof(map_t));
+    map_t *map;
 
+    if ((int)width <= 0 || (int)height <= 0) {
+        fprintf(stderr, "Invalid map size: (%ld)x(%ld)\n", width, height);
+        return NULL;
+    }
+    map = malloc(sizeof(map_t));
     if (!map) {
         perror("malloc");
         return NULL;
