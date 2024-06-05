@@ -50,5 +50,3 @@ endpoint_t *endpoint_constructor(char *ip, int port, endpoint_type_t type);
 * @param endpoint the endpoint to destroy
 **/
 void endpoint_destructor(endpoint_t *endpoint);
-
-static bool endpoint_init_mode(endpoint_t *endpoint);
