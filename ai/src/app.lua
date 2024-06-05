@@ -5,7 +5,7 @@ local Config = require("ai/src/config")
 local App = {}
 
 function App.ShowHelp()
-    print("USAGE:\t./zappy_gui -p port -h machine")
+    print("USAGE:\t./zappy_ai -p port -n name -h machine")
 end
 
 --- @param args string[]
