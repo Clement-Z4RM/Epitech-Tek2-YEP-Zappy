@@ -1,3 +1,4 @@
+local ZappyAI = require("ai/src/classes/zappy_ai")
 local Config = require("ai/src/config")
 
 --- @module App
@@ -10,9 +11,11 @@ end
 --- @param args string[]
 --- @return void
 function App.Main(args)
-    if args[1] == "-help" then
+    if #args > 0 and args[1] == "-help" then
         return App.ShowHelp()
     end
+    local zappyAI <const> = ZappyAI.New(args)
+    
 end
 
 --- @param code number
