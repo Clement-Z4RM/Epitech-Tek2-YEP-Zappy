@@ -41,7 +41,7 @@ typedef struct endpoint_s {
 * @param ip the ip of the endpoint
 * @param port the port of the endpoint
 * @param type the type of the endpoint
-* @return endpoint_t the newly allocated instance
+* @return endpoint_t the newly allocated instance (or NULL if failed)
 **/
 endpoint_t *endpoint_constructor(char *ip, int port, endpoint_type_t type);
 
@@ -50,3 +50,5 @@ endpoint_t *endpoint_constructor(char *ip, int port, endpoint_type_t type);
 * @param endpoint the endpoint to destroy
 **/
 void endpoint_destructor(endpoint_t *endpoint);
+
+static bool endpoint_init_mode(endpoint_t *endpoint);

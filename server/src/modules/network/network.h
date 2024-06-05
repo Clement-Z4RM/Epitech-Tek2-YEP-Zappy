@@ -37,3 +37,15 @@ network_t *network_constructor(char *ip, int port);
 * @param network the network to destroy
 **/
 void network_destructor(network_t *network);
+
+/**
+* @brief set the file descriptors and select them
+* @description
+* This function is responsible for setting the file descriptors and selecting
+* them for reading and writing, file descriptors are the socket of the server
+* (endpoint) and the sockets of the clients
+* socket of the clients is set for both reading and writing
+* @param network the network to set and select the fds
+* @return bool true if the operation was successful, false otherwise (select)
+**/
+bool network_set_and_select_fds(network_t *network);
