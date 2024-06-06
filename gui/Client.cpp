@@ -18,10 +18,7 @@ namespace gui {
         client.sin_port = Socket::network(port);
         client.sin_addr.s_addr = Socket::adress(ip);
         if (Socket::connection(sfd, (struct sockaddr *)&client, (socklen_t)sizeof(client)) == -1)
-        {
-            std::cerr << "Don't connect" << std::endl;
-            std::exit(84);
-        }
+            throw std::runtime_error("Connection error");
         _sfd = sfd;
         _param._port = port;
         _param._machine = ip;

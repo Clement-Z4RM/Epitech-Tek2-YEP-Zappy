@@ -10,7 +10,7 @@ namespace gui {
         {
             _client.readSocket();
             if (!_client.isConnected)
-                exit(84);
+                throw std::runtime_error("Connection failed");
             std::string id = "GRAPHIC\n";
             _client.sendMsg(id);
             while (_client.isReady() && _client.isParamGet) {
