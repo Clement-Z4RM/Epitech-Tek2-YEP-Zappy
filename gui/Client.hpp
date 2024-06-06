@@ -7,17 +7,12 @@
 
 #pragma once
 #include <string>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/select.h>
 #include <iostream>
 #include <memory>
 #include <cstring>
 #include <deque>
 #include <sstream>
+#include "Socket.hpp"
 #include "Parameters.hpp"
 
 namespace gui {

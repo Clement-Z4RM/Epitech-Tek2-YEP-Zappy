@@ -13,7 +13,12 @@ int main(int ac, char **av)
         return 84;
     std::string ip = av[1];
     std::string port = av[2];
-    gui::GUI gui(ip, port);
-    gui.run();
+    try {
+        gui::GUI gui(ip, port);
+        gui.run();
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
     return 0;
 }

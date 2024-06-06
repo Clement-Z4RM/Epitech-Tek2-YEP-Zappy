@@ -12,6 +12,7 @@ add_executable(zappy_gui
         Gui.cpp
         Window.hpp
         Window.cpp
+        Socket.hpp
         src/egg.hpp
         src/egg.cpp
 )
