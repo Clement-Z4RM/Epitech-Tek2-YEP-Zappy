@@ -4,34 +4,39 @@
 ## File description:
 ## Makefile
 ##
+
 .ONESHELL:
 
-SRC :=	Main.cpp
+BUILD_TYPE	=	Release
 
-OBJ := $(SRC:.cpp=.o)
+SERVER_DIR	=	server
+SERVER_NAME	=	zappy_server
 
-NAME := zappy_ai
+GUI_DIR		=	gui
+GUI_NAME	=	zappy_gui
 
-CXX := g++
-CXXFLAGS := -Wall -Wextra -Werror -I./include -std=c++17
+all: $(SERVER_NAME) $(GUI_NAME)
 
-all: $(NAME)
-	cd gui
-	rm -rf build
-	mkdir build
-	cd build
-	cmake ..
-	make
-	cp ./zappy_gui ../../zappy_gui
-	cd ../../
+$(SERVER_NAME):
+	@mkdir -p $(SERVER_DIR)/build
+	@cd $(SERVER_DIR)/build
+	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+	@cmake --build .
+	@cd ../..
+	@mv $(SERVER_DIR)/$(SERVER_NAME) .
 
-$(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ)
+$(GUI_NAME):
+	@mkdir -p $(GUI_DIR)/build
+	@cd $(GUI_DIR)/build
+	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+	@cmake --build .
+	@cd ../..
+	@mv $(GUI_DIR)/$(GUI_NAME) .
 
-clean:
-	rm -f $(OBJ)
+debug:
+	@$(MAKE) -s BUILD_TYPE=Debug
 
-fclean: clean
-	rm -f $(NAME)
+tests_run:
+	@echo "There is actually no tests to run for this project"
 
-re: fclean all
+.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug tests_run
