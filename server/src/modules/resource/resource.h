@@ -46,7 +46,8 @@ typedef struct resource_s {
 /**
  * @brief Resources list
  */
-typedef SLIST_HEAD(resources_s, resource_s) resources_t;
+SLIST_HEAD(resources_s, resource_s);
+typedef struct resources_s resources_t;
 
 /**
  * @brief The density of each resource

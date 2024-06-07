@@ -40,6 +40,7 @@ typedef struct player_s {
 /**
  * @brief Players list
  */
-typedef SLIST_HEAD(players_s, player_s) players_t;
+SLIST_HEAD(players_s, player_s);
+typedef struct players_s players_t;
 
 #endif /* !ZAPPY_SERVER_PLAYER_H_ */
