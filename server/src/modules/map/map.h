@@ -9,7 +9,13 @@
     #define ZAPPY_SERVER_MAP_H_
 
     #include <sys/types.h>
+    #include "player/player.h"
+    #include "resource/resource.h"
 
+/**
+ * Cell structure. It contains the cell's neighbors, its position,
+ * and the elements (players, eggs and resources) on it.
+ */
 typedef struct cell_s {
     /** @brief The cell's up neighbor */
     struct cell_s *up;
@@ -17,13 +23,17 @@ typedef struct cell_s {
     struct cell_s *left;
 
     // TODO: are x & y useful?
-
     /** @brief The cell's x position */
     uint x;
     /** @brief The cell's y position */
     uint y;
 
-    // TODO: Add elements on cell (players, eggs, foods and resources)
+    /** @brief The players on the cell */
+    players_t players;
+//    /** @brief The eggs on the cell */
+//    eggs_t eggs; TODO: implement this
+    /** @brief The resources (foods and stones) on the cell */
+    resources_t resources;
 
     /** @brief The cell's right neighbor */
     struct cell_s *right;
@@ -31,6 +41,9 @@ typedef struct cell_s {
     struct cell_s *down;
 } cell_t;
 
+/**
+ * Map structure. It contains the map width and height, and its cells.
+ */
 typedef struct map_s {
     /** @brief The map cells */
     cell_t **cells;

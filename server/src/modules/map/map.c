@@ -11,6 +11,27 @@
 #include <stdio.h>
 #include "map.h"
 
+static void destroy_cell_elements(cell_t *cell)
+{
+    void *tmp;
+
+    while (!SLIST_EMPTY(&cell->players)) {
+        tmp = SLIST_FIRST(&cell->players);
+        SLIST_REMOVE_HEAD(&cell->players, next);
+        free(tmp);
+    }
+//    while (!SLIST_EMPTY(&cell->eggs)) {
+//        tmp = SLIST_FIRST(&cell->eggs);
+//        SLIST_REMOVE_HEAD(&cell->eggs, next);
+//        free(tmp);
+//    }
+    while (!SLIST_EMPTY(&cell->resources)) {
+        tmp = SLIST_FIRST(&cell->resources);
+        SLIST_REMOVE_HEAD(&cell->resources, next);
+        free(tmp);
+    }
+}
+
 /**
  * @brief Map structure destructor
  *
@@ -20,8 +41,11 @@ static void map_destructor(map_t *map)
 {
     if (!map)
         return;
-    for (size_t i = 0; map->cells[i]; ++i)
-        free(map->cells[i]);
+    for (size_t y = 0; map->cells[y]; ++y) {
+        for (size_t x = 0; x < map->width; ++x)
+            destroy_cell_elements(&map->cells[y][x]);
+        free(map->cells[y]);
+    }
     free(map->cells);
     free(map);
 }
@@ -64,6 +88,9 @@ static void link_cells(map_t *map)
         for (size_t x = 0; x < map->x; ++x) {
             map->cells[y][x].x = x;
             map->cells[y][x].y = y;
+            SLIST_INIT(&map->cells[y][x].players);
+//            SLIST_INIT(&map->cells[y][x].eggs);
+            SLIST_INIT(&map->cells[y][x].resources);
             link_cell(map, y, x);
         }
 }
