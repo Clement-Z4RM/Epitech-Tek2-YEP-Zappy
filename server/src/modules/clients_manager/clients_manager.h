@@ -48,4 +48,5 @@ extern void clients_manager_add(client_manager_t *manager, client_t *client);
 * @param manager the client manager
 * @param client the client to remove
 * **/
-extern void clients_manager_remove(client_manager_t *manager, client_t *client);
+extern void clients_manager_remove(client_manager_t *manager,
+    client_t *client);
