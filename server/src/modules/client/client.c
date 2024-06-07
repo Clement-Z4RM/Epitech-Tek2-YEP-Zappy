@@ -7,6 +7,7 @@
 
 #include "client.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void client_destroy(client_t *client)
 {
@@ -19,8 +20,10 @@ client_t *client_create(int socket)
 {
     client_t *client = malloc(sizeof(client_t));
 
-    if (!client)
+    if (!client) {
+        perror("malloc");
         return NULL;
+    }
     client->socket = socket;
     client->team_name = NULL;
     return client;

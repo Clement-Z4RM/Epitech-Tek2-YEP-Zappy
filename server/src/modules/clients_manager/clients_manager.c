@@ -10,7 +10,7 @@
 #include "sys/queue.h"
 #include "stdio.h"
 
-void client_manager_add(client_manager_t *manager, client_t *client)
+void clients_manager_add(client_manager_t *manager, client_t *client)
 {
     client_node_t *new_node = malloc(sizeof(client_node_t));
 
@@ -21,7 +21,7 @@ void client_manager_add(client_manager_t *manager, client_t *client)
     manager->nb_clients++;
 }
 
-void client_manager_remove(client_manager_t *manager, client_t *client)
+void clients_manager_remove(client_manager_t *manager, client_t *client)
 {
     client_node_t *current = NULL;
     client_node_t *tmp = NULL;
@@ -41,7 +41,7 @@ void client_manager_remove(client_manager_t *manager, client_t *client)
     }
 }
 
-void client_manager_destructor(client_manager_t *manager)
+void clients_manager_destructor(client_manager_t *manager)
 {
     client_node_t *current = NULL;
 
@@ -54,7 +54,7 @@ void client_manager_destructor(client_manager_t *manager)
     free(manager);
 }
 
-client_manager_t *client_manager_constructor(void)
+client_manager_t *clients_manager_constructor(void)
 {
     client_manager_t *manager = malloc(sizeof(client_manager_t));
 

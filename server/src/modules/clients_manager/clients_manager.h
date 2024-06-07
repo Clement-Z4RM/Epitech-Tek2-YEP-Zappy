@@ -19,16 +19,16 @@ SLIST_HEAD(clients_list_s, client_node_s);
 typedef struct clients_list_s clients_list_t;
 
 /** @brief represent the client manager module **/
-typedef struct client_manager_s {
-    clients_list_t clients_list; //< the list of clients
-    int nb_clients; //< actual number of clients
+typedef struct clients_manager_s {
+    clients_list_t clients_list; ///< the list of clients
+    int nb_clients; ///< actual number of clients
 } client_manager_t;
 
 /**
 * @brief create a new instance of the client_manager module
 * @return client_manager_t the newly allocated instance
 * **/
-client_manager_t *client_manager_constructor(void);
+client_manager_t *clients_manager_constructor(void);
 
 /**
  * @brief destroy a client manager instance and all its clients
