@@ -23,8 +23,10 @@ typedef struct request_handler {
     void (*handler)(handler_data_t *);
 } request_handler_t;
 
-/** @brief the list of request handlers **/
-static const request_handler_t request_handlers[HANDLERS_COUNT] = {0};
+void example_handler(handler_data_t *handler_data)
+{
+    (void)handler_data;
+}
 
 /** @brief  handle a request  **/
 extern void requests_manager_handle_request(
@@ -32,3 +34,8 @@ extern void requests_manager_handle_request(
     client_t *client,
     client_manager_t *clients_manager
 );
+
+/** @brief the list of request handlers **/
+static const request_handler_t request_handlers[HANDLERS_COUNT] = {
+    {"test", &example_handler}
+};
