@@ -13,7 +13,6 @@ env:
 jobs:
   build:
     name: Test CMake and verify executables
-    if: ${{ EXECUTABLES != '' }}
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
     steps:
@@ -35,7 +34,6 @@ jobs:
   glibchecker:
     name: Check for un-encapsulated GLibC usage in C++ executables
     needs: build
-    if: ${{ CXX_EXECUTABLES != '' }}
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
     steps:
