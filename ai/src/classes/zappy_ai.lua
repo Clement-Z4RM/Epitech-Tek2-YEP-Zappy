@@ -1,34 +1,28 @@
 --- @class ZappyAI
---- @field protected params table<string, any>
-local ZappyAI = {}
+--- @field public params ZappyParamsContainer
+--- @field public server ZappyServer
+local ZappyAI <const> = {}
+
+local ZappyParamsContainer <const> = require("ai/src/classes/zappy_params")
+local ZappyServer <const> = require("ai/src/classes/zappy_server")
 
 --- @param args string[]
 --- @return ZappyAI
 function ZappyAI.New(args)
     local self = setmetatable({}, { __index = ZappyAI })
     
-    self.params = self:ParseParams(args)
+    self.params = ZappyParamsContainer.New(args)
+    self.server = ZappyServer.New(self, self.params:Get("h"), self.params:Get("p"))
     return self
 end
 
---- @param args string[]
---- @return table<string, any>
-function ZappyAI:ParseParams(args)
-    local params = {}
-    local currentParamIdentifier
-    
-    for _, paramValue in ipairs(args) do
-        if currentParamIdentifier then
-            params[currentParamIdentifier] = paramValue
-            currentParamIdentifier = nil
-        end
-        
-        if paramValue:sub(1, 1) == "-" then
-            local identifier <const> = paramValue:sub(2)
-            currentParamIdentifier = identifier
-        end
-    end
-    return params
+--- @param message string
+--- @return void
+function ZappyAI:Error(message)
+    print(("Error: %s"):format(message))
+    os.exit(84)
 end
 
+
+-- Export
 return ZappyAI
