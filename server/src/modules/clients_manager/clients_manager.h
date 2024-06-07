@@ -34,18 +34,18 @@ client_manager_t *clients_manager_constructor(void);
  * @brief destroy a client manager instance and all its clients
  * @param manager the client manager to destroy
  */
-extern void client_manager_destructor(client_manager_t *manager);
+extern void clients_manager_destructor(client_manager_t *manager);
 
 /**
 * @brief add a new client to the client manager's list
 * @param manager the client manager
 * @param client the client to add
 * **/
-extern void client_manager_add(client_manager_t *manager, client_t *client);
+extern void clients_manager_add(client_manager_t *manager, client_t *client);
 
 /**
 * @brief remove a client from the client manager's list
 * @param manager the client manager
 * @param client the client to remove
 * **/
-extern void client_manager_remove(client_manager_t *manager, client_t *client);
+extern void clients_manager_remove(client_manager_t *manager, client_t *client);

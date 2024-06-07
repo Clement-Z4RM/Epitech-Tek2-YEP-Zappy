@@ -23,6 +23,8 @@ void requests_manager_handle_request(char *request, client_t *client,
     char **args = requests_manager_parse_args(request);
     handler_data_t handler_data = {client, args, clients_manager};
 
+    if (args == NULL || args[0] == NULL)
+        return;
     for (int i = 0; i < HANDLERS_COUNT; i++) {
         if (request_handlers[i].command_name == NULL)
             continue;
