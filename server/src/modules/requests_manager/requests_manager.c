@@ -10,17 +10,17 @@
 #include <string.h>
 #include "../../include/utilities.h"
 
-static char **request_manager_parse_args(char *request)
+static char **requests_manager_parse_args(char *request)
 {
     char **args = str_array_split(request, " ");
 
     return args;
 }
 
-void request_manager_handle_request(char *request, client_t *client,
+void requests_manager_handle_request(char *request, client_t *client,
     client_manager_t *clients_manager)
 {
-    char **args = request_manager_parse_args(request);
+    char **args = requests_manager_parse_args(request);
     handler_data_t handler_data = {client, args, clients_manager};
 
     for (int i = 0; i < HANDLERS_COUNT; i++) {
