@@ -150,5 +150,6 @@ map_t *create_map(size_t width, size_t height)
     map->height = height;
     if (!initialize_map_cells(map))
         return NULL;
+    compute_resource_quantities(map);
     return map;
 }

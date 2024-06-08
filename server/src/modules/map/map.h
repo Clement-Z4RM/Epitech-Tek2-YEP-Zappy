@@ -59,6 +59,10 @@ typedef struct map_s {
         size_t y;
     };
 
+    /** @brief The quantity of each resource on the map,
+     * depending on the width and height of it and the resource density */
+    size_t resource_quantities[RESOURCES_COUNT];
+
     /** @brief Structure destructor */
     void (*destroy)(struct map_s *map);
 } map_t;

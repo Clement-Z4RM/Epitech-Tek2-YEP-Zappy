@@ -9,6 +9,7 @@
     #define ZAPPY_SERVER_RESOURCE_H_
 
     #include <sys/queue.h>
+    #include "map/map.h"
 
 /**
  * @brief The type of a resource
@@ -28,7 +29,8 @@ typedef enum resource_name_e {
     RN_SIBUR,
     RN_MENDIANE,
     RN_PHIRAS,
-    RN_THYSTAME
+    RN_THYSTAME,
+    RESOURCES_COUNT
 } resource_name_t;
 
 /**
@@ -61,5 +63,9 @@ static const float RESOURCE_DENSITIES[] = {
     [RN_PHIRAS] = 0.08f,
     [RN_THYSTAME] = 0.05f
 };
+
+//region Resource utilities
+extern void compute_resource_quantities(map_t *map);
+//endregion
 
 #endif /* !ZAPPY_SERVER_RESOURCE_H_ */
