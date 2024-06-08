@@ -9,7 +9,8 @@
     #define ZAPPY_SERVER_RESOURCE_H_
 
     #include <sys/queue.h>
-    #include "map/map.h"
+
+typedef struct map_s map_t;
 
 /**
  * @brief The type of a resource

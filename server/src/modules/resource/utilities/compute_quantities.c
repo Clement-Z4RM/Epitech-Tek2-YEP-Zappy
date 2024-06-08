@@ -5,6 +5,8 @@
 ** compute_quantities.c
 */
 
+#include <sys/types.h>
+#include "map/map.h"
 #include "resource/resource.h"
 
 /**
