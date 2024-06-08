@@ -20,11 +20,11 @@ static void destroy_cell_elements(cell_t *cell)
         SLIST_REMOVE_HEAD(&cell->players, next);
         free(tmp);
     }
-//    while (!SLIST_EMPTY(&cell->eggs)) {
-//        tmp = SLIST_FIRST(&cell->eggs);
-//        SLIST_REMOVE_HEAD(&cell->eggs, next);
-//        free(tmp);
-//    }
+    while (!SLIST_EMPTY(&cell->eggs)) {
+        tmp = SLIST_FIRST(&cell->eggs);
+        SLIST_REMOVE_HEAD(&cell->eggs, next);
+        free(tmp);
+    }
     while (!SLIST_EMPTY(&cell->resources)) {
         tmp = SLIST_FIRST(&cell->resources);
         SLIST_REMOVE_HEAD(&cell->resources, next);
@@ -89,7 +89,7 @@ static void link_cells(map_t *map)
             map->cells[y][x].x = x;
             map->cells[y][x].y = y;
             SLIST_INIT(&map->cells[y][x].players);
-//            SLIST_INIT(&map->cells[y][x].eggs);
+            SLIST_INIT(&map->cells[y][x].eggs);
             SLIST_INIT(&map->cells[y][x].resources);
             link_cell(map, y, x);
         }

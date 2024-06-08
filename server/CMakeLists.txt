@@ -15,4 +15,5 @@ add_executable(zappy_server
         src/modules/map/map.h
         src/modules/map/map.c
         src/modules/player/player.h
-        src/modules/resource/resource.h)
+        src/modules/resource/resource.h
+        src/modules/egg/egg.h)

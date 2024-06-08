@@ -9,6 +9,7 @@
     #define ZAPPY_SERVER_MAP_H_
 
     #include <sys/types.h>
+    #include "egg/egg.h"
     #include "player/player.h"
     #include "resource/resource.h"
 
@@ -28,10 +29,10 @@ typedef struct cell_s {
     /** @brief The cell's y position */
     uint y;
 
+    /** @brief The eggs on the cell */
+    eggs_t eggs;
     /** @brief The players on the cell */
     players_t players;
-//    /** @brief The eggs on the cell */
-//    eggs_t eggs; TODO: implement this
     /** @brief The resources (foods and stones) on the cell */
     resources_t resources;
 
