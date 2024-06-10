@@ -8,7 +8,7 @@
 #include "network.h"
 #include <stdio.h>
 
-bool network_accept_client(network_t *network)
+bool network_accept_connexion(network_t *network)
 {
     struct sockaddr_in client_address = {0};
     client_t *client = NULL;
@@ -25,13 +25,17 @@ bool network_accept_client(network_t *network)
         return false;
     }
     clients_manager_add(network->clients_manager, client);
+    printf("New client connected\n");
     return true;
 }
 
 bool network_set_and_select_fds(network_t *network)
 {
     struct client_node_s *current = NULL;
+    struct timeval timeout = {0};
 
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 100;
     FD_ZERO(&network->read_fds);
     FD_ZERO(&network->write_fds);
     FD_SET(network->endpoint->socket, &network->read_fds);
@@ -41,9 +45,8 @@ bool network_set_and_select_fds(network_t *network)
         FD_SET(current->client->socket, &network->write_fds);
     }
     if (select(FD_SETSIZE,
-            &network->read_fds,
-            &network->write_fds,
-            NULL, NULL) < 0) {
+            &network->read_fds, &network->write_fds,
+            NULL, &timeout) < 0) {
         perror("select");
         return false;
     }
@@ -54,6 +57,8 @@ void network_destructor(network_t *network)
 {
     if (network->endpoint)
         endpoint_destructor(network->endpoint);
+    if (network->clients_manager)
+        clients_manager_destructor(network->clients_manager);
     free(network);
 }
 
@@ -71,5 +76,9 @@ network_t *network_constructor(char *ip, int port)
         return NULL;
     }
     network->clients_manager = clients_manager_constructor();
+    if (network->clients_manager == NULL) {
+        network_destructor(network);
+        return NULL;
+    }
     return network;
 }

@@ -49,3 +49,13 @@ void network_destructor(network_t *network);
 * @return bool true if the operation was successful, false otherwise (select)
 **/
 bool network_set_and_select_fds(network_t *network);
+
+/**
+* @brief accept a new client connection
+* @description
+* This function is responsible for accepting a new client connection
+* It creates a new client instance and adds it to the clients manager
+* @param network the network to accept the connection
+* @return bool true if the operation was successful, false otherwise (accept)
+**/
+bool network_accept_connexion(network_t *network);
