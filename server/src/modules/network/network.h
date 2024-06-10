@@ -51,11 +51,17 @@ void network_destructor(network_t *network);
 bool network_set_and_select_fds(network_t *network);
 
 /**
-* @brief accept a new client connection
-* @description
-* This function is responsible for accepting a new client connection
-* It creates a new client instance and adds it to the clients manager
-* @param network the network to accept the connection
-* @return bool true if the operation was successful, false otherwise (accept)
-**/
-bool network_accept_connexion(network_t *network);
+* @brief receive requests from clients and handle it with the request_manager
+* @param network the network to receive requests from
+* @return bool true if the operation was successful, false otherwise (recv)
+*/
+bool network_receive_requests(network_t *network);
+
+/**
+ * @brief send a request to a client
+ * @param network the network endpoint to send the request from
+ * @param client the client to send the request to
+ * @param request the request to send
+ * @return bool true if the operation was successful, false otherwise (send)
+ */
+bool network_send_request(network_t *network, client_t *client, char *request);

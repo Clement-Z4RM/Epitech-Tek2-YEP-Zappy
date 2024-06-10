@@ -6,7 +6,8 @@
 */
 
 #include "options/options.h"
-#include "modules/network/network.h"
+#include "network/network.h"
+#include "requests_manager/requests_manager.h"
 #include "signal.h"
 #include "stdio.h"
 #include "../include/zappy_server.h"
@@ -28,13 +29,9 @@ static int server_loop(options_t *options)
             network_destructor(network);
             return 84;
         }
-        if (FD_ISSET(network->endpoint->socket, &network->read_fds) &&
-            !network_accept_connexion(network)
-            ) {
-            network_destructor(network);
-            return 84;
-        }
+        network_receive_requests(network);
     }
+    printf("Server stopped\n");
     return 0;
 }
 

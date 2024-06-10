@@ -7,8 +7,18 @@
 
 #include "network.h"
 #include <stdio.h>
+#include <string.h>
+#include "../requests_manager/requests_manager.h"
 
-bool network_accept_connexion(network_t *network)
+/**
+* @brief accept a new client connection
+* @description
+* This function is responsible for accepting a new client connection
+* It creates a new client instance and adds it to the clients manager
+* @param network the network to accept the connection
+* @return bool true if the operation was successful, false otherwise (accept)
+**/
+static bool network_accept_connexion(network_t *network)
 {
     struct sockaddr_in client_address = {0};
     client_t *client = NULL;
@@ -26,6 +36,41 @@ bool network_accept_connexion(network_t *network)
     }
     clients_manager_add(network->clients_manager, client);
     printf("New client connected\n");
+    return true;
+}
+
+bool network_send_request(network_t *network, client_t *client, char *request)
+{
+    if (FD_ISSET(client->socket, &network->write_fds)) {
+        if (send(client->socket, request, strlen(request), 0) == -1) {
+            perror("send");
+            return false;
+        }
+    }
+    return true;
+}
+
+bool network_receive_requests(network_t *network)
+{
+    struct client_node_s *current = NULL;
+    char buffer[1024] = {0};
+
+    if (FD_ISSET(network->endpoint->socket, &network->read_fds)) {
+        if (!network_accept_connexion(network)) {
+            return false;
+        }
+    }
+    SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
+    {
+        if (FD_ISSET(current->client->socket, &network->read_fds)) {
+            if (recv(current->client->socket, buffer, 1024, 0) == -1) {
+                perror("recv");
+                return false;
+            }
+            requests_manager_handle_request(buffer, current->client,
+                network->clients_manager);
+        }
+    }
     return true;
 }
 
