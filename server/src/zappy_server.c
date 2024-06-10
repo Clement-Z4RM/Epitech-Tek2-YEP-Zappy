@@ -12,6 +12,7 @@
 #include "stdio.h"
 #include "../include/zappy_server.h"
 #include "logs/logs.h"
+#include "utilities.h"
 
 static void sig_handler(int signum)
 {
@@ -23,8 +24,8 @@ static int server_loop(options_t *options)
 {
     network_t *network = network_constructor("127.0.0.1", options->port);
 
-    signal(SIGINT, sig_handler);
-    signal(SIGTERM, sig_handler);
+    catch_signal(SIGINT, sig_handler);
+    catch_signal(SIGTERM, sig_handler);
     while (server_state == SERVER_RUNNING) {
         if (!network_set_and_select_fds(network))
             return 84;
