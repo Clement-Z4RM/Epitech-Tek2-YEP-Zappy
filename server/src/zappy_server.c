@@ -5,19 +5,28 @@
 ** zappy_server.c
 */
 
+#include <signal.h>
+#include <stdio.h>
 #include "options/options.h"
 #include "network/network.h"
 #include "requests_manager/requests_manager.h"
-#include "signal.h"
-#include "stdio.h"
-#include "../include/zappy_server.h"
 #include "logs/logs.h"
+#include "macros.h"
 #include "utilities.h"
+#include "zappy_server.h"
 
-static void sig_handler(int signum)
+static bool loop(bool stop)
 {
-    (void)signum;
-    server_state = SERVER_STOPPED;
+    static bool _loop = true;
+
+    if (stop)
+        _loop = false;
+    return _loop;
+}
+
+static void sig_handler(UNUSED int signum)
+{
+    loop(true);
 }
 
 static int server_loop(options_t *options)
@@ -26,7 +35,7 @@ static int server_loop(options_t *options)
 
     catch_signal(SIGINT, sig_handler);
     catch_signal(SIGTERM, sig_handler);
-    while (server_state == SERVER_RUNNING) {
+    while (loop(false)) {
         if (!network_set_and_select_fds(network))
             return 84;
         if (!network_receive_requests(network))
