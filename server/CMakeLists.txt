@@ -18,6 +18,7 @@ add_executable(zappy_server
         src/zappy_server.c
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
+        src/utilities/strings/str_array_split.c
         src/modules/options/options.h
         src/modules/options/options.c
         src/modules/options/usage.c
@@ -31,5 +32,6 @@ add_executable(zappy_server
         src/modules/options/parsers/frequency.c
         src/modules/clients_manager/clients_manager.c
         src/modules/client/client.c
+        src/modules/requests_manager/requests_manager.c
         src/modules/network/endpoint/endpoint.c
         src/modules/network/network.c)

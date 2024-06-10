@@ -18,10 +18,10 @@ typedef struct client_s {
 * @param socket the socket of the client
 * @return client_t the newly allocated instance
 * **/
-client_t *client_create(int socket);
+extern client_t *client_create(int socket);
 
 /**
 * @brief destroy a client instance
 * @param client  the client to destroy
 */
-void client_destroy(client_t *client);
+extern void client_destroy(client_t *client);
