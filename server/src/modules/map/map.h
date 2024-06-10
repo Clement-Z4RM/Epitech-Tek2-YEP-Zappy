@@ -50,7 +50,9 @@ typedef struct cell_s {
 
 typedef struct map_resources_s {
     /** @brief The quantity of each resource on the map,
-     * depending on the width and height of it and the resource density */
+     * depending on the width and height of it and the resource density.
+     * The last element is the total quantity of resources on the map
+     * (all added together) */
     size_t quantities[RESOURCES_COUNT + 1];
 
     /**

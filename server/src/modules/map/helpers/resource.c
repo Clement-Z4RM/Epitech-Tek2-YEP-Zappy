@@ -76,7 +76,7 @@ static bool generate_resource(map_t *map, resource_name_t resource)
  */
 static bool generate_resources(map_t *map)
 {
-    for (resource_name_t resource = 0; resource <= RESOURCES_COUNT; ++resource)
+    for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
         for (size_t i = 0; i < map->resources.quantities[resource]; ++i)
             if (!generate_resource(map, resource)) {
                 map->destroy(map);
