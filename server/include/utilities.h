@@ -20,4 +20,8 @@ extern int str_to_port(const char *str);
 extern char **str_array_split(char *str, char *separator);
 //endregion
 
+//region Signals
+extern void catch_signal(int signum, void (*handler)(int));
+//endregion
+
 #endif /* !ZAPPY_SERVER_UTILITIES_H_ */

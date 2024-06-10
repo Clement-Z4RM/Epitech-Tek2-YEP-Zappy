@@ -50,4 +50,5 @@ add_executable(zappy_server
         src/modules/resource/resource.h
         src/modules/resource/utilities/compute_quantities.c
         src/modules/client/client.h
-        src/modules/client/client.c)
+        src/modules/client/client.c
+        src/utilities/signals/catch_signal.c)
