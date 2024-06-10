@@ -30,13 +30,13 @@ typedef struct network_s {
 * @param port the port of the network server
 * @return network_t the newly allocated instance
 **/
-network_t *network_constructor(char *ip, int port);
+extern network_t *network_constructor(char *ip, int port);
 
 /**
 * @brief destroy a network instance (freeing memory)
 * @param network the network to destroy
 **/
-void network_destructor(network_t *network);
+extern void network_destructor(network_t *network);
 
 /**
 * @brief set the file descriptors and select them
@@ -48,20 +48,20 @@ void network_destructor(network_t *network);
 * @param network the network to set and select the fds
 * @return bool true if the operation was successful, false otherwise (select)
 **/
-bool network_set_and_select_fds(network_t *network);
+extern bool network_set_and_select_fds(network_t *network);
 
 /**
 * @brief receive requests from clients and handle it with the request_manager
 * @param network the network to receive requests from
 * @return bool true if the operation was successful, false otherwise (recv)
 */
-bool network_receive_requests(network_t *network);
+extern bool network_receive_requests(network_t *network);
 
 /**
- * @brief send a request to a client
- * @param network the network endpoint to send the request from
- * @param client the client to send the request to
- * @param request the request to send
- * @return bool true if the operation was successful, false otherwise (send)
- */
-bool network_send_request(network_t *network, client_t *client, char *request);
+* @brief for each clients send all requests contained in the requests queue
+* @param network the network to send requests from
+* @param client the client to send requests to
+* @param request the request to send
+* @return bool true if the operation was successful, false otherwise (send)
+**/
+extern bool network_send_requests(network_t *network);

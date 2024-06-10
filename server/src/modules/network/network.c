@@ -39,11 +39,12 @@ static bool network_accept_connexion(network_t *network)
     return true;
 }
 
-bool network_send_request(network_t *network, client_t *client, char *request)
+bool network_send_requests(network_t *network)
 {
-    if (FD_ISSET(client->socket, &network->write_fds)) {
-        if (send(client->socket, request, strlen(request), 0) == -1) {
-            perror("send");
+    client_node_t *current = NULL;
+
+    SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
+        if (!client_send_all_requests(current->client, &network->write_fds)) {
             return false;
         }
     }

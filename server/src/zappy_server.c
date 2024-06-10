@@ -30,6 +30,7 @@ static int server_loop(options_t *options)
             return 84;
         }
         network_receive_requests(network);
+        network_send_requests(network);
     }
     printf("Server stopped\n");
     return 0;

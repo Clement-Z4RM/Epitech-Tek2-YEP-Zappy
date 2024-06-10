@@ -43,10 +43,14 @@ typedef struct endpoint_s {
 * @param type the type of the endpoint
 * @return endpoint_t the newly allocated instance (or NULL if failed)
 **/
-endpoint_t *endpoint_constructor(char *ip, int port, endpoint_type_t type);
+extern endpoint_t *endpoint_constructor(
+    char *ip,
+    int port,
+    endpoint_type_t type
+);
 
 /**
 * @brief destroy an endpoint instance (freeing memory)
 * @param endpoint the endpoint to destroy
 **/
-void endpoint_destructor(endpoint_t *endpoint);
+extern void endpoint_destructor(endpoint_t *endpoint);
