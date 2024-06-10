@@ -27,8 +27,19 @@ in_addr_t Socket::adress(std::string &str) {
     return adress;
 }
 
+int Socket::connection(int fd, const sockaddr *addr, socklen_t len) {
+    int connection = connect(fd, addr, len);
+    if (connection == -1)
+        throw std::runtime_error("Connection error");
+    return connection;
+}
+
 int Socket::close_socket(int fd) {
     return close(fd);
+}
+
+ssize_t Socket::read_socket(int fd, char *buff, size_t len) {
+    return read(fd, buff, len);
 }
 
 int Socket::select_socket(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout) {

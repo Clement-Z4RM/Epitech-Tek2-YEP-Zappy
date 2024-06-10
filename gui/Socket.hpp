@@ -22,18 +22,11 @@ public:
 
     static in_addr_t adress(std::string &str);
 
-    static int connection(int fd, const sockaddr *addr, socklen_t len) {
-        int connection = connect(fd, addr, len);
-        if (connection == -1)
-            throw std::runtime_error("Connection error");
-        return connection;
-    }
+    static int connection(int fd, const sockaddr *addr, socklen_t len);
 
     static int close_socket(int fd);
 
-    static ssize_t read_socket(int fd, char *buff, size_t len) {
-        return read(fd, buff, len);
-    }
+    static ssize_t read_socket(int fd, char *buff, size_t len);
 
     static int select_socket(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 
