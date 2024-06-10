@@ -17,6 +17,7 @@ add_executable(zappy_gui
         Window.hpp
         Window.cpp
         Socket.hpp
+        Socket.cpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
