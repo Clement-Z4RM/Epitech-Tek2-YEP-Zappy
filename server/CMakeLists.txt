@@ -19,27 +19,35 @@ add_executable(zappy_server
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
         src/utilities/strings/str_array_split.c
+        src/modules/egg/egg.h
         src/modules/options/options.h
         src/modules/options/options.c
         src/modules/options/usage.c
-        src/modules/options/parsers/unknown.c
         src/modules/options/parsers/usage.c
-        src/modules/options/parsers/port.c
-        src/modules/options/parsers/world_width.c
         src/modules/options/parsers/world_height.c
-        src/modules/options/parsers/teams.c
         src/modules/options/parsers/clients.c
+        src/modules/options/parsers/teams.c
+        src/modules/options/parsers/unknown.c
         src/modules/options/parsers/frequency.c
-        src/modules/clients_manager/clients_manager.c
-        src/modules/client/client.c
-        src/modules/requests_manager/requests_manager.c
-        src/modules/network/endpoint/endpoint.c
-        src/modules/network/network.c
-        src/modules/network/network.c
-        src/modules/logs/successes/network_logs.c)
+        src/modules/options/parsers/world_width.c
+        src/modules/options/parsers/port.c
+        src/modules/logs/logs.h
+        src/modules/logs/logs_colors.h
+        src/modules/logs/successes/network_logs.c
+        src/modules/logs/successes/logs_successes.h
+        src/modules/logs/failures/logs_failures.h
+        src/modules/player/player.h
         src/modules/map/map.h
         src/modules/map/map.c
-        src/modules/player/player.h
+        src/modules/network/network.h
+        src/modules/network/network.c
+        src/modules/network/endpoint/endpoint.h
+        src/modules/network/endpoint/endpoint.c
+        src/modules/requests_manager/requests_manager.h
+        src/modules/requests_manager/requests_manager.c
+        src/modules/clients_manager/clients_manager.h
+        src/modules/clients_manager/clients_manager.c
         src/modules/resource/resource.h
         src/modules/resource/utilities/compute_quantities.c
-        src/modules/egg/egg.h)
+        src/modules/client/client.h
+        src/modules/client/client.c)
