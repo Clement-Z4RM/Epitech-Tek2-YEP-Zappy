@@ -6,6 +6,36 @@
 */
 
 #include "options/options.h"
+#include "network/network.h"
+#include "requests_manager/requests_manager.h"
+#include "signal.h"
+#include "stdio.h"
+#include "../include/zappy_server.h"
+
+static void sig_handler(int signum)
+{
+    (void)signum;
+    server_state = SERVER_STOPPED;
+}
+
+static int server_loop(options_t *options)
+{
+    network_t *network = network_constructor("127.0.0.1", options->port);
+
+    signal(SIGINT, sig_handler);
+    signal(SIGTERM, sig_handler);
+    while (server_state == SERVER_RUNNING) {
+        if (!network_set_and_select_fds(network))
+            return 84;
+        if (!network_receive_requests(network))
+            return 84;
+        if (!network_send_requests(network))
+            return 84;
+    }
+    printf("Server stopped\n");
+    network_destructor(network);
+    return 0;
+}
 
 /**
  * @brief The main function of the Zappy server
@@ -23,6 +53,10 @@ int zappy_server(int argc, char *argv[])
         return 84;
     if (usage(options))
         return 0;
+    if (server_loop(options) == 84) {
+        options->destroy(options);
+        return 84;
+    }
     options->destroy(options);
     return 0;
 }

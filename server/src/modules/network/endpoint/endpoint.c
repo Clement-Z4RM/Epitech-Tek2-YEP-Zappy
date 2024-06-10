@@ -8,6 +8,8 @@
 #include "endpoint.h"
 #include "stdlib.h"
 #include "string.h"
+#include "stdio.h"
+#include "unistd.h"
 
 /**
 * @brief initialize the socket of the endpoint
@@ -76,17 +78,20 @@ static bool endpoint_init_mode(endpoint_t *endpoint)
     if (endpoint->type == SERVER) {
         if (listen(endpoint->socket, 10) == -1)
             return false;
+        printf("Server listening on %s:%d\n", endpoint->ip, endpoint->port);
         return true;
     }
     if (connect(endpoint->socket, (struct sockaddr *)&endpoint->addr,
         sizeof(endpoint->addr)) == -1)
         return false;
+    printf("Connected to %s:%d\n", endpoint->ip, endpoint->port);
     return true;
 }
 
 void endpoint_destructor(endpoint_t *endpoint)
 {
     free(endpoint->ip);
+    close(endpoint->socket);
     free(endpoint);
 }
 
