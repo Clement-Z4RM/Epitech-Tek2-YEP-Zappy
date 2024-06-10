@@ -35,7 +35,7 @@ void clients_manager_remove(client_manager_t *manager, client_t *client)
     }
     if (tmp) {
         SLIST_REMOVE(&manager->clients_list, tmp, client_node_s, next);
-        client_destroy(tmp->client);
+        client_destructor(tmp->client);
         free(tmp);
         manager->nb_clients--;
     }
@@ -48,7 +48,7 @@ void clients_manager_destructor(client_manager_t *manager)
     while (!SLIST_EMPTY(&manager->clients_list)) {
         current = SLIST_FIRST(&manager->clients_list);
         SLIST_REMOVE_HEAD(&manager->clients_list, next);
-        client_destroy(current->client);
+        client_destructor(current->client);
         free(current);
     }
     free(manager);

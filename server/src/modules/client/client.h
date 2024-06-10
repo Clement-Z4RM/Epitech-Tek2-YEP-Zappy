@@ -9,6 +9,7 @@
 #include <sys/queue.h>
 #include "stdbool.h"
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 /**
 * @brief represent a node of the client request queue
@@ -29,6 +30,7 @@ typedef struct client_requests_queue_s client_requests_queue_t;
 /** @brief represent a client module **/
 typedef struct client_s {
     int socket; ///< the socket of the client
+    struct sockaddr_in *addr; ///< the address of the client
     char *team_name; ///< the team name of the client
     client_requests_queue_t requests_queue; ///< the queue of requests to send
 } client_t;
@@ -38,13 +40,13 @@ typedef struct client_s {
 * @param socket the socket of the client
 * @return client_t the newly allocated instance
 * **/
-extern client_t *client_create(int socket);
+extern client_t *client_constructor(int socket, struct sockaddr_in *addr);
 
 /**
 * @brief destroy a client instance
 * @param client  the client to destroy
 */
-extern void client_destroy(client_t *client);
+extern void client_destructor(client_t *client);
 
 /**
 * @brief add a request to the client's request queue
