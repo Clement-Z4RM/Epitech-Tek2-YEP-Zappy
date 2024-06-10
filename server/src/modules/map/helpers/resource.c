@@ -10,7 +10,6 @@
 #include "map/map.h"
 #include "resource/resource.h"
 
-//region Compute resource quantities
 /**
  * @brief Compute the quantity for each resource on the map
  * depending on the width and height of it and the resource density,
@@ -36,9 +35,7 @@ static void compute_resource_quantities(map_t *map)
         map->resources.quantities[RESOURCES_COUNT] += (size_t)quantity;
     }
 }
-//endregion
 
-//region Resources generation
 /**
  * @brief Generate a resource on the map, and store it in a random cell.
  *
@@ -89,7 +86,6 @@ static bool generate_resources(map_t *map)
         }
     return true;
 }
-//endregion
 
 /**
  * @brief Initialize the resources helper in the map structure.

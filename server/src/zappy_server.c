@@ -18,7 +18,6 @@
 #include "utilities.h"
 #include "zappy_server.h"
 
-//region System interruption handling
 static bool loop(bool stop)
 {
     static bool _loop = true;
@@ -32,7 +31,6 @@ static void sig_handler(UNUSED int signum)
 {
     loop(true);
 }
-//endregion
 
 static int destroy(network_t *network, map_t *map, int to_return)
 {
