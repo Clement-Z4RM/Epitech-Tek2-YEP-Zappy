@@ -9,6 +9,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
+#include "unistd.h"
 
 /**
 * @brief initialize the socket of the endpoint
@@ -90,6 +91,7 @@ static bool endpoint_init_mode(endpoint_t *endpoint)
 void endpoint_destructor(endpoint_t *endpoint)
 {
     free(endpoint->ip);
+    close(endpoint->socket);
     free(endpoint);
 }
 

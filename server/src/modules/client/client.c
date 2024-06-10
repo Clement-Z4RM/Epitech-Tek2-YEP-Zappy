@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "string.h"
+#include "unistd.h"
 
 bool client_send_all_requests(client_t *client, fd_set *write_fds)
 {
@@ -54,6 +55,7 @@ void client_destroy(client_t *client)
         free(current->request);
         free(current);
     }
+    close(client->socket);
     free(client);
 }
 
