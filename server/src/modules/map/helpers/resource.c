@@ -24,10 +24,11 @@
 static void compute_resource_quantities(map_t *map)
 {
     size_t map_area = map->width * map->height;
+    resource_name_t resource = 0;
     float quantity;
 
     map->resources.quantities[RESOURCES_COUNT] = 0;
-    for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource) {
+    for (; resource < RESOURCES_COUNT; ++resource) {
         quantity = (float)map_area * RESOURCE_DENSITIES[resource];
         if (quantity < 1)
             quantity = 1;
@@ -49,17 +50,22 @@ static void compute_resource_quantities(map_t *map)
  */
 static bool generate_resource(map_t *map, resource_name_t resource)
 {
-    size_t x = random() % map->x;
-    size_t y = random() % map->y;
-    resource_t *new_resource = malloc(sizeof(resource_t));
+    size_t x;
+    size_t y;
+    resource_t *new_resource;
 
-    if (!new_resource) {
-        perror("malloc");
-        return false;
+    for (size_t i = 0; i < map->resources.quantities[resource]; ++i) {
+        x = random() % map->x;
+        y = random() % map->y;
+        new_resource = malloc(sizeof(resource_t));
+        if (!new_resource) {
+            perror("malloc");
+            return false;
+        }
+        new_resource->name = resource;
+        new_resource->type = (resource == RN_FOOD ? RT_FOOD : RT_STONE);
+        SLIST_INSERT_HEAD(&map->cells[y][x].resources, new_resource, next);
     }
-    new_resource->name = resource;
-    new_resource->type = (resource == RN_FOOD ? RT_FOOD : RT_STONE);
-    SLIST_INSERT_HEAD(&map->cells[y][x].resources, new_resource, next);
     return true;
 }
 
@@ -77,11 +83,10 @@ static bool generate_resource(map_t *map, resource_name_t resource)
 static bool generate_resources(map_t *map)
 {
     for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
-        for (size_t i = 0; i < map->resources.quantities[resource]; ++i)
-            if (!generate_resource(map, resource)) {
-                map->destroy(map);
-                return false;
-            }
+        if (!generate_resource(map, resource)) {
+            map->destroy(map);
+            return false;
+        }
     return true;
 }
 //endregion
