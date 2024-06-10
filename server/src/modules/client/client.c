@@ -43,7 +43,7 @@ void client_add_request(client_t *client, char *request)
     SLIST_INSERT_HEAD(&client->requests_queue, new_node, next);
 }
 
-void client_destroy(client_t *client)
+void client_destructor(client_t *client)
 {
     client_request_node_t *current = NULL;
 
@@ -59,7 +59,7 @@ void client_destroy(client_t *client)
     free(client);
 }
 
-client_t *client_create(int socket)
+client_t *client_constructor(int socket, struct sockaddr_in *addr)
 {
     client_t *client = malloc(sizeof(client_t));
 
@@ -69,6 +69,7 @@ client_t *client_create(int socket)
     }
     client->socket = socket;
     client->team_name = NULL;
+    client->addr = addr;
     SLIST_INIT(&client->requests_queue);
     return client;
 }

@@ -35,4 +35,5 @@ add_executable(zappy_server
         src/modules/requests_manager/requests_manager.c
         src/modules/network/endpoint/endpoint.c
         src/modules/network/network.c
-        src/modules/network/network.c)
+        src/modules/network/network.c
+        src/modules/logs/successes/network_logs.c)

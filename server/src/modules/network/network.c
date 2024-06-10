@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../requests_manager/requests_manager.h"
+#include "../logs/logs.h"
 
 /**
 * @brief accept a new client connection
@@ -30,12 +31,12 @@ static bool network_accept_connexion(network_t *network)
         perror("accept");
         return false;
     }
-    client = client_create(client_socket);
+    client = client_constructor(client_socket, &client_address);
     if (client == NULL) {
         return false;
     }
     clients_manager_add(network->clients_manager, client);
-    printf("New client connected\n");
+    log_network_client_connected_success(client);
     return true;
 }
 

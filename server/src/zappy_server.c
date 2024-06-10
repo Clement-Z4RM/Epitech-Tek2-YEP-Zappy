@@ -11,6 +11,7 @@
 #include "signal.h"
 #include "stdio.h"
 #include "../include/zappy_server.h"
+#include "logs/logs.h"
 
 static void sig_handler(int signum)
 {
@@ -32,8 +33,8 @@ static int server_loop(options_t *options)
         if (!network_send_requests(network))
             return 84;
     }
-    printf("Server stopped\n");
     network_destructor(network);
+    LOG_SUCCESS("Server stopped\n");
     return 0;
 }
 
