@@ -5,7 +5,9 @@
 ** zappy_server.c
 */
 
+#include <time.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include "options/options.h"
 #include "network/network.h"
@@ -64,6 +66,7 @@ int zappy_server(int argc, char *argv[])
         return 84;
     if (usage(options))
         return 0;
+    srandom(time(NULL));
     if (server_loop(options) == 84) {
         options->destroy(options);
         return 84;
