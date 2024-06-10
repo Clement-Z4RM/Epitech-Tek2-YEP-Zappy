@@ -44,8 +44,16 @@ void client_add_request(client_t *client, char *request)
 
 void client_destroy(client_t *client)
 {
+    client_request_node_t *current = NULL;
+
     if (client->team_name)
         free(client->team_name);
+    while (!SLIST_EMPTY(&client->requests_queue)) {
+        current = SLIST_FIRST(&client->requests_queue);
+        SLIST_REMOVE_HEAD(&client->requests_queue, next);
+        free(current->request);
+        free(current);
+    }
     free(client);
 }
 
