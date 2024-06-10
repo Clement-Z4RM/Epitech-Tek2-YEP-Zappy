@@ -29,6 +29,30 @@ function ZappyServer:GetStatus()
     return self.status
 end
 
+--- @param content string
+function ZappyServer:Send(content)
+    self.tcp:send(("%s\n"):format(content))
+end
+
+--- @param content string
+--- @param numResults number
+--- @return string | string[]
+function ZappyServer:SendSync(content, numResults)
+    self:Send(content)
+    if not numResults then
+        return self:GetLastAnswer()
+    end
+    local results <const> = {}
+    for i = 1, numResults do
+        local tcpAnswer <const> = self:GetLastAnswer()
+        if tcpAnswer == "ko" then
+            break
+        end
+        results[#results + 1] = tcpAnswer
+    end
+    return results
+end
+
 --- @return boolean
 function ZappyServer:Connect()
     self.tcp:connect(self.host, self.port)
@@ -37,6 +61,12 @@ function ZappyServer:Connect()
         return false
     end
     return true
+end
+
+--- @return string
+function ZappyServer:GetLastAnswer()
+    local answer <const> = self.tcp:receive()
+    return answer
 end
 
 --- @return boolean true if successfully disconnected
