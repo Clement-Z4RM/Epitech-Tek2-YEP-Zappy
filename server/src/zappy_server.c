@@ -25,14 +25,15 @@ static int server_loop(options_t *options)
     signal(SIGINT, sig_handler);
     signal(SIGTERM, sig_handler);
     while (server_state == SERVER_RUNNING) {
-        if (!network_set_and_select_fds(network)) {
-            network_destructor(network);
+        if (!network_set_and_select_fds(network))
             return 84;
-        }
-        network_receive_requests(network);
-        network_send_requests(network);
+        if (!network_receive_requests(network))
+            return 84;
+        if (!network_send_requests(network))
+            return 84;
     }
     printf("Server stopped\n");
+    network_destructor(network);
     return 0;
 }
 
