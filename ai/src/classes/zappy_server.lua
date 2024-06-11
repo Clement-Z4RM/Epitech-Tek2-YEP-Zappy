@@ -9,14 +9,12 @@ local NetworkZappyAnswer <const> = require("ai/src/constants/network_zappy_answe
 local NetworkTCPStatus <const> = require("ai/src/enums/network_tcp_status")
 local Socket <const> = require("socket")
 
---- @param parent ZappyAI
 --- @param host string
 --- @param port number
 --- @return ZappyServer
-function ZappyServer.New(parent, host, port)
+function ZappyServer.New(host, port)
     local self = setmetatable({}, {__index = ZappyServer})
-
-    self.parent = parent
+    
     self.host = host
     self.port = port
     self.tcp = Socket.tcp()

@@ -23,7 +23,7 @@ function ZappyAI.New(args)
     local self = setmetatable({}, { __index = ZappyAI })
     
     self.params = ZappyParamsContainer.New(args)
-    self.server = ZappyServer.New(self, self.params:Get("h"), self.params:Get("p"))
+    self.server = ZappyServer.New(self.params:Get("h"), self.params:Get("p"))
     self.logger = ZappyLogger.New()
     self.inventory = ZappyInventory.New()
     self.status = ZappyAIStatus.CONNECTING
