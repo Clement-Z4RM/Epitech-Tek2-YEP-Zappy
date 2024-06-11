@@ -8,6 +8,7 @@
 --- @field protected numTicks
 local ZappyAI <const> = {}
 
+local Posix <const> = require("posix")
 local Socket <const> = require("socket")
 local ZappyAction <const> = require("ai/src/constants/network_zappy_action")
 local ZappyParamsContainer <const> = require("ai/src/classes/zappy_params")
@@ -29,6 +30,11 @@ function ZappyAI.New(args)
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
     self.numTicks = 0
+    
+    Posix.signal(Posix.SIGINT, function()
+        self.logger:Warn("CTRL + C Pressed in the console, exiting...")
+        self.status = ZappyAIStatus.ENDED
+    end)
     return self
 end
 
