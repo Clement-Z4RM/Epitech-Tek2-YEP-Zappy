@@ -2,6 +2,7 @@
 --- @field public params ZappyParamsContainer
 --- @field public server ZappyServer
 --- @field public logger ZappyLogger
+--- @field public inventory ZappyInventory
 --- @field public status number
 --- @field public worldDimensions {x: number, y: number}
 --- @field protected numTicks
@@ -10,6 +11,7 @@ local ZappyAI <const> = {}
 local Socket <const> = require("socket")
 local ZappyAction <const> = require("ai/src/constants/network_zappy_action")
 local ZappyParamsContainer <const> = require("ai/src/classes/zappy_params")
+local ZappyInventory <const> = require("ai/src/classes/zappy_inventory")
 local ZappyAIStatus <const> = require("ai/src/enums/zappy_ai_status")
 local ZappyServer <const> = require("ai/src/classes/zappy_server")
 local ZappyLogger <const> = require("ai/src/classes/zappy_logger")
@@ -23,6 +25,7 @@ function ZappyAI.New(args)
     self.params = ZappyParamsContainer.New(args)
     self.server = ZappyServer.New(self, self.params:Get("h"), self.params:Get("p"))
     self.logger = ZappyLogger.New()
+    self.inventory = ZappyInventory.New()
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
     self.numTicks = 0
