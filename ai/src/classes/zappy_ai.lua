@@ -58,7 +58,7 @@ end
 --[[
     Actions
 --]]
---- Send base data to the server
+--- Send the team's name to the server and receive game's data
 --- @return boolean
 function ZappyAI:SetupBaseInfos()
     local teamName <const> = self.params:Get("n")
@@ -80,17 +80,40 @@ function ZappyAI:SetupBaseInfos()
     return true
 end
 
---[[
-    Actions & Handling
---]]
+--- Ask the server for the base inventory
+--- @return void
 function ZappyAI:SetupInventory()
-    local result <const> = self.server:SendSync(ZappyAction.GET_INVENTORY)
-    print(result)
+    local input = self.server:SendSync(ZappyAction.GET_INVENTORY)
+    input = input:match("%[(.*)%]")
+    input = input:gsub("^%s+", ""):gsub("%s+$", "")
+    
+    local items = {}
+    local function split(str, sep)
+        local result = {}
+        for part in str:gmatch("([^" .. sep .. "]+)") do
+            table.insert(result, part)
+        end
+        return result
+    end
+    
+    local elements = split(input, ",")
+    for _, element in ipairs(elements) do
+        element = element:gsub("^%s+", ""):gsub("%s+$", "")
+        local item, quantity = element:match("(%a+)%s+(%d+)")
+        if item and quantity then
+            items[item] = tonumber(quantity)
+        end
+    end
+    
+    for item, quantity in pairs(items) do
+        self.inventory:Add(item, quantity)
+    end
+    self.logger:Info(("Base inventory: %s"):format(self.inventory))
 end
 
+--- @TODO: Implement
 function ZappyAI:LookupEnvironment()
     local result <const> = self.server:SendSync(ZappyAction.LOOKUP_ENVIRONMENT)
-    print(result)
 end
 
 --[[
