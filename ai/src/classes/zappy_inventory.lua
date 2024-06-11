@@ -2,9 +2,16 @@
 --- @field public items table<string, number>
 local ZappyInventory = {}
 
+local Json <const> = require("ai/src/vendors/json")
+
+--- @param inventory ZappyInventory
+local function classToString(inventory)
+    return Json.encode(inventory.items)
+end
+
 --- @return ZappyInventory
 function ZappyInventory.New()
-    local self = setmetatable({}, {__index = ZappyInventory})
+    local self = setmetatable({}, {__index = ZappyInventory, __tostring = classToString})
 
     self.items = {}
     return self
