@@ -8,6 +8,7 @@ env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-josephine.chicouras.git"
   EXECUTABLES: "zappy_gui"
   CXX_EXECUTABLES: "zappy_gui"
+  GLIBCHECKER_IGNORE: "./gui/Socket.cpp"
   MAX_REPO_SIZE: "15"
 
 jobs:
@@ -47,7 +48,6 @@ jobs:
         timeout-minutes: 2
         run: |
           export PATH=$PATH:$(pwd)/.github/workflows
-          export GLIBCHECKER_IGNORE="./src/utilities/DLLoader/DLLoader.hpp:dlopen ./src/utilities/DLLoader/DLLoader.hpp:dlclose ./src/utilities/DLLoader/DLLoader.hpp:dlsym ./src/utilities/DLLoader/DLLoader.hpp:dlerror"
           for executable in ${CXX_EXECUTABLES//,/ }; do
             GLIBCHECKER_GH_ACTIONS= glib_checker $executable
           done

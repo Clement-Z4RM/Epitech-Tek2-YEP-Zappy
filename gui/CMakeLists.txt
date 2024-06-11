@@ -17,6 +17,7 @@ add_executable(zappy_gui
         Window.hpp
         Window.cpp
         Socket.hpp
+        Socket.cpp
         Player.hpp
         Player.cpp
 )

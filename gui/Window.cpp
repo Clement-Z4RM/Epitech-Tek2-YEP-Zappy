@@ -10,6 +10,9 @@
 Window::Window()
 {
     _window.create(sf::VideoMode(1920, 1080), "Zappy");
+    sf::Image *icon = new sf::Image();
+    if (icon->loadFromFile("./ressources/empire_nexus.jpeg"))
+        _window.setIcon(1024, 1024, icon->getPixelsPtr());
 }
 
 Window::~Window() = default;
