@@ -21,6 +21,12 @@ end
 
 --- @param message string
 --- @return void
+function ZappyLogger:Warn(message)
+    print(("\27[33m[Warning] \27[97m%s"):format(message))
+end
+
+--- @param message string
+--- @return void
 function ZappyLogger:Error(message)
     print(("\27[91m[Error] \27[97m%s"):format(message))
 end
