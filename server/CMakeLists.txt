@@ -18,6 +18,7 @@ add_executable(zappy_server
         src/zappy_server.c
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
+        src/utilities/signals/catch_signal.c
         src/utilities/strings/str_array_split.c
         src/modules/egg/egg.h
         src/modules/options/options.h
@@ -39,6 +40,7 @@ add_executable(zappy_server
         src/modules/player/player.h
         src/modules/map/map.h
         src/modules/map/map.c
+        src/modules/map/helpers/resource.c
         src/modules/network/network.h
         src/modules/network/network.c
         src/modules/network/endpoint/endpoint.h
@@ -48,6 +50,5 @@ add_executable(zappy_server
         src/modules/clients_manager/clients_manager.h
         src/modules/clients_manager/clients_manager.c
         src/modules/resource/resource.h
-        src/modules/resource/utilities/compute_quantities.c
         src/modules/client/client.h
         src/modules/client/client.c)

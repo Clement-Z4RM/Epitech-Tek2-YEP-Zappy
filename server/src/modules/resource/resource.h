@@ -10,8 +10,6 @@
 
     #include <sys/queue.h>
 
-typedef struct map_s map_t;
-
 /**
  * @brief The type of a resource
  */
@@ -64,9 +62,5 @@ static const float RESOURCE_DENSITIES[] = {
     [RN_PHIRAS] = 0.08f,
     [RN_THYSTAME] = 0.05f
 };
-
-//region Resource utilities
-extern void compute_resource_quantities(map_t *map);
-//endregion
 
 #endif /* !ZAPPY_SERVER_RESOURCE_H_ */
