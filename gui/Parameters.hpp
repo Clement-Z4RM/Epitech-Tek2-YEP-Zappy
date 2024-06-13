@@ -85,6 +85,12 @@ class Parameters {
             return players;
         }
 
+        void clear()
+        {
+            _players.clear();
+            _map.clear();
+        }
+
         int _width{-1};
         int _height{-1};
         int _port;

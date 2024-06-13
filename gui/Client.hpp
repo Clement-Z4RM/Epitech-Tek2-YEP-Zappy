@@ -33,6 +33,8 @@ namespace gui {
 
         void parseParameters();
 
+        void refreshMap();
+
         bool isConnected = false;
         bool isParamGet = true;
         bool isMapFinished = false;
@@ -41,6 +43,9 @@ namespace gui {
 
         Parameters &getParam() { return _param; }
 
+        void clearData();
+
+        std::string tmp;
     private:
         int _sfd;
         Parameters _param;

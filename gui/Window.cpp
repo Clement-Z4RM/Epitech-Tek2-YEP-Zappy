@@ -19,7 +19,7 @@ Window::~Window() = default;
 
 void Window::run()
 {
-    while (_window.isOpen()) {
+    if (_window.isOpen()) {
         sf::Event event;
         while (_window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)

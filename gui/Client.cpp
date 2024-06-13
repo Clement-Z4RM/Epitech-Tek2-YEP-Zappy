@@ -31,11 +31,8 @@ namespace gui {
 
     void Client::readSocket()
     {
-        fd_set rfds;
-        struct timeval tv;
-        int retval;
-        char buff[8192];
-        std::memset(buff, 0, 8192);
+        char buff[4096];
+        std::memset(buff, 0, 4096);
 
         std::string str;
 
@@ -43,11 +40,11 @@ namespace gui {
             return;
 
         ssize_t bytes_received;
-        bytes_received = Socket::read_socket(_sfd, buff, 8192);
+        bytes_received = Socket::read_socket(_sfd, buff, 4096);
         if (bytes_received == -1)
             std::cerr << "No buffer" << std::endl;
         str = buff;
-        parseMsg(str);
+        tmp = str;
     }
 
     bool Client::isReady()
@@ -124,6 +121,7 @@ namespace gui {
                 i = 0;
             }
         }
+        std::cout << "'" << msg << "'" << std::endl;
         if (!msg.empty()) {
             _map.push_back(msg);
             _incompleteCase = true;
@@ -154,6 +152,7 @@ namespace gui {
         std::deque<std::string> players;
         std::deque<std::string> inventory;
 
+        _param._map.clear();
         for (auto &i : _map) {
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
@@ -186,7 +185,7 @@ namespace gui {
             s >> tmp;
             int y = std::stoi(tmp);
             for (auto &player : _param._players) {
-                if (player->getId() == std::stoi(inv.substr(4, inv.find(" ", 4) - 4)) && player->getPosition()._x == x && player->getPosition()._y == y) {
+                if (player->getId() == identifier && player->getPosition()._x == x && player->getPosition()._y == y) {
                     player->setInventory(s);
                     break;
                 }
@@ -195,5 +194,40 @@ namespace gui {
         for (auto &param : otherParam) {
             std::cout << param << std::endl;
         }
+    }
+
+    void Client::clearData()
+    {
+        std::string output;
+
+        for (size_t i = 0; i < tmp.length(); ++i) {
+            if (std::isprint(tmp[i]) || tmp[i] == '\n' && tmp[i] != '@') {
+                output += tmp[i];
+            } else if (!std::isprint(tmp[i])) {
+                while (i < tmp.length() && !std::isprint(tmp[i])) {
+                    ++i;
+                }
+                --i;
+            }
+        }
+        tmp = output;
+    }
+
+    void Client::refreshMap()
+    {
+        usleep(_param._freq);
+        this->isMapFinished = false;
+        _map.clear();
+        while (!this->isMapFinished) {
+            this->readSocket();
+            this->clearData();
+            std::cout << tmp << std::endl;
+            this->getCases(tmp);
+        }
+        this->parseParameters();
+        std::cout << "Map refreshed" << std::endl;
+//        for (auto &i : _map) {
+//            std::cout << i << std::endl;
+//        }
     }
 } // gui

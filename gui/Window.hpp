@@ -20,6 +20,9 @@ public:
 
     void rendMap(Parameters &params);
 
+    void clearMap() { _map.clear(); }
+    bool isOpen() { return _window.isOpen(); }
+
 private:
     sf::RenderWindow _window;
     std::deque<std::shared_ptr<sf::RectangleShape>> _map;
