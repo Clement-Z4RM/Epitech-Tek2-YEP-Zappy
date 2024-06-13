@@ -147,13 +147,20 @@ namespace gui {
         }
     }
 
-    void Client::parseMap()
+    void Client::parseParameters()
     {
         std::deque<std::string> tmpMap;
         std::deque<std::string> otherParam;
+        std::deque<std::string> players;
+        std::deque<std::string> inventory;
+
         for (auto &i : _map) {
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
+            else if (i.find("pnw") != std::string::npos)
+                players.push_back(i);
+            else if (i.find("pin") != std::string::npos)
+                inventory.push_back(i);
             else
                 otherParam.push_back(i);
         }
@@ -162,6 +169,31 @@ namespace gui {
             std::shared_ptr<Case> new_case = std::make_shared<Case>();
             new_case->createCase(s);
             _param._map.push_back(new_case);
+        }
+        for (auto &player : players) {
+            std::stringstream s(player);
+            std::shared_ptr<Player> new_player = std::make_shared<Player>(s);
+            _param._players.push_back(new_player);
+        }
+        for (auto &inv : inventory) {
+            std::stringstream s(inv);
+            std::string tmp;
+            s >> tmp;
+            s >> tmp;
+            int identifier = std::stoi(tmp);
+            s >> tmp;
+            int x = std::stoi(tmp);
+            s >> tmp;
+            int y = std::stoi(tmp);
+            for (auto &player : _param._players) {
+                if (player->getId() == std::stoi(inv.substr(4, inv.find(" ", 4) - 4)) && player->getPosition()._x == x && player->getPosition()._y == y) {
+                    player->setInventory(s);
+                    break;
+                }
+            }
+        }
+        for (auto &param : otherParam) {
+            std::cout << param << std::endl;
         }
     }
 } // gui

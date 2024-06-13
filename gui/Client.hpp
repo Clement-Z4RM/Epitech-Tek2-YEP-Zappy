@@ -31,7 +31,7 @@ namespace gui {
         void getFrequency(std::string &msg);
         void getCases(std::string &msg);
 
-        void parseMap();
+        void parseParameters();
 
         bool isConnected = false;
         bool isParamGet = true;
