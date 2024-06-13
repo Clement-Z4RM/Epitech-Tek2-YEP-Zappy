@@ -147,7 +147,7 @@ namespace gui {
         }
     }
 
-    void Client::parseMap() // TODO: rename to parseParameters
+    void Client::parseParameters()
     {
         std::deque<std::string> tmpMap;
         std::deque<std::string> otherParam;

@@ -17,7 +17,7 @@ namespace gui {
                 _client.readSocket();
             }
             std::cout << "Got all parameters" << std::endl;
-            _client.parseMap();
+            _client.parseParameters();
         }
 
         GUI::~GUI() = default;
