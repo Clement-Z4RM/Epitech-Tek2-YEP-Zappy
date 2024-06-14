@@ -12,6 +12,7 @@
 #include <deque>
 #include <memory>
 #include <iostream>
+#include <unordered_map>
 #include "../Parameters.hpp"
 #include "Modal.hpp"
 
@@ -29,11 +30,12 @@ public:
 
     bool isOpen() { return _window.isOpen(); }
 
-    void displayInformation(std::shared_ptr<Case> selectedCase);
+    void displayInformation(const std::shared_ptr<Case>& selectedCase, Parameters &params);
+    void addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::shared_ptr<Modal> &modal);
 
 private:
     std::shared_ptr<sf::Font> _globalFont;
     sf::RenderWindow _window;
     std::deque<std::shared_ptr<sf::RectangleShape>> _map;
-    std::deque<std::shared_ptr<Modal>> _modals;
+    std::unordered_map<std::string, std::shared_ptr<Modal>> _modals;
 };

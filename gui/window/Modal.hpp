@@ -12,7 +12,6 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "Text.hpp"
 
 class Modal {
 public:
