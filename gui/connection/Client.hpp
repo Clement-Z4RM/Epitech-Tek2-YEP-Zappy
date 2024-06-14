@@ -13,7 +13,8 @@
 #include <deque>
 #include <sstream>
 #include "Socket.hpp"
-#include "Parameters.hpp"
+#include "../Parameters.hpp"
+#include "Sleep.hpp"
 
 namespace gui {
     class Client {
@@ -22,8 +23,8 @@ namespace gui {
         ~Client();
 
         void readSocket();
-        bool isReady();
-        void sendMsg(std::string &msg);
+        bool isReady() const;
+        void sendMsg(std::string &msg) const;
 
         void parseMsg(std::string &msg);
 
@@ -31,7 +32,9 @@ namespace gui {
         void getFrequency(std::string &msg);
         void getCases(std::string &msg);
 
-        void parseMap();
+        void parseParameters();
+
+        void refreshMap();
 
         bool isConnected = false;
         bool isParamGet = true;
@@ -41,6 +44,9 @@ namespace gui {
 
         Parameters &getParam() { return _param; }
 
+        void clearData();
+
+        std::string tmp;
     private:
         int _sfd;
         Parameters _param;

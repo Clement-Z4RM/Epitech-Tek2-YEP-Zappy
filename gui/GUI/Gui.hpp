@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include "Client.hpp"
-#include "Window.hpp"
+#include "../connection/Client.hpp"
+#include "../window/Window.hpp"
 
 namespace gui {
 

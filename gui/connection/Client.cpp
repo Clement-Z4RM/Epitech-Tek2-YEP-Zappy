@@ -13,7 +13,7 @@ namespace gui {
         int sfd = Socket::create(AF_INET, SOCK_STREAM, 0);
         if (sfd == -1)
             std::cerr << "Socket error" << std::endl;
-        struct sockaddr_in client;
+        struct sockaddr_in client{};
         client.sin_family = AF_INET;
         client.sin_port = Socket::network(port);
         client.sin_addr.s_addr = Socket::adress(ip);
@@ -31,36 +31,29 @@ namespace gui {
 
     void Client::readSocket()
     {
-        fd_set rfds;
-        struct timeval tv;
-        int retval;
-        char buff[8192];
-        std::memset(buff, 0, 8192);
-
-        std::string str;
+        char buff[4096];
 
         if (!isReady())
             return;
-
+        std::memset(buff, 0, 4096);
         ssize_t bytes_received;
-        bytes_received = Socket::read_socket(_sfd, buff, 8192);
+        bytes_received = Socket::read_socket(_sfd, buff, 4095);
         if (bytes_received == -1)
             std::cerr << "No buffer" << std::endl;
-        str = buff;
-        parseMsg(str);
+        tmp = buff;
     }
 
-    bool Client::isReady()
+    bool Client::isReady() const
     {
         fd_set readfds;
-        struct timeval timeout;
-        int ready = 0;
+        struct timeval timeout{};
+        int ready;
 
         FD_ZERO(&readfds);
         FD_SET(_sfd, &readfds);
-        timeout.tv_sec = 0.1;
+        timeout.tv_sec = static_cast<time_t>(0.1);
         timeout.tv_usec = 0;
-        ready = Socket::select_socket(_sfd + 1, &readfds, NULL, NULL, &timeout);
+        ready = Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
         if (ready == -1) {
             std::cout << "select" << std::endl;
             return false;
@@ -68,7 +61,7 @@ namespace gui {
         return true;
     }
 
-    void Client::sendMsg(std::string &msg)
+    void Client::sendMsg(std::string &msg) const
     {
         Socket::send_socket(_sfd, msg.c_str(), msg.size(), 0);
     }
@@ -88,23 +81,23 @@ namespace gui {
 
     void Client::getMapSize(std::string &msg)
     {
-        int size = msg.find("msz") + 4;
+        std::string::size_type size = msg.find("msz") + 4;
         if (size < 4) {
             return;
         }
-        std::string x = msg.substr(size, msg.find(" ", size) - size);
-        size = msg.find(" ", size) + 1;
-        std::string y = msg.substr(size, msg.find("\n", size) - size);
+        std::string x = msg.substr(size, msg.find(' ', size) - size);
+        size = msg.find(' ', size) + 1;
+        std::string y = msg.substr(size, msg.find('\n', size) - size);
         _param._width = std::stoi(x);
         _param._height = std::stoi(y);
     }
 
     void Client::getFrequency(std::string &msg)
     {
-        int freq = msg.find("sgt") + 4;
+        std::string::size_type freq = msg.find("sgt") + 4;
         if (freq <= 4)
             return;
-        std::string f = msg.substr(freq, msg.find("\n", freq) - freq);
+        std::string f = msg.substr(freq, msg.find('\n', freq) - freq);
         _param._freq = std::stoi(f);
     }
 
@@ -138,8 +131,8 @@ namespace gui {
             s >> btc;
             s >> x;
             s >> y;
-            if (btc != "bct" || std::atoi(x.c_str()) != _param._width - 1 ||
-                std::atoi(y.c_str()) != _param._height - 1) {
+            if (btc != "bct" || std::strtol(x.c_str(), nullptr, 10) != _param._width - 1 ||
+            std::strtol(y.c_str(), nullptr, 10) != _param._height - 1) {
             } else {
                 this->isMapFinished = true;
                 this->isParamGet = false;
@@ -147,13 +140,14 @@ namespace gui {
         }
     }
 
-    void Client::parseMap() // TODO: rename to parseParameters
+    void Client::parseParameters()
     {
         std::deque<std::string> tmpMap;
         std::deque<std::string> otherParam;
         std::deque<std::string> players;
         std::deque<std::string> inventory;
 
+        _param._map.clear();
         for (auto &i : _map) {
             std::cout << "param her : " << i << std::endl;
             if (i.find("bct") != std::string::npos)
@@ -180,16 +174,16 @@ namespace gui {
         }
         for (auto &inv : inventory) {
             std::stringstream s(inv);
-            std::string tmp;
-            s >> tmp;
-            s >> tmp;
-            int identifier = std::stoi(tmp);
-            s >> tmp;
-            int x = std::stoi(tmp);
-            s >> tmp;
-            int y = std::stoi(tmp);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            s >> tmpData;
+            int x = std::stoi(tmpData);
+            s >> tmpData;
+            int y = std::stoi(tmpData);
             for (auto &player : _param._players) {
-                if (player->getId() == std::stoi(inv.substr(4, inv.find(" ", 4) - 4)) && player->getPosition()._x == x && player->getPosition()._y == y) {
+                if (player->getId() == identifier && player->getPosition()._x == x && player->getPosition()._y == y) {
                     player->setInventory(s);
                     break;
                 }
@@ -198,5 +192,35 @@ namespace gui {
         for (auto &param : otherParam) {
             std::cout << param << std::endl;
         }
+    }
+
+    void Client::clearData()
+    {
+        std::string output;
+
+        for (size_t i = 0; i < tmp.length(); ++i) {
+            if (std::isprint(tmp[i]) || tmp[i] == '\n' && tmp[i] != '@') {
+                output += tmp[i];
+            } else if (!std::isprint(tmp[i])) {
+                while (i < tmp.length() && !std::isprint(tmp[i])) {
+                    ++i;
+                }
+                --i;
+            }
+        }
+        tmp = output;
+    }
+
+    void Client::refreshMap()
+    {
+        Sleep::sleepInMicroSecond(_param._freq);
+        this->isMapFinished = false;
+        _map.clear();
+        while (!this->isMapFinished) {
+            this->readSocket();
+            this->clearData();
+            this->getCases(tmp);
+        }
+        this->parseParameters();
     }
 } // gui

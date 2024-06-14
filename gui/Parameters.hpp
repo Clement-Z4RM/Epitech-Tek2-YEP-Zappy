@@ -11,7 +11,7 @@
 #include <memory>
 #include <sstream>
 #include <deque>
-#include "Player.hpp"
+#include "player/Player.hpp"
 #include "src/egg.hpp"
 
 class Case {
@@ -72,6 +72,12 @@ class Parameters {
                     players.push_back(player);
             }
             return players;
+        }
+
+        void clear()
+        {
+            _players.clear();
+            _map.clear();
         }
 
         int _width{-1};

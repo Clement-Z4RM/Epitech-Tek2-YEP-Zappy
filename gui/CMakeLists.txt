@@ -9,19 +9,23 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(zappy_gui
         main.cpp
-        Client.hpp
-        Client.cpp
+        connection/Client.hpp
+        connection/Client.cpp
         Parameters.hpp
-        Gui.hpp
-        Gui.cpp
-        Window.hpp
-        Window.cpp
-        Socket.hpp
+        GUI/Gui.hpp
+        GUI/Gui.cpp
+        window/Window.hpp
+        window/Window.cpp
+        connection/Socket.hpp
+        connection/Socket.cpp
+        player/Player.hpp
+        player/Player.cpp
+        connection/Sleep.hpp
+        connection/Sleep.cpp
+        window/Modal.hpp
+        window/Modal.cpp
         src/egg.hpp
         src/egg.cpp
-        Socket.cpp
-        Player.hpp
-        Player.cpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
