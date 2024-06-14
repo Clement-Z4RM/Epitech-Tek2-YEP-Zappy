@@ -9,6 +9,10 @@
 
 int main(int ac, char **av)
 {
+    if (ac == 2 && std::string(av[1]) == "-help") {
+        std::cout << "USAGE: ./zappy_gui ip port" << std::endl;
+        return 0;
+    }
     if (ac != 3 || std::strtoll(av[2], NULL, 10) < 0 || std::strtoll(av[2], NULL, 10) > 65535)
         return 84;
     std::string ip = av[1];
