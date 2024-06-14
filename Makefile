@@ -4,6 +4,7 @@
 ## File description:
 ## Makefile
 ##
+.ONESHELL:
 
 .ONESHELL:
 
