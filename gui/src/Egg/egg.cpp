@@ -7,6 +7,11 @@
 
 #include "egg.hpp"
 
+Eggs::Eggs()
+{
+    _eggTexture.loadFromFile(_eggTexturePath);
+}
+
 bool Eggs::startsWith(const std::string &str, const std::string &prefix)
 {
     return str.compare(0, prefix.size(), prefix) == 0;
@@ -60,9 +65,9 @@ void Eggs::addEgg(int id, int x, int y)
 void Eggs::renderEggs()
 {
     for (auto &egg : _eggs) {
-        std::shared_ptr<sf::CircleShape> shape = std::make_shared<sf::CircleShape>(10);
-        shape->setFillColor(sf::Color::Yellow);
+        std::shared_ptr<sf::Sprite> shape = std::make_shared<sf::Sprite>();
         shape->setPosition(egg._x * 32 + 32, egg._y * 32 + 32);
+        shape->setTexture(_eggTexture);
         _eggsShapes.push_back(shape);
     }
 }
