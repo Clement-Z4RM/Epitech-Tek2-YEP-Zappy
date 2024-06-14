@@ -11,10 +11,10 @@ Window::Window()
 {
     _window.create(sf::VideoMode(1920, 1080), "Zappy");
     sf::Image *icon = new sf::Image();
-    if (icon->loadFromFile("./ressources/empire_nexus.jpeg"))
+    if (icon->loadFromFile("./resources/empire_nexus.jpeg"))
         _window.setIcon(1024, 1024, icon->getPixelsPtr());
     _globalFont = std::make_shared<sf::Font>();
-    if (!_globalFont->loadFromFile("./ressources/font.ttf"))
+    if (!_globalFont->loadFromFile("./resources/font.ttf"))
         std::cerr << "Error loading font" << std::endl;
 }
 
@@ -90,6 +90,7 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     cooText->setFont(*_globalFont);
     cooText->setPosition(_window.getSize().x * 0.75 + 10, 75);
     modal->addText(cooText);
+
     std::shared_ptr<sf::Text> foodText = std::make_shared<sf::Text>();
     std::string food = "Food: " + std::to_string(selectedCase->_food) + "\n";
     foodText->setString(food);
@@ -97,20 +98,23 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     foodText->setFont(*_globalFont);
     foodText->setPosition(_window.getSize().x * 0.75 + 10, 100);
     modal->addText(foodText);
+
     std::shared_ptr<sf::Text> linemateText = std::make_shared<sf::Text>();
-    std::string limenate = "Linemate: " + std::to_string(selectedCase->_linemate) + "\n";
-    linemateText->setString(limenate);
+    std::string linemate = "Linemate: " + std::to_string(selectedCase->_linemate) + "\n";
+    linemateText->setString(linemate);
     linemateText->setCharacterSize(20);
     linemateText->setFont(*_globalFont);
     linemateText->setPosition(_window.getSize().x * 0.75 + 10, 125);
     modal->addText(linemateText);
+
     std::shared_ptr<sf::Text> deraumereText = std::make_shared<sf::Text>();
-    std::string deraume = "Deraumere: " + std::to_string(selectedCase->_deraumere) + "\n";
-    deraumereText->setString(deraume);
+    std::string deraumere = "Deraumere: " + std::to_string(selectedCase->_deraumere) + "\n";
+    deraumereText->setString(deraumere);
     deraumereText->setCharacterSize(20);
     deraumereText->setFont(*_globalFont);
     deraumereText->setPosition(_window.getSize().x * 0.75 + 10, 150);
     modal->addText(deraumereText);
+
     std::shared_ptr<sf::Text> siburText = std::make_shared<sf::Text>();
     std::string sibur = "Sibur: " + std::to_string(selectedCase->_sibur) + "\n";
     siburText->setString(sibur);
@@ -118,6 +122,7 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     siburText->setFont(*_globalFont);
     siburText->setPosition(_window.getSize().x * 0.75 + 10, 175);
     modal->addText(siburText);
+
     std::shared_ptr<sf::Text> mendianeText = std::make_shared<sf::Text>();
     std::string mendiane = "Mendiane: " + std::to_string(selectedCase->_mendiane) + "\n";
     mendianeText->setString(mendiane);
@@ -125,13 +130,15 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     mendianeText->setFont(*_globalFont);
     mendianeText->setPosition(_window.getSize().x * 0.75 + 10, 200);
     modal->addText(mendianeText);
+
     std::shared_ptr<sf::Text> phirasText = std::make_shared<sf::Text>();
-    std::string phiraq = "Phiras: " + std::to_string(selectedCase->_phiras) + "\n";
-    phirasText->setString(phiraq);
+    std::string phiras = "Phiras: " + std::to_string(selectedCase->_phiras) + "\n";
+    phirasText->setString(phiras);
     phirasText->setCharacterSize(20);
     phirasText->setFont(*_globalFont);
     phirasText->setPosition(_window.getSize().x * 0.75 + 10, 225);
     modal->addText(phirasText);
+
     std::shared_ptr<sf::Text> thystameText = std::make_shared<sf::Text>();
     std::string thystame = "Thystame: " + std::to_string(selectedCase->_thystame) + "\n";
     thystameText->setString(thystame);
@@ -139,6 +146,7 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     thystameText->setFont(*_globalFont);
     thystameText->setPosition(_window.getSize().x * 0.75 + 10, 250);
     modal->addText(thystameText);
+
     modal->setPosition(_window.getSize().x * 0.75, 50);
     modal->setSize(_window.getSize().x * 0.20, _window.getSize().y - 100);
     modal->setColor(100, 20, 20, 255);
