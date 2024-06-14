@@ -23,8 +23,8 @@ namespace gui {
         ~Client();
 
         void readSocket();
-        bool isReady();
-        void sendMsg(std::string &msg);
+        bool isReady() const;
+        void sendMsg(std::string &msg) const;
 
         void parseMsg(std::string &msg);
 
