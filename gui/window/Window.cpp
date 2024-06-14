@@ -28,6 +28,9 @@ void Window::run(Parameters &params)
         for (auto &i : _map) {
             _window.draw(*i);
         }
+        for (auto &p : params._eggs._eggsShapes) {
+            _window.draw(*p);
+        }
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
         _window.display();
