@@ -12,18 +12,7 @@
 #include <sstream>
 #include <deque>
 #include "Player.hpp"
-
-class Egg {
-    public:
-        Egg() = default;
-        ~Egg() = default;
-
-        int _id;
-        int _x;
-        int _y;
-        int _team;
-        int _hatching;
-};
+#include "src/egg.hpp"
 
 class Case {
     public:
