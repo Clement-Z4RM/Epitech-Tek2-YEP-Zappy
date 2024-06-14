@@ -13,7 +13,8 @@
 #include <deque>
 #include <sstream>
 #include "Socket.hpp"
-#include "Parameters.hpp"
+#include "../Parameters.hpp"
+#include "Sleep.hpp"
 
 namespace gui {
     class Client {

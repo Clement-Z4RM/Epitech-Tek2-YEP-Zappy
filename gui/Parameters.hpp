@@ -11,7 +11,7 @@
 #include <memory>
 #include <sstream>
 #include <deque>
-#include "Player.hpp"
+#include "player/Player.hpp"
 
 class Egg {
     public:

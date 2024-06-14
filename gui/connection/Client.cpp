@@ -117,7 +117,6 @@ namespace gui {
                 i = 0;
             }
         }
-        std::cout << "'" << msg << "'" << std::endl;
         if (!msg.empty()) {
             _map.push_back(msg);
             _incompleteCase = true;
@@ -211,19 +210,14 @@ namespace gui {
 
     void Client::refreshMap()
     {
-        usleep(_param._freq);
+        Sleep::sleepInMicroSecond(_param._freq);
         this->isMapFinished = false;
         _map.clear();
         while (!this->isMapFinished) {
             this->readSocket();
             this->clearData();
-//            std::cout << tmp << std::endl;
             this->getCases(tmp);
         }
         this->parseParameters();
-        std::cout << "Map refreshed" << std::endl;
-//        for (auto &i : _map) {
-//            std::cout << i << std::endl;
-//        }
     }
 } // gui
