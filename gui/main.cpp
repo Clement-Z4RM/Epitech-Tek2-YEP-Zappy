@@ -5,7 +5,7 @@
 ** main.cpp
 */
 
-#include "Gui.hpp"
+#include "GUI/Gui.hpp"
 
 int main(int ac, char **av)
 {
