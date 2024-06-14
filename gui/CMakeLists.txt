@@ -24,8 +24,8 @@ add_executable(zappy_gui
         connection/Sleep.cpp
         window/Modal.hpp
         window/Modal.cpp
-        src/egg.hpp
-        src/egg.cpp
+        src/Egg/egg.hpp
+        src/Egg/egg.cpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
