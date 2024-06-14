@@ -9,7 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include "Parameters.hpp"
+#include "../Parameters.hpp"
 
 class Window {
 public:
@@ -19,6 +19,9 @@ public:
     void run();
 
     void rendMap(Parameters &params);
+
+    void clearMap() { _map.clear(); }
+    bool isOpen() { return _window.isOpen(); }
 
 private:
     sf::RenderWindow _window;

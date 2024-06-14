@@ -11,6 +11,7 @@
 #include <memory>
 #include <sstream>
 #include <deque>
+#include "player/Player.hpp"
 
 class Egg {
     public:
@@ -75,6 +76,21 @@ class Parameters {
         Parameters() = default;
         ~Parameters() = default;
 
+        std::deque<std::shared_ptr<Player>> getPlayerOnCase(std::shared_ptr<Case> c) {
+            std::deque<std::shared_ptr<Player>> players;
+            for (auto &player : _players) {
+                if (player->getPosition()._x == c->_x && player->getPosition()._y == c->_y)
+                    players.push_back(player);
+            }
+            return players;
+        }
+
+        void clear()
+        {
+            _players.clear();
+            _map.clear();
+        }
+
         int _width{-1};
         int _height{-1};
         int _port;
@@ -83,5 +99,6 @@ class Parameters {
         int _clientsNb {-1};
         int _freq {-1};
         std::vector<std::string> _teams;
+        std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
 };
