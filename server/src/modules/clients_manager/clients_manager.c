@@ -10,15 +10,35 @@
 #include "sys/queue.h"
 #include "stdio.h"
 
-void clients_manager_add(client_manager_t *manager, client_t *client)
+bool clients_manager_add(client_manager_t *manager, client_t *client, const client_type_t type)
 {
-    client_node_t *new_node = malloc(sizeof(client_node_t));
+    client_node_t *new_node = NULL;
+    ai_client_node_t *new_ai_node = NULL;
+    gui_client_node_t *new_gui_node = NULL;
 
-    if (!new_node)
-        return;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
-    manager->nb_clients++;
+    if (type == NONE) {
+        new_node = malloc(sizeof(client_node_t));
+        if (new_node == NULL)
+            return false;
+        new_node->client = client;
+        SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
+        manager->nb_clients++;
+    } else if (type == AI) {
+        new_ai_node = malloc(sizeof(ai_client_node_t));
+        if (new_ai_node == NULL)
+            return false;
+        new_ai_node->client = client;
+        SLIST_INSERT_HEAD(&manager->ai_clients_list, new_ai_node, next);
+        manager->nb_ai_clients++;
+    } else {
+        new_gui_node = malloc(sizeof(gui_client_node_t));
+        if (new_gui_node == NULL)
+            return false;
+        new_gui_node->client = client;
+        SLIST_INSERT_HEAD(&manager->gui_clients_list, new_gui_node, next);
+        manager->nb_gui_clients++;
+    }
+    return true;
 }
 
 void clients_manager_remove(client_manager_t *manager, client_t *client)

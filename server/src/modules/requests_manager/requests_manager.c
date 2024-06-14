@@ -20,7 +20,7 @@ static bool requests_manager_have_team_name(client_t *client)
     return true;
 }
 
-static bool requests_manager_free_request_memory(char **args, client_t *client)
+static void requests_manager_free_request_memory(char **args, client_t *client)
 {
     if (client->current_request_to_handle)
         free(client->current_request_to_handle);
