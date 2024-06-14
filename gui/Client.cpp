@@ -32,19 +32,15 @@ namespace gui {
     void Client::readSocket()
     {
         char buff[4096];
-        std::memset(buff, 0, 4096);
-
-        std::string str;
 
         if (!isReady())
             return;
-
+        std::memset(buff, 0, 4096);
         ssize_t bytes_received;
-        bytes_received = Socket::read_socket(_sfd, buff, 4096);
+        bytes_received = Socket::read_socket(_sfd, buff, 4095);
         if (bytes_received == -1)
             std::cerr << "No buffer" << std::endl;
-        str = buff;
-        tmp = str;
+        tmp = buff;
     }
 
     bool Client::isReady()
@@ -221,7 +217,7 @@ namespace gui {
         while (!this->isMapFinished) {
             this->readSocket();
             this->clearData();
-            std::cout << tmp << std::endl;
+//            std::cout << tmp << std::endl;
             this->getCases(tmp);
         }
         this->parseParameters();

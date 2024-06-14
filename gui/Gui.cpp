@@ -26,8 +26,8 @@ namespace gui {
 
         void GUI::run()
         {
-            _client.refreshMap();
             while (_window.isOpen()) {
+                _client.refreshMap();
                 _window.rendMap(_client.getParam());
                 _window.run();
             }
