@@ -6,7 +6,7 @@ on:
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-YEP-400-LIL-4-1-zappy-josephine.chicouras.git"
-  EXECUTABLES: "zappy_gui"
+  EXECUTABLES: "zappy_server,zappy_gui"
   CXX_EXECUTABLES: "zappy_gui"
   GLIBCHECKER_IGNORE: "./gui/connection/Socket.cpp ./gui/connection/Sleep.cpp"
   MAX_REPO_SIZE: "15"
@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify executables
+        timeout-minutes: 2
         run: |
           for executable in ${EXECUTABLES//,/ }; do
             make "$executable"
@@ -28,10 +29,12 @@ jobs:
               echo "::error file=$executable,title=Executable problem::This executable does not exist or is not executable"
               exit 1
             fi
+            ./"$executable" -help
           done
 
   glibchecker:
     name: Check for un-encapsulated GLibC usage in C++ executables
+    needs: build
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
     steps:
@@ -54,6 +57,7 @@ jobs:
 
   tests:
     name: Run tests
+    needs: build
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
     steps:

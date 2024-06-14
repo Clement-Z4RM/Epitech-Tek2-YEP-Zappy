@@ -5,7 +5,9 @@
 ** main.c
 */
 
-int main(void)
+#include "zappy_server.h"
+
+int main(int argc, char *argv[])
 {
-    return 0;
+    return zappy_server(argc, argv);
 }
