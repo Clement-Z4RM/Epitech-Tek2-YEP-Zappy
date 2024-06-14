@@ -156,7 +156,7 @@ namespace gui {
                 players.push_back(i);
             else if (i.find("pin") != std::string::npos)
                 inventory.push_back(i);
-            else if (_eggs.checkMsg(i))
+            else if (_param._eggs.checkMsg(i))
                 continue;
             else
                 otherParam.push_back(i);

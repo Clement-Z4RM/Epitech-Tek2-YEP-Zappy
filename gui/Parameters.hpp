@@ -12,7 +12,7 @@
 #include <sstream>
 #include <deque>
 #include "player/Player.hpp"
-#include "src/egg.hpp"
+#include "src/Egg/egg.hpp"
 
 class Case {
     public:
@@ -90,4 +90,5 @@ class Parameters {
         std::vector<std::string> _teams;
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
+        Eggs _eggs;
 };
