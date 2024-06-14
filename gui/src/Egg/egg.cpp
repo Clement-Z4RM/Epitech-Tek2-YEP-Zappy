@@ -32,11 +32,15 @@ bool Eggs::checkMsg(std::string &s)
         return true;
     }
     if (startsWith(str, "pfk")) {
-        deleteEgg(0);
+        layingEgg(s);
         return true;
     }
     if (startsWith(str, "ebo")) {
-        addEgg(0, 1);
+        newConnection(s);
+        return true;
+    }
+    if (startsWith(str, "eht")) {
+        eggHatching(s);
         return true;
     }
     return false;
@@ -80,4 +84,37 @@ std::vector<std::string> Eggs::splitStr(const std::string &str, char delimiter)
         result.push_back(tok);
     }
     return result;
+}
+
+void Eggs::layingEgg(std::string &msg)
+{
+    std::vector<std::string> tab = splitStr(msg, ' ');
+    int id = std::stoi(tab[1]);
+    for (auto &egg : _eggs) {
+        if (egg.getId() == id) {
+            egg.setIsLaying(true);
+            return;
+        }
+    }
+}
+
+void Eggs::newConnection(std::string &msg)
+{
+    std::vector<std::string> tab = splitStr(msg, ' ');
+    int id = std::stoi(tab[1]);
+    int x = std::stoi(tab[2]);
+    int y = std::stoi(tab[3]);
+    addEgg(x, y);
+}
+
+void Eggs::eggHatching(std::string &msg)
+{
+    std::vector<std::string> tab = splitStr(msg, ' ');
+    int id = std::stoi(tab[1]);
+    for (auto &egg : _eggs) {
+        if (egg.getId() == id) {
+            egg.setIsLaying(false);
+            return;
+        }
+    }
 }

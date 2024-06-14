@@ -19,6 +19,7 @@ public:
     Egg(int id, int x, int y);
     ~Egg() = default;
     bool getIsLaying() const { return _isLaying; }
+    void setIsLaying(bool isLaying) { _isLaying = isLaying; }
     int getId() const { return _id; }
     int _x;
     int _y;
@@ -36,16 +37,16 @@ public:
     void deleteEgg(int id);
     bool checkMsg(std::string &s);
     void renderEggs();
-    void layingEgg(int id);
-    void newConnection();
-    void displayEggs();
+    void layingEgg(std::string &msg);
+    void newConnection(std::string &msg);
+    void eggHatching(std::string &msg);
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
 
 private:
     std::vector<Egg> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);
     static std::vector<std::string> splitStr(const std::string &str, char delimiter);
-    std::string _eggTexturePath = "../../resources/Egg.png";
+    std::string _eggTexturePath = "./resources/Egg.png";
     sf::Texture _eggTexture;
     int _nbEggsCreated = 0;
 };
