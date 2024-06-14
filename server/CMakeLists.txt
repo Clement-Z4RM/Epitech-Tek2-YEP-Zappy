@@ -51,4 +51,5 @@ add_executable(zappy_server
         src/modules/clients_manager/clients_manager.c
         src/modules/resource/resource.h
         src/modules/client/client.h
-        src/modules/client/client.c)
+        src/modules/client/client.c
+        include/responses.h)

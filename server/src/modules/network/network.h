@@ -10,6 +10,7 @@
 #include "endpoint/endpoint.h"
 #include "sys/select.h"
 #include "clients_manager/clients_manager.h"
+#include "../include/responses.h"
 
 /**
 * @brief represent the network module
