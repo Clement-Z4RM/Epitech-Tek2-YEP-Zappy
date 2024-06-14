@@ -22,6 +22,10 @@ add_executable(zappy_gui
         player/Player.cpp
         connection/Sleep.hpp
         connection/Sleep.cpp
+        window/Modal.hpp
+        window/Modal.cpp
+        window/Text.hpp
+        window/Text.cpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
