@@ -54,7 +54,6 @@ void Eggs::deleteEgg(int id)
 
 void Eggs::addEgg(int id, int x, int y)
 {
-
     _eggs.push_back(Egg(id, x, y));
 }
 
@@ -68,3 +67,14 @@ void Eggs::renderEggs()
     }
 }
 
+std::vector<std::string> Eggs::splitStr(const std::string &str, char delimiter)
+{
+    std::vector<std::string> result;
+    std::stringstream ss(str);
+    std::string tok;
+
+    while (getline(ss, tok, delimiter)) {
+        result.push_back(tok);
+    }
+    return result;
+}
