@@ -23,10 +23,8 @@ typedef struct request_handler {
     void (*handler)(handler_data_t *);
 } request_handler_t;
 
-/** @brief  handle a request  **/
-extern void requests_manager_handle_request(
-    char *request,
-    client_t *client,
+/** @brief  handle clients requests  **/
+extern void requests_manager_handle_requests(
     client_manager_t *clients_manager
 );
 
