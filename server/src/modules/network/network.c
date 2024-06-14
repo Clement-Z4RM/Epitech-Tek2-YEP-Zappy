@@ -34,7 +34,7 @@ static bool network_accept_connexion(network_t *network)
     client = client_constructor(client_socket, &client_address);
     if (client == NULL)
         return false;
-    if (!clients_manager_add(network->clients_manager, client))
+    if (!clients_manager_add(network->clients_manager, client, NONE))
         return false;
     client_add_request(client, RQST_WELCOME, TO_SEND);
     log_network_client_connected_success(client);

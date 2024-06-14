@@ -16,6 +16,7 @@ bool clients_manager_add(client_manager_t *manager, client_t *client, const clie
     ai_client_node_t *new_ai_node = NULL;
     gui_client_node_t *new_gui_node = NULL;
 
+    client->type = type;
     if (type == NONE) {
         new_node = malloc(sizeof(client_node_t));
         if (new_node == NULL)

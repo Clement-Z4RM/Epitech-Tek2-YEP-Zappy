@@ -10,11 +10,15 @@
 #include <string.h>
 #include "../../include/utilities.h"
 
-static bool requests_manager_have_team_name(client_t *client)
+static bool requests_manager_have_team_name(client_t *client, client_manager_t *clients_manager)
 {
     if (client->team_name == NULL) {
         client->team_name = client->current_request_to_handle;
         client->current_request_to_handle = NULL;
+        if (strcmp(client->team_name, "GRAPHIC") == 0)
+            clients_manager_add(clients_manager, client, GUI);
+        else
+            clients_manager_add(clients_manager, client, AI);
         return false;
     }
     return true;
@@ -35,7 +39,7 @@ static void requests_manager_handle_request(client_t *client,
     handler_data_t handler_data = {client, args, clients_manager};
 
     remove_newline(client->current_request_to_handle);
-    if (requests_manager_have_team_name(client))
+    if (requests_manager_have_team_name(client, clients_manager))
         return;
     args = str_array_split(client->current_request_to_handle, " ");
     if (args == NULL || args[0] == NULL)
