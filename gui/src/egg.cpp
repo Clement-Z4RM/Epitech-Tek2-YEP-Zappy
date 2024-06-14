@@ -54,5 +54,17 @@ void Eggs::deleteEgg(int id)
 
 void Eggs::addEgg(int id, int x, int y)
 {
+
     _eggs.push_back(Egg(id, x, y));
 }
+
+void Eggs::renderEggs()
+{
+    for (auto &egg : _eggs) {
+        std::shared_ptr<sf::CircleShape> shape = std::make_shared<sf::CircleShape>(10);
+        shape->setFillColor(sf::Color::Yellow);
+        shape->setPosition(egg._x * 32 + 32, egg._y * 32 + 32);
+        _eggsShapes.push_back(shape);
+    }
+}
+

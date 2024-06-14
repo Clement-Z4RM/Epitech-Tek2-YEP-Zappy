@@ -10,6 +10,9 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <deque>
+#include <SFML/Graphics.hpp>
+#include <memory>
 
 class Egg {
 public:
@@ -29,8 +32,11 @@ public:
     void addEgg(int id, int x, int y);
     void deleteEgg(int id);
     bool checkMsg(std::string &s);
+    void renderEggs();
+    void displayEggs();
 
 private:
     std::vector<Egg> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);
+    std::deque<std::shared_ptr<sf::CircleShape>> _eggsShapes;
 };
