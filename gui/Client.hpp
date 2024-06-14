@@ -45,6 +45,7 @@ namespace gui {
         int _sfd;
         Parameters _param;
         std::deque<std::string> _map;
+        Eggs _eggs;
         bool _incompleteCase = false;
     };
 

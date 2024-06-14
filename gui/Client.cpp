@@ -155,12 +155,15 @@ namespace gui {
         std::deque<std::string> inventory;
 
         for (auto &i : _map) {
+            std::cout << "param her : " << i << std::endl;
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
             else if (i.find("pnw") != std::string::npos)
                 players.push_back(i);
             else if (i.find("pin") != std::string::npos)
                 inventory.push_back(i);
+            else if (_eggs.checkMsg(i))
+                continue;
             else
                 otherParam.push_back(i);
         }
