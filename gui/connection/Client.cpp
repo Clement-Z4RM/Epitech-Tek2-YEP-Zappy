@@ -149,7 +149,6 @@ namespace gui {
 
         _param._map.clear();
         for (auto &i : _map) {
-            std::cout << "param her : " << i << std::endl;
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
             else if (i.find("pnw") != std::string::npos)
