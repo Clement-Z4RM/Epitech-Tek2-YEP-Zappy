@@ -166,4 +166,5 @@ void Window::rendMap(Parameters &params)
         new_rect->setOutlineThickness(1);
         _map.push_back(new_rect);
     }
+    params._eggs.renderEggs();
 }
