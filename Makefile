@@ -6,32 +6,27 @@
 ##
 .ONESHELL:
 
-SRC :=	Main.cpp
+.ONESHELL:
 
-OBJ := $(SRC:.cpp=.o)
+BUILD_TYPE	=	Release
 
-NAME := zappy_ai
+SERVER_DIR	=	server
+SERVER_NAME	=	zappy_server
 
-CXX := g++
-CXXFLAGS := -Wall -Wextra -Werror -I./include -std=c++17
+all: $(SERVER_NAME)
 
-all: $(NAME)
-	cd gui
-	rm -rf build
-	mkdir build
-	cd build
-	cmake ..
-	make
-	cp ./zappy_gui ../../zappy_gui
-	cd ../../
+$(SERVER_NAME):
+	@mkdir -p $(SERVER_DIR)/build
+	@cd $(SERVER_DIR)/build
+	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+	@cmake --build .
+	@cd ../..
+	@mv $(SERVER_DIR)/$(SERVER_NAME) .
 
-$(NAME): $(OBJ)
-	$(CXX) -o $(NAME) $(OBJ)
+debug:
+	@$(MAKE) -s BUILD_TYPE=Debug
 
-clean:
-	rm -f $(OBJ)
+tests_run:
+	@echo "There is actually no tests to run for this project"
 
-fclean: clean
-	rm -f $(NAME)
-
-re: fclean all
+.PHONY:	all $(SERVER_NAME) debug tests_run

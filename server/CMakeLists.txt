@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.23)
+project(Zappy-Server)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+add_compile_options(-W -Wall -Wextra -Wpedantic -Werror)
+
+set(CMAKE_C_STANDARD 17)
+
+include_directories(include)
+include_directories(src/modules)
+
+add_executable(zappy_server
+        include/macros.h
+        include/utilities.h
+        include/zappy_server.h
+        src/main.c
+        src/zappy_server.c
+        src/utilities/numbers/str_to_num.c
+        src/utilities/numbers/str_to_port.c
+        src/utilities/signals/catch_signal.c
+        src/utilities/strings/str_array_split.c
+        src/modules/egg/egg.h
+        src/modules/options/options.h
+        src/modules/options/options.c
+        src/modules/options/usage.c
+        src/modules/options/parsers/usage.c
+        src/modules/options/parsers/world_height.c
+        src/modules/options/parsers/clients.c
+        src/modules/options/parsers/teams.c
+        src/modules/options/parsers/unknown.c
+        src/modules/options/parsers/frequency.c
+        src/modules/options/parsers/world_width.c
+        src/modules/options/parsers/port.c
+        src/modules/logs/logs.h
+        src/modules/logs/logs_colors.h
+        src/modules/logs/successes/network_logs.c
+        src/modules/logs/successes/logs_successes.h
+        src/modules/logs/failures/logs_failures.h
+        src/modules/player/player.h
+        src/modules/map/map.h
+        src/modules/map/map.c
+        src/modules/map/helpers/resource.c
+        src/modules/network/network.h
+        src/modules/network/network.c
+        src/modules/network/endpoint/endpoint.h
+        src/modules/network/endpoint/endpoint.c
+        src/modules/requests_manager/requests_manager.h
+        src/modules/requests_manager/requests_manager.c
+        src/modules/clients_manager/clients_manager.h
+        src/modules/clients_manager/clients_manager.c
+        src/modules/resource/resource.h
+        src/modules/client/client.h
+        src/modules/client/client.c)
