@@ -19,7 +19,6 @@ public:
     ~Modal();
 
     void display(sf::RenderWindow &window);
-    void close();
 
     void addText(const std::shared_ptr<sf::Text> &text);
 

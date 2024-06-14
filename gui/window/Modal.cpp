@@ -27,11 +27,6 @@ void Modal::display(sf::RenderWindow &window)
     }
 }
 
-void Modal::close()
-{
-    _texts.clear();
-}
-
 void Modal::addText(const std::shared_ptr<sf::Text> &text)
 {
     _texts.push_back(text);
