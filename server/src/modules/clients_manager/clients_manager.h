@@ -64,7 +64,11 @@ extern void clients_manager_destructor(client_manager_t *manager);
 * @param client the client to add
 * @param type the type of the client
 * **/
-extern bool clients_manager_add(client_manager_t *manager, client_t *client, const client_type_t type);
+extern bool clients_manager_add(
+    client_manager_t *manager,
+    client_t *client,
+    const client_type_t type
+);
 
 /**
 * @brief remove a client from the client manager's list

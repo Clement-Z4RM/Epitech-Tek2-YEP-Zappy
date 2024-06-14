@@ -10,11 +10,41 @@
 #include "sys/queue.h"
 #include "stdio.h"
 
-bool clients_manager_add(client_manager_t *manager, client_t *client, const client_type_t type)
+static bool clients_manager_add_ai(client_manager_t *manager, client_t *client)
+{
+    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
+
+    if (new_node == NULL)
+        return false;
+    new_node->client = client;
+    SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
+    manager->nb_ai_clients++;
+    return true;
+}
+
+static bool clients_manager_add_gui(
+    client_manager_t *manager,
+    client_t *client
+)
+{
+    gui_client_node_t *new_node = malloc(sizeof(gui_client_node_t));
+
+    if (new_node == NULL)
+        return false;
+    new_node->client = client;
+    SLIST_INSERT_HEAD(&manager->gui_clients_list, new_node, next);
+    manager->nb_gui_clients++;
+    return true;
+}
+
+bool clients_manager_add(
+    client_manager_t *manager,
+    client_t *client,
+    const client_type_t type
+)
 {
     client_node_t *new_node = NULL;
-    ai_client_node_t *new_ai_node = NULL;
-    gui_client_node_t *new_gui_node = NULL;
+    bool state = true;
 
     client->type = type;
     if (type == NONE) {
@@ -25,21 +55,11 @@ bool clients_manager_add(client_manager_t *manager, client_t *client, const clie
         SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
         manager->nb_clients++;
     } else if (type == AI) {
-        new_ai_node = malloc(sizeof(ai_client_node_t));
-        if (new_ai_node == NULL)
-            return false;
-        new_ai_node->client = client;
-        SLIST_INSERT_HEAD(&manager->ai_clients_list, new_ai_node, next);
-        manager->nb_ai_clients++;
+        state = clients_manager_add_ai(manager, client);
     } else {
-        new_gui_node = malloc(sizeof(gui_client_node_t));
-        if (new_gui_node == NULL)
-            return false;
-        new_gui_node->client = client;
-        SLIST_INSERT_HEAD(&manager->gui_clients_list, new_gui_node, next);
-        manager->nb_gui_clients++;
+        state = clients_manager_add_gui(manager, client);
     }
-    return true;
+    return state;
 }
 
 void clients_manager_remove(client_manager_t *manager, client_t *client)
@@ -79,7 +99,7 @@ client_manager_t *clients_manager_constructor(void)
 {
     client_manager_t *manager = malloc(sizeof(client_manager_t));
 
-    if (!manager)
+    if (manager == NULL)
         return NULL;
     SLIST_INIT(&manager->clients_list);
     manager->nb_clients = 0;

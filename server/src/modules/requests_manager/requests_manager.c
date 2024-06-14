@@ -9,8 +9,18 @@
 #include "stdlib.h"
 #include <string.h>
 #include "../../include/utilities.h"
+#include "../logs/failures/logs_failures.h"
 
-static bool requests_manager_have_team_name(client_t *client, client_manager_t *clients_manager)
+/**
+* @brief check if the client has a team name
+* @param client the client to check
+* @param clients_manager the clients manager
+* @return bool true if the client has a team name, false otherwise
+**/
+static bool requests_manager_have_team_name(
+    client_t *client,
+    client_manager_t *clients_manager
+)
 {
     if (client->team_name == NULL) {
         client->team_name = client->current_request_to_handle;
@@ -24,6 +34,11 @@ static bool requests_manager_have_team_name(client_t *client, client_manager_t *
     return true;
 }
 
+/**
+* @brief freeing memory of the currently handled request
+* @param args parsed args of the request
+* @param client the client that sent the request
+**/
 static void requests_manager_free_request_memory(char **args, client_t *client)
 {
     if (client->current_request_to_handle)
@@ -32,26 +47,67 @@ static void requests_manager_free_request_memory(char **args, client_t *client)
     free_double_tab(args);
 }
 
+static bool requests_manager_handle_gui_request(
+    char **args,
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    gui_handler_data_t handler_data = {client, args, clients_manager};
+
+    for (int i = 0; i < GUI_HANDLERS_COUNT; i++) {
+        if (gui_request_handlers[i].command_name == NULL)
+            continue;
+        if (strcmp(gui_request_handlers[i].command_name, args[0]) == 0) {
+            gui_request_handlers[i].handler(&handler_data);
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool requests_manager_handle_ai_request(
+    char **args,
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    ai_handler_data_t handler_data = {client, args, clients_manager};
+
+    for (int i = 0; i < AI_HANDLERS_COUNT; i++) {
+        if (ai_request_handlers[i].command_name == NULL)
+            continue;
+        if (strcmp(ai_request_handlers[i].command_name, args[0]) == 0) {
+            ai_request_handlers[i].handler(&handler_data);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+* @brief handle the request of the client
+* @param client the client that sent the request
+* @param clients_manager the clients manager
+**/
 static void requests_manager_handle_request(client_t *client,
     client_manager_t *clients_manager)
 {
     char **args = NULL;
-    handler_data_t handler_data = {client, args, clients_manager};
 
     remove_newline(client->current_request_to_handle);
-    if (requests_manager_have_team_name(client, clients_manager))
+    if (!requests_manager_have_team_name(client, clients_manager))
         return;
     args = str_array_split(client->current_request_to_handle, " ");
     if (args == NULL || args[0] == NULL)
         return;
-    for (int i = 0; i < HANDLERS_COUNT; i++) {
-        if (request_handlers[i].command_name == NULL)
-            continue;
-        if (strcmp(request_handlers[i].command_name, args[0]) == 0) {
-            request_handlers[i].handler(&handler_data);
-            break;
-        }
-    }
+    if (client->type == AI)
+        if (!requests_manager_handle_ai_request(args, client, clients_manager))
+            log_request_no_handler(client);
+    if (client->type == GUI)
+        if (!requests_manager_handle_gui_request(args,
+            client, clients_manager))
+            log_request_no_handler(client);
     requests_manager_free_request_memory(args, client);
 }
 
