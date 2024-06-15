@@ -24,7 +24,10 @@ bool Eggs::checkMsg(std::string &s)
     std::string str;
     ss >> str;
     if (startsWith(str, "enw")) {
-        addEgg(0, 0);
+        std::vector <std::string> tab = splitStr(s, ' ');
+        int x = std::stoi(tab[3]);
+        int y = std::stoi(tab[4]);
+        addEgg(x, y);
         return true;
     }
     if (startsWith(str, "edi")) {
