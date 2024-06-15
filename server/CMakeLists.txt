@@ -11,16 +11,38 @@ include_directories(include)
 include_directories(src/modules)
 
 add_executable(zappy_server
+        #region Global headers
         include/macros.h
         include/utilities.h
         include/zappy_server.h
+        include/responses.h
+        #endregion
+
+        #region Main files
         src/main.c
         src/zappy_server.c
+        #endregion
+
+        #region Utilities
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
-        src/utilities/signals/catch_signal.c
+        src/utilities/strings/remove_newline.c
         src/utilities/strings/str_array_split.c
-        src/modules/egg/egg.h
+        src/utilities/strings/free_double_tab.c
+        src/utilities/signals/catch_signal.c
+        #endregion
+
+        #region Modules
+        #region Logs module
+        src/modules/logs/logs.h
+        src/modules/logs/logs_colors.h
+        src/modules/logs/successes/logs_successes.h
+        src/modules/logs/successes/network_logs.c
+        src/modules/logs/failures/logs_failures.h
+        src/modules/logs/failures/request_logs.c
+        #endregion
+
+        #region Options module
         src/modules/options/options.h
         src/modules/options/options.c
         src/modules/options/usage.c
@@ -32,27 +54,46 @@ add_executable(zappy_server
         src/modules/options/parsers/frequency.c
         src/modules/options/parsers/world_width.c
         src/modules/options/parsers/port.c
-        src/modules/logs/logs.h
-        src/modules/logs/logs_colors.h
-        src/modules/logs/successes/network_logs.c
-        src/modules/logs/successes/logs_successes.h
-        src/modules/logs/failures/logs_failures.h
+        #endregion
+
+        #region Egg module
+        src/modules/egg/egg.h
+        #endregion
+
+        #region Player module
         src/modules/player/player.h
+        #endregion
+
+        #region Resource module
+        src/modules/resource/resource.h
+        #endregion
+
+        #region Map module
         src/modules/map/map.h
         src/modules/map/map.c
         src/modules/map/helpers/resource.c
+        #endregion
+
+        #region Network module
         src/modules/network/network.h
         src/modules/network/network.c
         src/modules/network/endpoint/endpoint.h
         src/modules/network/endpoint/endpoint.c
-        src/modules/requests_manager/requests_manager.h
-        src/modules/requests_manager/requests_manager.c
-        src/modules/clients_manager/clients_manager.h
-        src/modules/clients_manager/clients_manager.c
-        src/modules/resource/resource.h
+        #endregion
+
+        #region Client module
         src/modules/client/client.h
         src/modules/client/client.c
-        include/responses.h
-        src/utilities/strings/remove_newline.c
-        src/utilities/strings/free_double_tab.c
-        src/modules/logs/failures/request_logs.c)
+        #endregion
+
+        #region Clients manager module
+        src/modules/clients_manager/clients_manager.h
+        src/modules/clients_manager/clients_manager.c
+        #endregion
+
+        #region Requests manager module
+        src/modules/requests_manager/requests_manager.h
+        src/modules/requests_manager/requests_manager.c
+        #endregion
+        #endregion
+)
