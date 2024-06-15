@@ -14,4 +14,4 @@
 #define LOG_SUCCESS(...) printf(GREEN "[SUCCESS] " RESET __VA_ARGS__)
 
 /** @brief log a success message when a client is connected **/
-void log_network_client_connected_success(client_t *client);
+extern void log_network_client_connected_success(client_t *client);

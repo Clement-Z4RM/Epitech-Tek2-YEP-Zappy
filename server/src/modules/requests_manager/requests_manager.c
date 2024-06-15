@@ -9,31 +9,106 @@
 #include "stdlib.h"
 #include <string.h>
 #include "../../include/utilities.h"
+#include "../logs/failures/logs_failures.h"
 
-static char **requests_manager_parse_args(char *request)
+/**
+* @brief check if the client has a team name
+* @param client the client to check
+* @param clients_manager the clients manager
+* @return bool true if the client has a team name, false otherwise
+**/
+static bool requests_manager_have_team_name(
+    client_t *client,
+    client_manager_t *clients_manager
+)
 {
-    char **args = str_array_split(request, " ");
-
-    return args;
+    if (client->team_name == NULL) {
+        client->team_name = client->current_request_to_handle;
+        client->current_request_to_handle = NULL;
+        if (strcmp(client->team_name, "GRAPHIC") == 0)
+            clients_manager_add(clients_manager, client, GUI);
+        else
+            clients_manager_add(clients_manager, client, AI);
+        return false;
+    }
+    return true;
 }
 
-static void requests_manager_handle_request(char *request, client_t *client,
-    client_manager_t *clients_manager)
+/**
+* @brief freeing memory of the currently handled request
+* @param args parsed args of the request
+* @param client the client that sent the request
+**/
+static void requests_manager_free_request_memory(char **args, client_t *client)
 {
-    char **args = requests_manager_parse_args(request);
-    handler_data_t handler_data = {client, args, clients_manager};
+    if (client->current_request_to_handle)
+        free(client->current_request_to_handle);
+    client->current_request_to_handle = NULL;
+    free_double_tab(args);
+}
 
-    if (args == NULL || args[0] == NULL)
-        return;
-    for (int i = 0; i < HANDLERS_COUNT; i++) {
-        if (request_handlers[i].command_name == NULL)
+static bool requests_manager_handle_gui_request(
+    char **args,
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    gui_handler_data_t handler_data = {client, args, clients_manager};
+
+    for (int i = 0; i < GUI_HANDLERS_COUNT; i++) {
+        if (gui_request_handlers[i].command_name == NULL)
             continue;
-        if (strcmp(request_handlers[i].command_name, args[0]) == 0) {
-            request_handlers[i].handler(&handler_data);
-            break;
+        if (strcmp(gui_request_handlers[i].command_name, args[0]) == 0) {
+            gui_request_handlers[i].handler(&handler_data);
+            return true;
         }
     }
-    free(args);
+    return false;
+}
+
+static bool requests_manager_handle_ai_request(
+    char **args,
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    ai_handler_data_t handler_data = {client, args, clients_manager};
+
+    for (int i = 0; i < AI_HANDLERS_COUNT; i++) {
+        if (ai_request_handlers[i].command_name == NULL)
+            continue;
+        if (strcmp(ai_request_handlers[i].command_name, args[0]) == 0) {
+            ai_request_handlers[i].handler(&handler_data);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+* @brief handle the request of the client
+* @param client the client that sent the request
+* @param clients_manager the clients manager
+**/
+static void requests_manager_handle_request(client_t *client,
+    client_manager_t *clients_manager)
+{
+    char **args = NULL;
+
+    remove_newline(client->current_request_to_handle);
+    if (!requests_manager_have_team_name(client, clients_manager))
+        return;
+    args = str_array_split(client->current_request_to_handle, " ");
+    if (args == NULL || args[0] == NULL)
+        return;
+    if (client->type == AI)
+        if (!requests_manager_handle_ai_request(args, client, clients_manager))
+            log_request_no_handler(client);
+    if (client->type == GUI)
+        if (!requests_manager_handle_gui_request(args,
+            client, clients_manager))
+            log_request_no_handler(client);
+    requests_manager_free_request_memory(args, client);
 }
 
 void requests_manager_handle_requests(client_manager_t *clients_manager)
@@ -53,7 +128,6 @@ void requests_manager_handle_requests(client_manager_t *clients_manager)
             CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
                 current_request, next);
             requests_manager_handle_request(
-                current->client->current_request_to_handle,
                 current->client, clients_manager
             );
         }

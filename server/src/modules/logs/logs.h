@@ -8,3 +8,4 @@
 #pragma once
 
 #include "successes/logs_successes.h"
+#include "failures/logs_failures.h"

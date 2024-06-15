@@ -56,7 +56,7 @@ bool client_send_all_requests(client_t *client, fd_set *write_fds)
 {
     client_request_node_t *current = NULL;
 
-    if (!client || !write_fds)
+    if (client == NULL || write_fds == NULL)
         return false;
     while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
         current = CIRCLEQ_LAST(&client->requests_queue_to_send);
@@ -77,7 +77,7 @@ void client_add_request(client_t *client, char *request,
 {
     client_request_node_t *new_node = malloc(sizeof(client_request_node_t));
 
-    if (!new_node)
+    if (new_node == NULL)
         return;
     new_node->request = request;
     if (type == TO_HANDLE) {
@@ -102,7 +102,7 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
 {
     client_t *client = malloc(sizeof(client_t));
 
-    if (!client) {
+    if (client == NULL) {
         perror("malloc");
         return NULL;
     }
@@ -110,6 +110,9 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
     client->team_name = NULL;
     client->addr = addr;
     client->current_request_to_handle = NULL;
+    client->requests_queue_to_send_size = 0;
+    client->requests_queue_to_handle_size = 0;
+    client->type = NONE;
     CIRCLEQ_INIT(&client->requests_queue_to_send);
     CIRCLEQ_INIT(&client->requests_queue_to_handle);
     return client;
