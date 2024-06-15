@@ -8,8 +8,8 @@
 #include "network.h"
 #include <stdio.h>
 #include <string.h>
-#include "../requests_manager/requests_manager.h"
-#include "../logs/logs.h"
+#include "requests_manager/requests_manager.h"
+#include "logs/logs.h"
 
 /**
 * @brief accept a new client connection

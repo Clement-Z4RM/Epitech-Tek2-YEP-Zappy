@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../client/client.h"
+#include "client/client.h"
 #include "sys/queue.h"
 
 typedef struct ai_client_node_s {

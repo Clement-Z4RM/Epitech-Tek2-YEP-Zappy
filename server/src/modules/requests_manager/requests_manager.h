@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../clients_manager/clients_manager.h"
+#include "clients_manager/clients_manager.h"
 
 #define AI_HANDLERS_COUNT 1
 #define GUI_HANDLERS_COUNT 1

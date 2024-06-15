@@ -5,7 +5,7 @@
 ** logs for network
 */
 
-#include "../../client/client.h"
+#include "client/client.h"
 #include "logs_successes.h"
 #include "sys/socket.h"
 #include "netinet/in.h"

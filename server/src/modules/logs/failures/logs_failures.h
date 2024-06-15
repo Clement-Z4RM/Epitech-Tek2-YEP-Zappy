@@ -8,7 +8,7 @@
 #pragma once
 #include "../logs_colors.h"
 #include "stdio.h"
-#include "../../client/client.h"
+#include "client/client.h"
 
 /** @brief macro to print [SUCCESS] in green
  * directly before the rest of the log**/

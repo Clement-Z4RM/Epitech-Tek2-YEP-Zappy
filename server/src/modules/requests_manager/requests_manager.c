@@ -8,8 +8,8 @@
 #include "requests_manager.h"
 #include "stdlib.h"
 #include <string.h>
-#include "../../include/utilities.h"
-#include "../logs/failures/logs_failures.h"
+#include "utilities.h"
+#include "logs/failures/logs_failures.h"
 
 /**
 * @brief check if the client has a team name
