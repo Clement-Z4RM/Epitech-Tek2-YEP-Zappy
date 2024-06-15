@@ -36,10 +36,18 @@ $(GUI_NAME):
 debug:
 	@$(MAKE) -s BUILD_TYPE=Debug
 
+clean:
+	@rm -rf $(SERVER_DIR)/build
+	@rm -rf $(GUI_DIR)/build
+
+fclean:	clean
+	@rm -f $(SERVER_NAME)
+	@rm -f $(GUI_NAME)
+
 tests_run:
 	@echo "There is actually no tests to run for this project"
 
 robot: all
 	@lolcat ./robot.txt
 
-.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug tests_run robot
+.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug clean fclean tests_run robot
