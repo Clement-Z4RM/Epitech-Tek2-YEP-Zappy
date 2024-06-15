@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy_gui
 ** File description:
-** egg.hpp
+** egg file
 */
 
 #pragma once
