@@ -12,9 +12,9 @@
 #include <netinet/in.h>
 
 typedef enum client_type_e {
+    NONE = -1,
     AI,
-    GUI,
-    NONE
+    GUI
 } client_type_t;
 
 typedef enum client_queue_type_e {
