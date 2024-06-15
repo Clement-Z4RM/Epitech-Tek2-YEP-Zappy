@@ -55,11 +55,11 @@ static bool requests_manager_handle_gui_request(
 {
     gui_handler_data_t handler_data = {client, args, clients_manager};
 
-    for (int i = 0; i < GUI_HANDLERS_COUNT; i++) {
-        if (gui_request_handlers[i].command_name == NULL)
+    for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
+        if (GUI_HANDLERS[i].command_name == NULL)
             continue;
-        if (strcmp(gui_request_handlers[i].command_name, args[0]) == 0) {
-            gui_request_handlers[i].handler(&handler_data);
+        if (strcmp(GUI_HANDLERS[i].command_name, args[0]) == 0) {
+            GUI_HANDLERS[i].handler(&handler_data);
             return true;
         }
     }
@@ -74,11 +74,11 @@ static bool requests_manager_handle_ai_request(
 {
     ai_handler_data_t handler_data = {client, args, clients_manager};
 
-    for (int i = 0; i < AI_HANDLERS_COUNT; i++) {
-        if (ai_request_handlers[i].command_name == NULL)
+    for (size_t i = 0; i < AI_HANDLERS_COUNT; i++) {
+        if (AI_HANDLERS[i].command_name == NULL)
             continue;
-        if (strcmp(ai_request_handlers[i].command_name, args[0]) == 0) {
-            ai_request_handlers[i].handler(&handler_data);
+        if (strcmp(AI_HANDLERS[i].command_name, args[0]) == 0) {
+            AI_HANDLERS[i].handler(&handler_data);
             return true;
         }
     }
