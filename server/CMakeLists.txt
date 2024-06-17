@@ -23,12 +23,18 @@ add_executable(zappy_server
         src/zappy_server.c
         #endregion
 
+        #region Server module
+        src/modules/server/server.h
+        src/modules/server/server.c
+        #endregion
+
         #region Utilities
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
         src/utilities/strings/remove_newline.c
         src/utilities/strings/str_array_split.c
         src/utilities/strings/free_double_tab.c
+        src/utilities/time/mstime.c
         src/utilities/signals/catch_signal.c
         #endregion
 
@@ -38,8 +44,10 @@ add_executable(zappy_server
         src/modules/logs/logs_colors.h
         src/modules/logs/successes/logs_successes.h
         src/modules/logs/successes/network_successes_logs.c
+        src/modules/logs/successes/team_successes_logs.c
         src/modules/logs/failures/logs_failures.h
         src/modules/logs/failures/request_failures_logs.c
+        src/modules/logs/failures/team_failures_logs.c
         #endregion
 
         #region Options module
@@ -94,13 +102,19 @@ add_executable(zappy_server
         #region Requests manager module
         src/modules/requests_manager/requests_manager.h
         src/modules/requests_manager/requests_manager.c
+        #endregion
+
+        #region Commands module
         src/modules/commands/commands.h
-        src/modules/commands/gui/msz.c
-        src/modules/logs/failures/team_failures_logs.c
-        src/modules/logs/successes/team_successes_logs.c
         src/modules/commands/gui/gui_commands.h
+        src/modules/commands/gui/msz.c
         src/modules/commands/gui/bct.c
         src/modules/commands/gui/mct.c
+        #endregion
+
+        #region Updater module
+        src/modules/updater/updater.c
+        src/modules/updater/updater.h
         #endregion
         #endregion
 )

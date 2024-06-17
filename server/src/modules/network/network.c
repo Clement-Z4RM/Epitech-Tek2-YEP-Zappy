@@ -5,11 +5,13 @@
 ** Network module
 */
 
-#include "network.h"
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include "macros.h"
 #include "requests_manager/requests_manager.h"
 #include "logs/logs.h"
+#include "network.h"
 
 /**
 * @brief accept a new client connection
@@ -76,28 +78,27 @@ bool network_receive_requests(network_t *network)
     return true;
 }
 
-bool network_set_and_select_fds(network_t *network)
+int8_t network_set_and_select_fds(network_t *network)
 {
     struct client_node_s *current = NULL;
-    struct timeval timeout = {0};
+    struct timeval timeout = {0, 100};
 
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100;
     FD_ZERO(&network->read_fds);
     FD_ZERO(&network->write_fds);
     FD_SET(network->endpoint->socket, &network->read_fds);
-    SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
-    {
+    SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
         FD_SET(current->client->socket, &network->read_fds);
         FD_SET(current->client->socket, &network->write_fds);
     }
     if (select(FD_SETSIZE,
             &network->read_fds, &network->write_fds,
             NULL, &timeout) < 0) {
+        if (errno == EINTR)
+            return EINTR;
         perror("select");
-        return false;
+        return ERROR;
     }
-    return true;
+    return SUCCESS;
 }
 
 static void network_destructor(network_t *network)

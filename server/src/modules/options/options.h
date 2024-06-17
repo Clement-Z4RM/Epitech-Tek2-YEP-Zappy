@@ -131,7 +131,7 @@ static const option_parser_t OPTION_PARSERS[] = {
     ['y'] = {"world height", true, parse_world_height},
     ['n'] = {"team names", true, parse_teams},
     ['c'] = {"clients number", true, parse_clients},
-    ['f'] = {"frequency", true, parse_frequency}
+    ['f'] = {"frequency", false, parse_frequency}
 };
 //endregion
 

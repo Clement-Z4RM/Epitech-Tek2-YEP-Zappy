@@ -45,9 +45,10 @@ extern network_t *network_constructor(char *ip, options_t *options);
 * (endpoint) and the sockets of the clients
 * socket of the clients is set for both reading and writing
 * @param network the network to set and select the fds
-* @return bool true if the operation was successful, false otherwise (select)
+*
+* @return 0 on success, EINTR if interrupted, -1 otherwise (select error)
 **/
-extern bool network_set_and_select_fds(network_t *network);
+extern int8_t network_set_and_select_fds(network_t *network);
 
 /**
 * @brief receive requests from clients and handle it with the request_manager
