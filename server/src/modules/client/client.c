@@ -86,6 +86,8 @@ void client_add_request(client_t *client, char *request,
     } else if (type == TO_SEND) {
         CIRCLEQ_INSERT_HEAD(&client->requests_queue_to_send, new_node, next);
         client->requests_queue_to_send_size++;
+    } else {
+        free(new_node);
     }
 }
 
