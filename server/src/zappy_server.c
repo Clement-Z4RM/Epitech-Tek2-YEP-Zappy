@@ -29,7 +29,7 @@ int zappy_server(int argc, char *argv[])
     if (usage(options))
         return 0;
     srandom(time(NULL));
-    if (server_loop(options) == 84) {
+    if (server(options)) {
         options->destroy(options);
         return 84;
     }

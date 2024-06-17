@@ -11,6 +11,7 @@
 #include "network/network.h"
 #include "requests_manager/requests_manager.h"
 #include "map/map.h"
+#include "updater/updater.h"
 #include "logs/logs.h"
 #include "macros.h"
 #include "utilities.h"
@@ -44,52 +45,79 @@ static void sig_handler(UNUSED int signum)
  *
  * @param network The network structure to destroy.
  * @param map The map structure to destroy.
- * @param to_return The value to return.
- *
- * @return The value to return (`to_return`).
+ * @param updater The updater structure to destroy.
  */
-static int destroy(network_t *network, map_t *map, int to_return)
+static void destroy(
+    network_t *network,
+    map_t *map,
+    updater_t *updater
+)
 {
     if (network)
         network->destroy(network);
     if (map)
         map->destroy(map);
-    if (0 == to_return)
+    if (updater)
+        updater->destroy(updater);
+}
+
+/**
+ * @brief The Zappy server loop.
+ *
+ * @param network The network structure.
+ * @param map The map structure.
+ * @param updater The updater structure.
+ *
+ * @return true if the program ran successfully, false otherwise.
+ */
+static bool server_loop(network_t *network, UNUSED map_t *map, updater_t *updater)
+{
+    time_t start = 0; // TODO: update start when the game starts (issue #65)
+
+    for (time_t elapsed = 0; loop(false); elapsed = mstime(NULL) - start) {
+        switch (network_set_and_select_fds(network)) {
+            case ERROR:
+                return false;
+            case EINTR:
+                return true;
+        }
+        if (!network_receive_requests(network))
+            return false;
+        if (!network_send_requests(network))
+            return false;
+        requests_manager_handle_requests(network->clients_manager);
+        updater->update(updater, elapsed);
+    }
+    return true;
+}
+
+/**
+ * @brief The main function of the Zappy server.
+ * It initializes all the necessary structures and starts the server loop.
+ *
+ * @param options The options of the server.
+ *
+ * @return true if the program ran successfully, false otherwise.
+ */
+bool server(options_t *options)
+{
+    network_t *network = network_constructor("127.0.0.1", options);
+    map_t *map = create_map(options->world.x, options->world.y);
+    updater_t *updater = create_updater(network, map);
+    bool to_return;
+
+    if (!network || !map || !updater) {
+        destroy(network, map, updater);
+        LOG_FAILURE("Server stopped\n");
+        return false;
+    }
+    catch_signal(SIGINT, sig_handler);
+    catch_signal(SIGTERM, sig_handler);
+    to_return = server_loop(network, map, updater);
+    destroy(network, map, updater);
+    if (to_return)
         LOG_SUCCESS("Server stopped\n");
     else
         LOG_FAILURE("Server stopped\n");
     return to_return;
-}
-
-/**
- * @brief The main function of the Zappy server containing the server loop.
- *
- * @param options The options of the server.
- *
- * @return 0 if the program ran successfully, 84 otherwise.
- */
-int server_loop(options_t *options)
-{
-    network_t *network = network_constructor("127.0.0.1", options);
-    map_t *map = create_map(options->world.x, options->world.y);
-    time_t start = time(NULL);
-
-    if (!network || !map)
-        return destroy(network, map, 84);
-    catch_signal(SIGINT, sig_handler);
-    catch_signal(SIGTERM, sig_handler);
-    for (UNUSED time_t elapsed = 0; loop(false); elapsed = start - time(NULL)) {
-        switch (network_set_and_select_fds(network)) {
-            case ERROR:
-                return destroy(network, map, 84);
-            case EINTR:
-                return destroy(network, map, 0);
-        }
-        if (!network_receive_requests(network))
-            return destroy(network, map, 84);
-        if (!network_send_requests(network))
-            return destroy(network, map, 84);
-        requests_manager_handle_requests(network->clients_manager);
-    }
-    return destroy(network, map, 0);
 }

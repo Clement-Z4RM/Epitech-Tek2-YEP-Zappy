@@ -108,5 +108,12 @@ add_executable(zappy_server
         src/modules/commands/commands.h
         src/modules/commands/gui/msz.c
         #endregion
+
+        #region Updater module
+        src/modules/updater/updater.c
+        src/modules/updater/updater.h
+        #endregion
         #endregion
 )
+
+target_link_libraries(zappy_server PRIVATE m)

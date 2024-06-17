@@ -8,6 +8,6 @@
 #ifndef ZAPPY_SERVER_SERVER_H_
     #define ZAPPY_SERVER_SERVER_H_
 
-extern int server_loop(options_t *options);
+extern int server(options_t *options);
 
 #endif /* !ZAPPY_SERVER_SERVER_H_ */
