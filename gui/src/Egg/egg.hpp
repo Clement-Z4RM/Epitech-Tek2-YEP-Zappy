@@ -44,7 +44,7 @@ public:
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
 
 private:
-    std::vector<Egg> _eggs;
+    std::vector<std::shared_ptr<Egg>> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);
     static std::vector<std::string> splitStr(const std::string &str, char delimiter);
     std::string _eggTexturePath = "./resources/Egg.png";
