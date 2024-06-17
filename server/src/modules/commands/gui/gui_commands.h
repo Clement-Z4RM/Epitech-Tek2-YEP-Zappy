@@ -13,3 +13,4 @@
 #include "responses.h"
 
 extern void msz(gui_handler_data_t *data);
+extern void bct(gui_handler_data_t *data);

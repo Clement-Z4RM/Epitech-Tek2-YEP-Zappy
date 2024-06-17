@@ -31,8 +31,9 @@ static bool requests_manager_add_to_team(
     if (clients_manager_add_to_team(
         clients_manager,
         client,
-        client->team_name) == false)
+        client->team_name) == false) {
         return false;
+    }
     return clients_manager_add(clients_manager, client, AI);
 }
 
@@ -104,6 +105,27 @@ static void requests_manager_handle_request_on_client_type(
             log_failure_request_no_handler(client);
 }
 
+static bool requests_manager_client_have_team(
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    static uint64_t id_count = 0;
+
+    if (client->team_name == NULL) {
+        if (requests_manager_add_to_team(client, clients_manager) == false) {
+            log_failure_add_to_team(client, client->team_name);
+            client->team_name = NULL;
+            return false;
+        }
+        client->id = id_count;
+        id_count++;
+        log_success_add_to_team(client);
+        return false;
+    }
+    return true;
+}
+
 //TODO: handle errors correctly
 /**
 * @brief handle the request of the client
@@ -116,15 +138,8 @@ static void requests_manager_handle_request(client_t *client,
     char **args = NULL;
 
     remove_newline(client->current_request_to_handle);
-    if (client->team_name == NULL) {
-        if (requests_manager_add_to_team(client, clients_manager) == false) {
-            log_failure_add_to_team(client, client->team_name);
-            client->team_name = NULL;
-            return;
-        }
-        log_success_add_to_team(client);
+    if (!requests_manager_client_have_team(client, clients_manager))
         return;
-    }
     args = str_array_split(client->current_request_to_handle, " ");
     if (args == NULL || args[0] == NULL)
         return;
