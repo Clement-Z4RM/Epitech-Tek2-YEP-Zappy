@@ -106,7 +106,10 @@ add_executable(zappy_server
 
         #region Commands module
         src/modules/commands/commands.h
+        src/modules/commands/gui/gui_commands.h
         src/modules/commands/gui/msz.c
+        src/modules/commands/gui/bct.c
+        src/modules/commands/gui/mct.c
         #endregion
 
         #region Updater module
