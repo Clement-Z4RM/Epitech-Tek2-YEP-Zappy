@@ -115,5 +115,3 @@ add_executable(zappy_server
         #endregion
         #endregion
 )
-
-target_link_libraries(zappy_server PRIVATE m)

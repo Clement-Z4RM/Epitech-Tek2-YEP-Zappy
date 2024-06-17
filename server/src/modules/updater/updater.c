@@ -48,15 +48,14 @@ static void updater_destructor(updater_t *updater)
 updater_t *create_updater(network_t *network, map_t *map)
 {
     updater_t *updater = malloc(sizeof(updater_t));
-    double generation_interval;
 
     if (!updater)
         return NULL;
-    generation_interval = 20000 / (double)network->options->freq;
-    updater->generation_interval = (time_t)round(generation_interval);
+    updater->generation_interval = (time_t)(20000 / network->options->freq);
     if (0 == updater->generation_interval)
         updater->generation_interval = 1;
     updater->next_generation = updater->generation_interval;
+    printf("Generation interval: %ld\n", updater->generation_interval);
     updater->network = network;
     updater->map = map;
     updater->update = &update;
