@@ -66,6 +66,8 @@ typedef struct options_s {
     /** @brief  The team names. It's a linked list because we don't know
      * the number of teams when options are parsed */
     team_names_t teams;
+    /** @brief The number of teams */
+    u_int64_t team_count;
     /** @brief The number of authorized clients per team */
     ulong clients;
     /** @brief The frequency,
