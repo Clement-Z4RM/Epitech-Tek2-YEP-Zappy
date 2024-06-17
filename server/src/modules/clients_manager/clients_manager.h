@@ -6,12 +6,14 @@
 */
 
 #pragma once
+#include <sys/queue.h>
+#include "player/player.h"
 #include "client/client.h"
-#include "sys/queue.h"
 
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
+    player_t player;
     SLIST_ENTRY(ai_client_node_s) next;
 } ai_client_node_t;
 

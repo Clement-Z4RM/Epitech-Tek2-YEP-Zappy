@@ -11,7 +11,7 @@
     #include <sys/types.h>
     #include <stdbool.h>
     #include "egg/egg.h"
-    #include "player/player.h"
+    #include "clients_manager/clients_manager.h"
     #include "resource/resource.h"
 
 /**
@@ -38,7 +38,7 @@ typedef struct cell_s {
     /** @brief The eggs on the cell */
     eggs_t eggs;
     /** @brief The players on the cell */
-    players_t players;
+    ai_clients_list_t players;
     /** @brief The resources (foods and stones) on the cell */
     u_int64_t resources[RESOURCES_COUNT];
 

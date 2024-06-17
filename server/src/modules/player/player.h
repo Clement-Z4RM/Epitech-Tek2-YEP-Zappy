@@ -16,10 +16,10 @@
  * @brief The direction where the player is looking at
  */
 typedef enum player_direction_e {
-    PD_UP,
-    PD_DOWN,
-    PD_LEFT,
-    PD_RIGHT
+    PD_UP = 1, /* NORTH */
+    PD_RIGHT,  /* EAST */
+    PD_DOWN,   /* SOUTH */
+    PD_LEFT    /* WEST */
 } player_direction_t;
 
 /**
@@ -36,14 +36,6 @@ typedef struct player_s {
     player_direction_t direction;
     /** @brief The resources (foods and stones) in the player's inventory */
     u_int64_t resources[RESOURCES_COUNT];
-    /** @brief The next player in the list */
-    SLIST_ENTRY(player_s) next;
 } player_t;
-
-/**
- * @brief Players list
- */
-SLIST_HEAD(players_s, player_s);
-typedef struct players_s players_t;
 
 #endif /* !ZAPPY_SERVER_PLAYER_H_ */
