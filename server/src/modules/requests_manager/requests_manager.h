@@ -9,6 +9,7 @@
 
 #include <stddef.h>
 #include "clients_manager/clients_manager.h"
+#include "map/map.h"
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct ai_handler_data_s {
@@ -28,6 +29,7 @@ typedef struct gui_handler_data_s {
     client_t *client;
     char **args;
     client_manager_t *clients_manager;
+    map_t *map;
 } gui_handler_data_t;
 
 /** @brief represent a gui request handler  **/
@@ -38,7 +40,8 @@ typedef struct gui_request_handler_s {
 
 /** @brief  handle clients requests  **/
 extern void requests_manager_handle_requests(
-    client_manager_t *clients_manager
+    client_manager_t *clients_manager,
+    map_t *map
 );
 
 // TODO: Don't put null element at end of below lists

@@ -31,8 +31,9 @@ static bool requests_manager_add_to_team(
     if (clients_manager_add_to_team(
         clients_manager,
         client,
-        client->team_name) == false)
+        client->team_name) == false) {
         return false;
+    }
     return clients_manager_add(clients_manager, client, AI);
 }
 
@@ -52,10 +53,11 @@ static void requests_manager_free_request_memory(char **args, client_t *client)
 static bool requests_manager_handle_gui_request(
     char **args,
     client_t *client,
-    client_manager_t *clients_manager
+    client_manager_t *clients_manager,
+    map_t *map
 )
 {
-    gui_handler_data_t handler_data = {client, args, clients_manager};
+    gui_handler_data_t handler_data = {client, args, clients_manager, map};
 
     for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
         if (GUI_HANDLERS[i].command_name == NULL)
@@ -90,7 +92,8 @@ static bool requests_manager_handle_ai_request(
 static void requests_manager_handle_request_on_client_type(
     client_t *client,
     char **args,
-    client_manager_t *clients_manager
+    client_manager_t *clients_manager,
+    map_t *map
 )
 {
     if (client->type == AI)
@@ -98,8 +101,29 @@ static void requests_manager_handle_request_on_client_type(
             log_failure_request_no_handler(client);
     if (client->type == GUI)
         if (!requests_manager_handle_gui_request(args,
-            client, clients_manager))
+            client, clients_manager, map))
             log_failure_request_no_handler(client);
+}
+
+static bool requests_manager_client_have_team(
+    client_t *client,
+    client_manager_t *clients_manager
+)
+{
+    static uint64_t id_count = 0;
+
+    if (client->team_name == NULL) {
+        if (requests_manager_add_to_team(client, clients_manager) == false) {
+            log_failure_add_to_team(client, client->team_name);
+            client->team_name = NULL;
+            return false;
+        }
+        client->id = id_count;
+        id_count++;
+        log_success_add_to_team(client);
+        return false;
+    }
+    return true;
 }
 
 //TODO: handle errors correctly
@@ -109,30 +133,26 @@ static void requests_manager_handle_request_on_client_type(
 * @param clients_manager the clients manager
 **/
 static void requests_manager_handle_request(client_t *client,
-    client_manager_t *clients_manager)
+    client_manager_t *clients_manager, map_t *map)
 {
     char **args = NULL;
 
     remove_newline(client->current_request_to_handle);
-    if (client->team_name == NULL) {
-        if (requests_manager_add_to_team(client, clients_manager) == false) {
-            log_failure_add_to_team(client, client->team_name);
-            client->team_name = NULL;
-            return;
-        }
-        log_success_add_to_team(client);
+    if (!requests_manager_client_have_team(client, clients_manager))
         return;
-    }
     args = str_array_split(client->current_request_to_handle, " ");
     if (args == NULL || args[0] == NULL)
         return;
     requests_manager_handle_request_on_client_type(
-        client, args, clients_manager
+        client, args, clients_manager, map
     );
     requests_manager_free_request_memory(args, client);
 }
 
-void requests_manager_handle_requests(client_manager_t *clients_manager)
+void requests_manager_handle_requests(
+    client_manager_t *clients_manager,
+    map_t *map
+)
 {
     client_node_t *current = NULL;
     client_request_node_t *current_request = NULL;
@@ -149,7 +169,7 @@ void requests_manager_handle_requests(client_manager_t *clients_manager)
             CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
                 current_request, next);
             requests_manager_handle_request(
-                current->client, clients_manager
+                current->client, clients_manager, map
             );
         }
     }

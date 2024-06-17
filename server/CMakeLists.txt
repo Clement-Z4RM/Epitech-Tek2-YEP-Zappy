@@ -98,6 +98,9 @@ add_executable(zappy_server
         src/modules/commands/gui/msz.c
         src/modules/logs/failures/team_failures_logs.c
         src/modules/logs/successes/team_successes_logs.c
+        src/modules/commands/gui/gui_commands.h
+        src/modules/commands/gui/bct.c
+        src/modules/commands/gui/mct.c
         #endregion
         #endregion
 )
