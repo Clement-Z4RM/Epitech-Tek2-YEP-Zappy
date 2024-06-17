@@ -37,8 +37,6 @@ static void updater_destructor(updater_t *updater)
     free(updater);
 }
 
-#include <unistd.h>
-
 /**
  * @brief Initialize the updater structure.
  *

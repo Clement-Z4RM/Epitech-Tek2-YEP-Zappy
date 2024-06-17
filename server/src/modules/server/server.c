@@ -70,7 +70,8 @@ static void destroy(
  *
  * @return true if the program ran successfully, false otherwise.
  */
-static bool server_loop(network_t *network, UNUSED map_t *map, updater_t *updater)
+static bool server_loop(network_t *network, UNUSED map_t *map,
+    updater_t *updater)
 {
     time_t start = 0; // TODO: update start when the game starts (issue #65)
 
