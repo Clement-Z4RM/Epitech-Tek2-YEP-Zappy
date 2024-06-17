@@ -10,6 +10,7 @@
 
     #include <sys/types.h>
     #include <sys/queue.h>
+    #include "resource/resource.h"
 
 /**
  * @brief The direction where the player is looking at
@@ -33,6 +34,8 @@ typedef struct player_s {
     u_int64_t life_span;
     /** @brief The direction where the player is looking at */
     player_direction_t direction;
+    /** @brief The resources (foods and stones) in the player's inventory */
+    u_int64_t resources[RESOURCES_COUNT];
     /** @brief The next player in the list */
     SLIST_ENTRY(player_s) next;
 } player_t;
