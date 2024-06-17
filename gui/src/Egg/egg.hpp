@@ -16,7 +16,7 @@
 
 class Egg {
 public:
-    Egg(int id, int x, int y);
+    Egg(int id, int team, int x, int y);
     ~Egg() = default;
     bool getIsLaying() const { return _isLaying; }
     void setIsLaying(bool isLaying) { _isLaying = isLaying; }
@@ -27,13 +27,14 @@ public:
 private:
     bool _isLaying = false;
     int _id;
+    int _team;
 };
 
 class Eggs {
 public:
     Eggs();
     ~Eggs() = default;
-    void addEgg(int x, int y);
+    void addEgg(int id,int team, int x, int y);
     void deleteEgg(int id);
     bool checkMsg(std::string &s);
     void renderEggs();
