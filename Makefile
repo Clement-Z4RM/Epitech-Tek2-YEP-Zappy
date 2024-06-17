@@ -47,7 +47,9 @@ fclean:	clean
 tests_run:
 	@echo "There is actually no tests to run for this project"
 
+re:	fclean all
+
 robot: all
 	@lolcat ./robot.txt
 
-.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug clean fclean tests_run robot
+.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug clean fclean tests_run re robot
