@@ -52,10 +52,11 @@ static void requests_manager_free_request_memory(char **args, client_t *client)
 static bool requests_manager_handle_gui_request(
     char **args,
     client_t *client,
-    client_manager_t *clients_manager
+    client_manager_t *clients_manager,
+    map_t *map
 )
 {
-    gui_handler_data_t handler_data = {client, args, clients_manager};
+    gui_handler_data_t handler_data = {client, args, clients_manager, map};
 
     for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
         if (GUI_HANDLERS[i].command_name == NULL)
@@ -90,7 +91,8 @@ static bool requests_manager_handle_ai_request(
 static void requests_manager_handle_request_on_client_type(
     client_t *client,
     char **args,
-    client_manager_t *clients_manager
+    client_manager_t *clients_manager,
+    map_t *map
 )
 {
     if (client->type == AI)
@@ -98,7 +100,7 @@ static void requests_manager_handle_request_on_client_type(
             log_failure_request_no_handler(client);
     if (client->type == GUI)
         if (!requests_manager_handle_gui_request(args,
-            client, clients_manager))
+            client, clients_manager, map))
             log_failure_request_no_handler(client);
 }
 
@@ -109,7 +111,7 @@ static void requests_manager_handle_request_on_client_type(
 * @param clients_manager the clients manager
 **/
 static void requests_manager_handle_request(client_t *client,
-    client_manager_t *clients_manager)
+    client_manager_t *clients_manager, map_t *map)
 {
     char **args = NULL;
 
@@ -127,12 +129,15 @@ static void requests_manager_handle_request(client_t *client,
     if (args == NULL || args[0] == NULL)
         return;
     requests_manager_handle_request_on_client_type(
-        client, args, clients_manager
+        client, args, clients_manager, map
     );
     requests_manager_free_request_memory(args, client);
 }
 
-void requests_manager_handle_requests(client_manager_t *clients_manager)
+void requests_manager_handle_requests(
+    client_manager_t *clients_manager,
+    map_t *map
+)
 {
     client_node_t *current = NULL;
     client_request_node_t *current_request = NULL;
@@ -149,7 +154,7 @@ void requests_manager_handle_requests(client_manager_t *clients_manager)
             CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
                 current_request, next);
             requests_manager_handle_request(
-                current->client, clients_manager
+                current->client, clients_manager, map
             );
         }
     }
