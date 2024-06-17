@@ -166,7 +166,7 @@ void clients_manager_destructor(client_manager_t *manager)
     free(manager);
 }
 
-client_manager_t *clients_manager_constructor(int max_clients_per_team)
+client_manager_t *clients_manager_constructor(ulong max_clients_per_team)
 {
     client_manager_t *manager = malloc(sizeof(client_manager_t));
 

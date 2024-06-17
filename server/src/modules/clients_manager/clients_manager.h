@@ -42,7 +42,7 @@ typedef struct clients_list_s clients_list_t;
 typedef struct team_node_s {
     char *name;
     ai_clients_list_t *ai_clients;
-    int nb_clients;
+    ulong nb_clients;
     SLIST_ENTRY(team_node_s) next;
 } team_node_t;
 
@@ -63,14 +63,14 @@ typedef struct clients_manager_s {
     team_list_t team_list; ///< the list of teams
     int nb_teams; ///< actual number of teams
 
-    int max_clients_per_team; ///< the maximum number of clients per team
+    ulong max_clients_per_team; ///< the maximum number of clients per team
 } client_manager_t;
 
 /**
 * @brief create a new instance of the client_manager module
 * @return client_manager_t the newly allocated instance
 * **/
-client_manager_t *clients_manager_constructor(int max_clients_per_team);
+client_manager_t *clients_manager_constructor(ulong max_clients_per_team);
 
 /**
  * @brief destroy a client manager instance and all its clients
