@@ -70,8 +70,7 @@ static void destroy(
  *
  * @return true if the program ran successfully, false otherwise.
  */
-static bool server_loop(network_t *network, UNUSED map_t *map,
-    updater_t *updater)
+static bool server_loop(network_t *network, map_t *map, updater_t *updater)
 {
     time_t start = 0; // TODO: update start when the game starts (issue #65)
 
@@ -86,7 +85,7 @@ static bool server_loop(network_t *network, UNUSED map_t *map,
             return false;
         if (!network_send_requests(network))
             return false;
-        requests_manager_handle_requests(network->clients_manager);
+        requests_manager_handle_requests(network->clients_manager, map);
         updater->update(updater, elapsed);
     }
     return true;
