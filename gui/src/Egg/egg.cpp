@@ -57,7 +57,6 @@ void Eggs::deleteEgg(int id)
     std::vector<std::shared_ptr<Egg>> tmp;
     for (auto egg : _eggs) {
         if (egg->getId() == id) {
-            std::cout << "Egg deleted" << std::endl;
             continue;
         }
         tmp.push_back(egg);
