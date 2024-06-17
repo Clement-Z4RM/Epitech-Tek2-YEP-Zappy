@@ -37,7 +37,7 @@ static bool network_accept_connexion(network_t *network)
     if (!clients_manager_add(network->clients_manager, client, NONE))
         return false;
     client_add_request(client, RQST_WELCOME, TO_SEND);
-    log_network_client_connected_success(client);
+    log_success_network_client_connected(client);
     return true;
 }
 
@@ -109,7 +109,7 @@ static void network_destructor(network_t *network)
     free(network);
 }
 
-network_t *network_constructor(char *ip, int port)
+network_t *network_constructor(char *ip, options_t *options)
 {
     network_t *network = malloc(sizeof(network_t));
 
@@ -117,16 +117,17 @@ network_t *network_constructor(char *ip, int port)
         perror("malloc");
         return NULL;
     }
-    network->endpoint = endpoint_constructor(ip, port, SERVER);
+    network->endpoint = endpoint_constructor(ip, options->port, SERVER);
     if (network->endpoint == NULL) {
         free(network);
         return NULL;
     }
-    network->clients_manager = clients_manager_constructor();
+    network->clients_manager = clients_manager_constructor(options->clients);
     if (network->clients_manager == NULL) {
         network_destructor(network);
         return NULL;
     }
+    network->options = options;
     network->destroy = &network_destructor;
     return network;
 }

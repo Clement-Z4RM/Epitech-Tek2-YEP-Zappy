@@ -11,6 +11,7 @@
 #include "sys/select.h"
 #include "clients_manager/clients_manager.h"
 #include "responses.h"
+#include "../options/options.h"
 
 /**
 * @brief represent the network module
@@ -23,6 +24,7 @@ typedef struct network_s {
     fd_set read_fds; ///< the file descriptor set for reading
     fd_set write_fds; ///< the file descriptor set for writing
     client_manager_t *clients_manager; //< the clients manager
+    options_t *options;
     void (*destroy)(struct network_s *network); ///< the destructor
 } network_t;
 
@@ -30,9 +32,10 @@ typedef struct network_s {
 * @brief create a new instance of the network module
 * @param ip the ip of the network server
 * @param port the port of the network server
+* @param options the options of the server
 * @return network_t the newly allocated instance
 **/
-extern network_t *network_constructor(char *ip, int port);
+extern network_t *network_constructor(char *ip, options_t *options);
 
 /**
 * @brief set the file descriptors and select them
