@@ -29,12 +29,6 @@ typedef struct cell_s {
     /** @brief The cell's left neighbor */
     struct cell_s *left;
 
-    // TODO: are x & y useful?
-    /** @brief The cell's x position */
-    u_int64_t x;
-    /** @brief The cell's y position */
-    u_int64_t y;
-
     /** @brief The eggs on the cell */
     eggs_t eggs;
     /** @brief The players on the cell */

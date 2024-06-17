@@ -83,8 +83,6 @@ static void link_cells(map_t *map)
     for (size_t y = 0; y < map->y; ++y)
         for (size_t x = 0; x < map->x; ++x) {
             cell = &map->cells[y][x];
-            cell->x = x;
-            cell->y = y;
             SLIST_INIT(&cell->players);
             SLIST_INIT(&cell->eggs);
             memset(&cell->resources, 0, sizeof(cell->resources));
