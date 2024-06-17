@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "map.h"
 
 static void destroy_cell_elements(cell_t *cell)
@@ -21,11 +22,6 @@ static void destroy_cell_elements(cell_t *cell)
     while (!SLIST_EMPTY(&cell->eggs)) {
         tmp = SLIST_FIRST(&cell->eggs);
         SLIST_REMOVE_HEAD(&cell->eggs, next);
-        free(tmp);
-    }
-    while (!SLIST_EMPTY(&cell->resources)) {
-        tmp = SLIST_FIRST(&cell->resources);
-        SLIST_REMOVE_HEAD(&cell->resources, next);
         free(tmp);
     }
 }
@@ -82,13 +78,16 @@ static void link_cell(map_t *map, size_t y, size_t x)
  */
 static void link_cells(map_t *map)
 {
+    cell_t *cell;
+
     for (size_t y = 0; y < map->y; ++y)
         for (size_t x = 0; x < map->x; ++x) {
-            map->cells[y][x].x = x;
-            map->cells[y][x].y = y;
-            SLIST_INIT(&map->cells[y][x].players);
-            SLIST_INIT(&map->cells[y][x].eggs);
-            SLIST_INIT(&map->cells[y][x].resources);
+            cell = &map->cells[y][x];
+            cell->x = x;
+            cell->y = y;
+            SLIST_INIT(&cell->players);
+            SLIST_INIT(&cell->eggs);
+            memset(&cell->resources, 0, sizeof(cell->resources));
             link_cell(map, y, x);
         }
 }

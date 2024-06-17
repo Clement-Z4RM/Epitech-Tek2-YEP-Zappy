@@ -36,31 +36,25 @@ typedef enum resource_name_e {
  * @brief Resource structure
  */
 typedef struct resource_s {
-    /** @brief The type of the resource */
-    resource_type_t type;
     /** @brief The name of the resource */
     resource_name_t name;
-    /** @brief The next resource in the list */
-    SLIST_ENTRY(resource_s) next;
+    /** @brief The type of the resource */
+    resource_type_t type;
+    /** @brief The density of the resource */
+    float density;
 } resource_t;
-
-/**
- * @brief Resources list
- */
-SLIST_HEAD(resources_s, resource_s);
-typedef struct resources_s resources_t;
 
 /**
  * @brief The density of each resource
  */
-static const float RESOURCE_DENSITIES[] = {
-    [RN_FOOD] = 0.5f,
-    [RN_LINEMATE] = 0.3f,
-    [RN_DERAUMERE] = 0.15f,
-    [RN_SIBUR] = 0.1f,
-    [RN_MENDIANE] = 0.1f,
-    [RN_PHIRAS] = 0.08f,
-    [RN_THYSTAME] = 0.05f
+static const resource_t RESOURCES[] = {
+    [RN_FOOD] = {RN_FOOD, RT_FOOD, 0.5f},
+    [RN_LINEMATE] = {RN_LINEMATE, RT_STONE, 0.3f},
+    [RN_DERAUMERE] = {RN_DERAUMERE, RT_STONE, 0.15f},
+    [RN_SIBUR] = {RN_SIBUR, RT_STONE, 0.1f},
+    [RN_MENDIANE] = {RN_MENDIANE, RT_STONE, 0.1f},
+    [RN_PHIRAS] = {RN_PHIRAS, RT_STONE, 0.08f},
+    [RN_THYSTAME] = {RN_THYSTAME, RT_STONE, 0.05f}
 };
 
 #endif /* !ZAPPY_SERVER_RESOURCE_H_ */

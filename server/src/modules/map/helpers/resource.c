@@ -28,42 +28,12 @@ static void compute_resource_quantities(map_t *map)
 
     map->resources.quantities[RESOURCES_COUNT] = 0;
     for (; resource < RESOURCES_COUNT; ++resource) {
-        quantity = (float)map_area * RESOURCE_DENSITIES[resource];
+        quantity = (float)map_area * RESOURCES[resource].density;
         if (quantity < 1)
             quantity = 1;
         map->resources.quantities[resource] = (size_t)quantity;
         map->resources.quantities[RESOURCES_COUNT] += (size_t)quantity;
     }
-}
-
-/**
- * @brief Generate a resource on the map, and store it in a random cell.
- *
- * @param map The map where the resource is generated.
- * @param resource The resource to generate.
- *
- * @return true if the resource was successfully generated,
- * false otherwise (allocation error).
- */
-static bool generate_resource(map_t *map, resource_name_t resource)
-{
-    size_t x;
-    size_t y;
-    resource_t *new_resource;
-
-    for (size_t i = 0; i < map->resources.quantities[resource]; ++i) {
-        x = random() % map->x;
-        y = random() % map->y;
-        new_resource = malloc(sizeof(resource_t));
-        if (!new_resource) {
-            perror("malloc");
-            return false;
-        }
-        new_resource->name = resource;
-        new_resource->type = (resource == RN_FOOD ? RT_FOOD : RT_STONE);
-        SLIST_INSERT_HEAD(&map->cells[y][x].resources, new_resource, next);
-    }
-    return true;
 }
 
 /**
@@ -73,18 +43,18 @@ static bool generate_resource(map_t *map, resource_name_t resource)
  * and every 20 time units (once at least an AI is connected).
  *
  * @param map The map where the resources are generated.
- *
- * @return true if the resources were successfully generated,
- * false otherwise (allocation error).
  */
-static bool generate_resources(map_t *map)
+static void generate_resources(map_t *map)
 {
+    size_t x;
+    size_t y;
+
     for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
-        if (!generate_resource(map, resource)) {
-            map->destroy(map);
-            return false;
+        for (size_t i = 0; i < map->resources.quantities[resource]; ++i) {
+            x = random() % map->x;
+            y = random() % map->y;
+            ++map->cells[y][x].resources[resource];
         }
-    return true;
 }
 
 /**
