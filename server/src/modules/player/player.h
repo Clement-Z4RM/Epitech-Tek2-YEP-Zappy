@@ -22,6 +22,11 @@ typedef enum player_direction_e {
     PD_LEFT    /* WEST */
 } player_direction_t;
 
+typedef enum player_rotation_e {
+    PR_LEFT = -1,
+    PR_RIGHT = 1
+} player_rotation_t;
+
 /**
  * @brief Player structure.
  * A player (also called a client ; or a Trantorian, an inhabitant of Trantor,
@@ -32,8 +37,15 @@ typedef struct player_s {
     /** @brief The amount of time (in time units)
      * the player can still stay alive. If it reaches 0, the player dies */
     u_int64_t life_span;
+
+    /** @brief The player's x position on the map */
+    u_int64_t x;
+    /** @brief The player's y position on the map */
+    u_int64_t y;
+
     /** @brief The direction where the player is looking at */
     player_direction_t direction;
+
     /** @brief The resources (foods and stones) in the player's inventory */
     u_int64_t resources[RESOURCES_COUNT];
 } player_t;
