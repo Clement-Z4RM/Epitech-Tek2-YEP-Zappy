@@ -19,15 +19,16 @@ bool Eggs::startsWith(const std::string &str, const std::string &prefix)
 
 bool Eggs::checkMsg(std::string &s)
 {
-    std::cout << s << std::endl;
     std::stringstream ss(s);
     std::string str;
     ss >> str;
     if (startsWith(str, "enw")) {
         std::vector <std::string> tab = splitStr(s, ' ');
+        int id = std::stoi(tab[1]);
+        int team = std::stoi(tab[2]);
         int x = std::stoi(tab[3]);
         int y = std::stoi(tab[4]);
-        addEgg(x, y);
+        addEgg(id, team, x, y);
         return true;
     }
     if (startsWith(str, "edi")) {
@@ -49,29 +50,33 @@ bool Eggs::checkMsg(std::string &s)
     return false;
 }
 
-Egg::Egg(int id, int x, int y) : _id(id), _x(x), _y(y) {}
+Egg::Egg(int id, int team, int x, int y) : _id(id), _x(x), _y(y), _team(team) {}
 
 void Eggs::deleteEgg(int id)
 {
-    for (auto egg = _eggs.begin(); egg != _eggs.end(); egg++) {
+    std::vector<std::shared_ptr<Egg>> tmp;
+    for (auto egg : _eggs) {
         if (egg->getId() == id) {
-            _eggs.erase(egg);
-            return;
+            continue;
         }
+        tmp.push_back(egg);
     }
+    _eggs = tmp;
 }
 
-void Eggs::addEgg(int x, int y)
+void Eggs::addEgg(int id,int team, int x, int y)
 {
-    _eggs.push_back(Egg(_nbEggsCreated, x, y));
+    std::shared_ptr<Egg> new_egg = std::make_shared<Egg>(id, team, x, y);
+    _eggs.push_back(new_egg);
     _nbEggsCreated++;
 }
 
 void Eggs::renderEggs()
 {
+    _eggsShapes.clear();
     for (auto &egg : _eggs) {
         std::shared_ptr<sf::Sprite> shape = std::make_shared<sf::Sprite>();
-        shape->setPosition(egg._x * 32 + 32, egg._y * 32 + 32);
+        shape->setPosition(egg->_x * 32 + 32, egg->_y * 32 + 32);
         shape->setTexture(_eggTexture);
         _eggsShapes.push_back(shape);
     }
@@ -94,8 +99,8 @@ void Eggs::layingEgg(std::string &msg)
     std::vector<std::string> tab = splitStr(msg, ' ');
     int id = std::stoi(tab[1]);
     for (auto &egg : _eggs) {
-        if (egg.getId() == id) {
-            egg.setIsLaying(true);
+        if (egg->getId() == id) {
+            egg->setIsLaying(true);
             return;
         }
     }
@@ -105,9 +110,12 @@ void Eggs::newConnection(std::string &msg)
 {
     std::vector<std::string> tab = splitStr(msg, ' ');
     int id = std::stoi(tab[1]);
-    int x = std::stoi(tab[2]);
-    int y = std::stoi(tab[3]);
-    addEgg(x, y);
+    for (auto &egg : _eggs) {
+        if (egg->getId() == id) {
+            this->deleteEgg(id);
+            return;
+        }
+    }
 }
 
 void Eggs::eggHatching(std::string &msg)
@@ -115,8 +123,8 @@ void Eggs::eggHatching(std::string &msg)
     std::vector<std::string> tab = splitStr(msg, ' ');
     int id = std::stoi(tab[1]);
     for (auto &egg : _eggs) {
-        if (egg.getId() == id) {
-            egg.setIsLaying(false);
+        if (egg->getId() == id) {
+            egg->setIsLaying(false);
             return;
         }
     }

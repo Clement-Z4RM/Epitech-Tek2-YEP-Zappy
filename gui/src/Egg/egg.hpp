@@ -16,7 +16,7 @@
 
 class Egg {
 public:
-    Egg(int id, int x, int y);
+    Egg(int id, int team, int x, int y);
     ~Egg() = default;
     bool getIsLaying() const { return _isLaying; }
     void setIsLaying(bool isLaying) { _isLaying = isLaying; }
@@ -27,13 +27,14 @@ public:
 private:
     bool _isLaying = false;
     int _id;
+    int _team;
 };
 
 class Eggs {
 public:
     Eggs();
     ~Eggs() = default;
-    void addEgg(int x, int y);
+    void addEgg(int id,int team, int x, int y);
     void deleteEgg(int id);
     bool checkMsg(std::string &s);
     void renderEggs();
@@ -43,7 +44,7 @@ public:
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
 
 private:
-    std::vector<Egg> _eggs;
+    std::vector<std::shared_ptr<Egg>> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);
     static std::vector<std::string> splitStr(const std::string &str, char delimiter);
     std::string _eggTexturePath = "./resources/Egg.png";

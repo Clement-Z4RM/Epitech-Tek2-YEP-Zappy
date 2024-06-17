@@ -188,9 +188,6 @@ namespace gui {
                 }
             }
         }
-        for (auto &param : otherParam) {
-            std::cout << param << std::endl;
-        }
     }
 
     void Client::clearData()
