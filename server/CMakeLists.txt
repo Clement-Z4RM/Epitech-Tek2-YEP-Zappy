@@ -23,6 +23,11 @@ add_executable(zappy_server
         src/zappy_server.c
         #endregion
 
+        #region Server module
+        src/modules/server/server.h
+        src/modules/server/server.c
+        #endregion
+
         #region Utilities
         src/utilities/numbers/str_to_num.c
         src/utilities/numbers/str_to_port.c
@@ -38,8 +43,10 @@ add_executable(zappy_server
         src/modules/logs/logs_colors.h
         src/modules/logs/successes/logs_successes.h
         src/modules/logs/successes/network_successes_logs.c
+        src/modules/logs/successes/team_successes_logs.c
         src/modules/logs/failures/logs_failures.h
         src/modules/logs/failures/request_failures_logs.c
+        src/modules/logs/failures/team_failures_logs.c
         #endregion
 
         #region Options module
@@ -94,10 +101,11 @@ add_executable(zappy_server
         #region Requests manager module
         src/modules/requests_manager/requests_manager.h
         src/modules/requests_manager/requests_manager.c
+        #endregion
+
+        #region Commands module
         src/modules/commands/commands.h
         src/modules/commands/gui/msz.c
-        src/modules/logs/failures/team_failures_logs.c
-        src/modules/logs/successes/team_successes_logs.c
         #endregion
         #endregion
 )
