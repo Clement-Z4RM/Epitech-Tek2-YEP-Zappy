@@ -6,13 +6,12 @@
 */
 
 #include "logs_failures.h"
-#include "sys/socket.h"
 #include "netinet/in.h"
 #include "arpa/inet.h"
 
 /** @brief log a failure message when a client request dosn't have handler
     @param client the client that sent the request **/
-void log_request_no_handler(const client_t *client)
+void log_failure_request_no_handler(const client_t *client)
 {
     char *ip = inet_ntoa(client->addr->sin_addr);
     int port = ntohs(client->addr->sin_port);

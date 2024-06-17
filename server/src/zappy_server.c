@@ -43,7 +43,7 @@ static int destroy(network_t *network, map_t *map, int to_return)
 
 static int server_loop(options_t *options)
 {
-    network_t *network = network_constructor("127.0.0.1", options->port);
+    network_t *network = network_constructor("127.0.0.1", options);
     map_t *map = create_map(options->world.x, options->world.y);
 
     if (!network || !map)

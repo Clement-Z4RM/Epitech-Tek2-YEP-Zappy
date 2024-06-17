@@ -37,9 +37,9 @@ add_executable(zappy_server
         src/modules/logs/logs.h
         src/modules/logs/logs_colors.h
         src/modules/logs/successes/logs_successes.h
-        src/modules/logs/successes/network_logs.c
+        src/modules/logs/successes/network_successes_logs.c
         src/modules/logs/failures/logs_failures.h
-        src/modules/logs/failures/request_logs.c
+        src/modules/logs/failures/request_failures_logs.c
         #endregion
 
         #region Options module
@@ -94,6 +94,10 @@ add_executable(zappy_server
         #region Requests manager module
         src/modules/requests_manager/requests_manager.h
         src/modules/requests_manager/requests_manager.c
+        src/modules/commands/commands.h
+        src/modules/commands/gui/msz.c
+        src/modules/logs/failures/team_failures_logs.c
+        src/modules/logs/successes/team_successes_logs.c
         #endregion
         #endregion
 )
