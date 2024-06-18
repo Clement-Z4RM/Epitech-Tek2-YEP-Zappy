@@ -108,6 +108,7 @@ static bool clients_manager_add_gui(
     return true;
 }
 
+//TODO: exit here or return to main routine exiting if malloc failed ?
 bool clients_manager_add(
     client_manager_t *manager,
     client_t *client,
