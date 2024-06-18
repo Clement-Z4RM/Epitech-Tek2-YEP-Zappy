@@ -75,6 +75,7 @@ static bool server_loop(network_t *network, map_t *map, updater_t *updater)
     time_t start = 0; // TODO: update start when the game starts (issue #65)
 
     for (time_t elapsed = 0; loop(false); elapsed = mstime(NULL) - start) {
+        updater->update(updater, elapsed);
         switch (network_set_and_select_fds(network)) {
             case ERROR:
                 return false;
@@ -86,7 +87,6 @@ static bool server_loop(network_t *network, map_t *map, updater_t *updater)
         if (!network_send_requests(network))
             return false;
         requests_manager_handle_requests(network->clients_manager, map);
-        updater->update(updater, elapsed);
     }
     return true;
 }
