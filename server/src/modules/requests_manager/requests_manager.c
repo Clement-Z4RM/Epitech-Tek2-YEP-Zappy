@@ -5,36 +5,33 @@
 ** Requests_manager module
 */
 
-#include "requests_manager.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include <string.h>
 #include "utilities.h"
 #include "logs/failures/logs_failures.h"
 #include "logs/successes/logs_successes.h"
+#include "requests_manager.h"
 
 /**
 * @brief check if the client has a team name
 * @param client the client to check
-* @param clients_manager the clients manager
+* @param manager the clients manager
 * @return bool true if the client has a team name, false otherwise
 **/
-static bool requests_manager_add_to_team(
-    client_t *client,
-    client_manager_t *clients_manager
-)
+static bool add_to_team(client_t *client, client_manager_t *manager)
 {
     client->team_name = client->current_request_to_handle;
     client->current_request_to_handle = NULL;
     if (strcmp(client->team_name, "GRAPHIC") == 0) {
-        return clients_manager_add(clients_manager, client, GUI);
+        return clients_manager_add(manager, client, GUI);
     }
     if (clients_manager_add_to_team(
-        clients_manager,
+        manager,
         client,
         client->team_name) == false) {
         return false;
     }
-    return clients_manager_add(clients_manager, client, AI);
+    return clients_manager_add(manager, client, AI);
 }
 
 /**
@@ -42,78 +39,62 @@ static bool requests_manager_add_to_team(
 * @param args parsed args of the request
 * @param client the client that sent the request
 **/
-static void requests_manager_free_request_memory(char **args, client_t *client)
+static void free_request_memory(char **args, client_t *client)
 {
-    if (client->current_request_to_handle)
-        free(client->current_request_to_handle);
-    client->current_request_to_handle = NULL;
+    if (client) {
+        if (client->current_request_to_handle)
+            free(client->current_request_to_handle);
+        client->current_request_to_handle = NULL;
+    }
     free_double_tab(args);
 }
 
-static bool requests_manager_handle_gui_request(
+static void handle_ai_request(
     char **args,
-    client_t *client,
-    client_manager_t *clients_manager,
+    ai_client_node_t *client,
+    client_manager_t *manager,
     map_t *map
 )
 {
-    gui_handler_data_t handler_data = {client, args, clients_manager, map};
-
-    for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
-        if (GUI_HANDLERS[i].command_name == NULL)
-            continue;
-        if (strcmp(GUI_HANDLERS[i].command_name, args[0]) == 0) {
-            GUI_HANDLERS[i].handler(&handler_data);
-            return true;
-        }
-    }
-    return false;
-}
-
-static bool requests_manager_handle_ai_request(
-    char **args,
-    client_t *client,
-    client_manager_t *clients_manager
-)
-{
-    ai_handler_data_t handler_data = {client, args, clients_manager};
+    ai_handler_data_t handler_data = {client, args, manager, map};
 
     for (size_t i = 0; i < AI_HANDLERS_COUNT; i++) {
         if (AI_HANDLERS[i].command_name == NULL)
             continue;
         if (strcmp(AI_HANDLERS[i].command_name, args[0]) == 0) {
             AI_HANDLERS[i].handler(&handler_data);
-            return true;
+            return;
         }
     }
-    return false;
+    log_failure_request_no_handler(client->client);
 }
 
-static void requests_manager_handle_request_on_client_type(
-    client_t *client,
+static void handle_gui_request(
     char **args,
-    client_manager_t *clients_manager,
+    gui_client_node_t *client,
+    client_manager_t *manager,
     map_t *map
 )
 {
-    if (client->type == AI)
-        if (!requests_manager_handle_ai_request(args, client, clients_manager))
-            log_failure_request_no_handler(client);
-    if (client->type == GUI)
-        if (!requests_manager_handle_gui_request(args,
-            client, clients_manager, map))
-            log_failure_request_no_handler(client);
+    gui_handler_data_t handler_data = {client, args, manager, map};
+
+    for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
+        if (GUI_HANDLERS[i].command_name == NULL)
+            continue;
+        if (strcmp(GUI_HANDLERS[i].command_name, args[0]) == 0) {
+            GUI_HANDLERS[i].handler(&handler_data);
+            return;
+        }
+    }
+    log_failure_request_no_handler(client->client);
 }
 
-static bool requests_manager_client_have_team(
-    client_t *client,
-    client_manager_t *clients_manager
-)
+static bool client_have_team(client_t *client, client_manager_t *manager)
 {
     static uint64_t id_count = 0;
 
     if (client->team_name == NULL) {
-        if (requests_manager_add_to_team(client, clients_manager) == false) {
+        if (add_to_team(client, manager) == false) {
             log_failure_add_to_team(client, client->team_name);
             client->team_name = NULL;
             return false;
@@ -128,46 +109,77 @@ static bool requests_manager_client_have_team(
 
 //TODO: handle errors correctly
 /**
-* @brief handle the request of the client
+* @brief parse the arguments of the request
+ *
 * @param client the client that sent the request
-* @param clients_manager the clients manager
+* @param manager the clients manager
+ * @param args a pointer to a char array that will contain the parsed args
 **/
-static void requests_manager_handle_request(client_t *client,
-    client_manager_t *clients_manager, map_t *map)
+static bool parse_args(client_t *client,
+    client_manager_t *manager, char ***args)
 {
-    char **args = NULL;
-
+    if (!client)
+        return false;
     remove_newline(client->current_request_to_handle);
-    if (!requests_manager_client_have_team(client, clients_manager))
-        return;
-    args = str_array_split(client->current_request_to_handle, " ");
-    if (args == NULL || args[0] == NULL)
-        return;
-    requests_manager_handle_request_on_client_type(
-        client, args, clients_manager, map
-    );
-    requests_manager_free_request_memory(args, client);
+    if (!client_have_team(client, manager))
+        return false;
+    *args = str_array_split(client->current_request_to_handle, " ");
+    if (*args == NULL || (*args)[0] == NULL)
+        return false;
+    return true;
 }
 
-void requests_manager_handle_requests(
-    client_manager_t *clients_manager,
-    map_t *map
-)
+static client_t *get_client(client_node_t *current)
+{
+    client_t *client = current->client;
+    client_request_node_t *request = NULL;
+
+    if (client->current_request_to_handle == NULL) {
+        request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
+        client->current_request_to_handle = request->request;
+        CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+        return client;
+    }
+    return NULL;
+}
+
+static void handle_none_clients_requests(client_manager_t *manager)
 {
     client_node_t *current = NULL;
-    client_request_node_t *current_request = NULL;
+    client_request_node_t *request = NULL;
     client_t *client = NULL;
 
-    SLIST_FOREACH(current, &clients_manager->clients_list, next) {
+    for (current = SLIST_FIRST(&manager->clients_list); current;
+        current = SLIST_NEXT(current, next)) {
         client = current->client;
-        if (client->current_request_to_handle == NULL) {
-            current_request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
-            client->current_request_to_handle = current_request->request;
-            CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
-                current_request, next);
-            requests_manager_handle_request(
-                current->client, clients_manager, map
-            );
+        if (NONE == client->type && !client->current_request_to_handle) {
+            request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
+            client->current_request_to_handle = request->request;
+            CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+            free_request_memory(NULL, client);
         }
+    }
+}
+
+void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
+{
+    ai_client_node_t *ai_current = NULL;
+    gui_client_node_t *gui_current = NULL;
+    client_t *client = NULL;
+    char **args = NULL;
+
+    handle_none_clients_requests(manager);
+    for (ai_current = SLIST_FIRST(&manager->ai_clients_list); ai_current;
+        ai_current = SLIST_NEXT(ai_current, next)) {
+        client = get_client((client_node_t *)ai_current);
+        if (parse_args(client, manager, &args))
+            handle_ai_request(args, ai_current, manager, map);
+        free_request_memory(args, client);
+    }
+    SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
+        client = get_client((client_node_t *)gui_current);
+        if (parse_args(client, manager, &args))
+            handle_gui_request(args, gui_current, manager, map);
+        free_request_memory(args, client);
     }
 }
