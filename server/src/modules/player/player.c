@@ -40,6 +40,12 @@ void player_go_forward(ai_client_node_t *client, map_t *map)
     SLIST_INSERT_HEAD(&map->cells[player->y][player->x].players, client, next);
 }
 
+/**
+ * @brief Turn the player to the left or to the right.
+ *
+ * @param client The client related to the player to turn.
+ * @param rotation The rotation to apply to the player (left or right).
+ */
 void player_turn(ai_client_node_t *client, player_rotation_t rotation)
 {
     player_t *player = &client->player;
