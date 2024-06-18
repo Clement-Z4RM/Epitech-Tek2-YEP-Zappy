@@ -13,6 +13,7 @@
 #include <deque>
 #include "player/Player.hpp"
 #include "src/Egg/egg.hpp"
+#include "src/setting/SettingMenu.hpp"
 
 class Case {
     public:
@@ -91,4 +92,5 @@ class Parameters {
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
         Eggs _eggs;
+        SettingMenu _settingMenu;
 };
