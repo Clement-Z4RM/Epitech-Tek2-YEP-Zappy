@@ -5,24 +5,25 @@
 ## Makefile
 ##
 
+AI_NAME = zappy_ai
+
 SRC = src/main.lua
-
-EXECUTABLE = ../zappy_ai
-
+EXECUTABLE = ../$(AI_NAME)
 DIST_FOLDER = ../..
 
-all: build
+all: $(AI_NAME)
 
-build:
-	cp $(SRC) $(EXECUTABLE)
-	chmod u+x $(EXECUTABLE)
+$(AI_NAME):
+	@mkdir -p $(DIST_FOLDER)
+	@cp $(SRC) $(EXECUTABLE)
+	@chmod u+x $(EXECUTABLE)
 
 clean:
-	rm -f $(EXECUTABLE)
+	@rm -f $(EXECUTABLE)
 
 fclean: clean
-	rm -f $(DIST_FOLDER)/$(EXECUTABLE)
+	@rm -rf $(DIST_FOLDER)/$(EXECUTABLE)
 
 re: fclean all
 
-.PHONY: all build clean fclean re
+.PHONY: all $(AI_NAME) clean fclean re
