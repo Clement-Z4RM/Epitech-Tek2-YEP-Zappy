@@ -9,6 +9,7 @@
 #define ZAPPY_GUI_SETTINGMENU_HPP
 
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 class button {
 public:
@@ -17,7 +18,7 @@ public:
     void displayButton();
 private:
     std::string _name;
-
+    sf::Vector2f _position;
 };
 
 class SettingMenu {
