@@ -26,6 +26,8 @@ add_executable(zappy_gui
         window/Modal.cpp
         src/Egg/egg.hpp
         src/Egg/egg.cpp
+        src/setting/SettingMenu.cpp
+        src/setting/SettingMenu.hpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
