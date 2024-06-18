@@ -158,13 +158,10 @@ void requests_manager_handle_requests(
     client_request_node_t *current_request = NULL;
     client_t *client = NULL;
 
-    while (!SLIST_EMPTY(&clients_manager->clients_list)) {
-        current = SLIST_FIRST(&clients_manager->clients_list);
+    SLIST_FOREACH(current, &clients_manager->clients_list, next) {
         client = current->client;
-        SLIST_REMOVE_HEAD(&clients_manager->clients_list, next);
         if (client->current_request_to_handle == NULL) {
-            current_request = CIRCLEQ_LAST(
-                &client->requests_queue_to_handle);
+            current_request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
             client->current_request_to_handle = current_request->request;
             CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
                 current_request, next);
