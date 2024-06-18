@@ -91,16 +91,12 @@ static void handle_gui_request(
 
 static bool client_have_team(client_t *client, client_manager_t *manager)
 {
-    static uint64_t id_count = 0;
-
     if (client->team_name == NULL) {
         if (add_to_team(client, manager) == false) {
             log_failure_add_to_team(client, client->team_name);
             client->team_name = NULL;
             return false;
         }
-        client->id = id_count;
-        id_count++;
         log_success_add_to_team(client);
     }
     return true;

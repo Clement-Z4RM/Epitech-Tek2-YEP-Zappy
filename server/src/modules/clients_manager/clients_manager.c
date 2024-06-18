@@ -81,12 +81,17 @@ bool clients_manager_add_to_team(
     return clients_manager_add_new_team(manager, team_name, client);
 }
 
+//TODO: init the player struct with map or something
 static bool clients_manager_add_ai(client_manager_t *manager, client_t *client)
 {
     ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
+    static uint64_t id = 0;
 
     if (new_node == NULL)
         return false;
+    id++;
+    new_node->player.id = id;
+    new_node->player.level = 1;
     new_node->client = client;
     SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
     manager->nb_ai_clients++;

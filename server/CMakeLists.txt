@@ -108,15 +108,16 @@ add_executable(zappy_server
         #region Commands module
         src/modules/commands/commands.h
         src/modules/commands/gui/gui_commands.h
-        src/modules/commands/gui/msz.c
-        src/modules/commands/gui/bct.c
-        src/modules/commands/gui/mct.c
+        src/modules/commands/gui/handlers/msz.c
+        src/modules/commands/gui/handlers/bct.c
+        src/modules/commands/gui/handlers/mct.c
         #endregion
 
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
         src/modules/clients_manager/client_manager_getters.c
+        src/modules/commands/gui/events/pex.c
         #endregion
         #endregion
 )

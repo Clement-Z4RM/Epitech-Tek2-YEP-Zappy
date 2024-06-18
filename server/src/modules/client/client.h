@@ -50,7 +50,6 @@ typedef struct client_s {
     int requests_queue_to_handle_size; ///< size requests to handle
     char *current_request_to_handle; ///< the current request being handled
     client_type_t type; ///< the type of the client
-    uint64_t id; ///< the id of the client
 } client_t;
 
 /**

@@ -16,7 +16,7 @@ ai_client_node_t *clients_manager_get_ai_by_id(
 
     SLIST_FOREACH(node, &manager->ai_clients_list, next)
     {
-        if (node->client->id == id)
+        if (node->player.id == id)
             return node;
     }
     return NULL;

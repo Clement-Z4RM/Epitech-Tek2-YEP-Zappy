@@ -5,7 +5,7 @@
 ** mct command
 */
 
-#include "gui_commands.h"
+#include "commands/gui/gui_commands.h"
 #include "stdlib.h"
 
 void mct(gui_handler_data_t *data)
