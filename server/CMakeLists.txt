@@ -70,6 +70,7 @@ add_executable(zappy_server
 
         #region Player module
         src/modules/player/player.h
+        src/modules/player/player_utilities.h
         src/modules/player/player.c
         #endregion
 
@@ -111,6 +112,9 @@ add_executable(zappy_server
         src/modules/commands/gui/msz.c
         src/modules/commands/gui/bct.c
         src/modules/commands/gui/mct.c
+        src/modules/commands/ai/ai_commands.h
+        src/modules/commands/ai/forward.c
+        src/modules/commands/ai/turn.c
         #endregion
 
         #region Updater module

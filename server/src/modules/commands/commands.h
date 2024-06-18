@@ -6,3 +6,6 @@
 */
 
 #pragma once
+
+#include "ai/ai_commands.h"
+#include "gui/gui_commands.h"

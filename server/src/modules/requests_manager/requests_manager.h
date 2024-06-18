@@ -10,6 +10,7 @@
 #include <stddef.h>
 #include "clients_manager/clients_manager.h"
 #include "map/map.h"
+#include "commands/commands.h"
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct ai_handler_data_s {
@@ -48,7 +49,11 @@ extern void requests_manager_handle_requests(
 // TODO: Don't put null element at end of below lists
 
 /** @brief the list of ai request handlers **/
-static const ai_request_handler_t AI_HANDLERS[] = {0};
+static const ai_request_handler_t AI_HANDLERS[] = {
+    {"Forward", forward},
+    {"Right", right},
+    {"Left", left}
+};
 
 #define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)
 

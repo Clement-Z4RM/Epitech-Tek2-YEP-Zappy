@@ -6,7 +6,7 @@
 */
 
 #include "gui_commands.h"
-#include "../../requests_manager/requests_manager.h"
+#include "requests_manager/requests_manager.h"
 #include "string.h"
 
 void msz(gui_handler_data_t *data)
