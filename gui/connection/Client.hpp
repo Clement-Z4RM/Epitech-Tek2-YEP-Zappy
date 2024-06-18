@@ -15,6 +15,7 @@
 #include "Socket.hpp"
 #include "../Parameters.hpp"
 #include "Sleep.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace gui {
     class Client {

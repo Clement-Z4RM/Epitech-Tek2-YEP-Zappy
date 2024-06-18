@@ -6,7 +6,10 @@
 */
 
 #pragma once
-#include <sstream>
+#include <sstream>$
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <iostream>
 
 enum Orientation {
     NORTH = 1,
@@ -50,7 +53,7 @@ public:
 
     void setLevel(int level) { _level = level; }
     void setOrientation(Orientation orientation) { _orientation = orientation; }
-    void setPosition(int x, int y) { _position._x = x; _position._y = y; }
+    void setPosition(int x, int y);
 
     void setInventory(std::stringstream  &s);
     void setInventory(int food, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) { _inventory = Inventory(food, linemate, deraumere, sibur, mendiane, phiras, thystame); }
@@ -60,6 +63,9 @@ public:
     Coordinates getPosition() { return _position; }
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
+    std::shared_ptr<sf::Sprite> getPlayerSprite() { return _playerSprite; }
+
+    void display(sf::RenderWindow &window);
 
 private:
     Coordinates _position{};
@@ -68,4 +74,6 @@ private:
     int _id;
     std::string _team;
     Inventory _inventory{};
+    std::shared_ptr<sf::Sprite> _playerSprite;
+    sf::Vector2f position;
 };
