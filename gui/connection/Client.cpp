@@ -146,6 +146,8 @@ namespace gui {
         std::deque<std::string> otherParam;
         std::deque<std::string> players;
         std::deque<std::string> inventory;
+        std::deque<std::string> shift;
+        std::deque<std::string> death;
 
         _param._map.clear();
         for (auto &i : _map) {
@@ -155,6 +157,10 @@ namespace gui {
                 players.push_back(i);
             else if (i.find("pin") != std::string::npos)
                 inventory.push_back(i);
+            else if (i.find("ppo") != std::string::npos)
+                shift.push_back(i);
+            else if (i.find("pdi") != std::string::npos)
+                death.push_back(i);
             else if (_param._eggs.checkMsg(i))
                 continue;
             else
@@ -170,6 +176,39 @@ namespace gui {
             std::stringstream s(player);
             std::shared_ptr<Player> new_player = std::make_shared<Player>(s);
             _param._players.push_back(new_player);
+        }
+        for (auto &move : shift) {
+            std::stringstream s(move);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            s >> tmpData;
+            int x = std::stoi(tmpData);
+            s >> tmpData;
+            int y = std::stoi(tmpData);
+            s >> tmpData;
+            int orientation = std::stoi(tmpData);
+            for (auto &player : _param._players) {
+                if (player->getId() == identifier) {
+                    player->setPosition(x, y);
+                    player->setOrientation(static_cast<Orientation>(orientation));
+                    break;
+                }
+            }
+        }
+        for (auto &dead : death) {
+            std::stringstream s(dead);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            for (auto &player : _param._players) {
+                if (player->getId() == identifier) {
+                    _param._players.erase(std::remove(_param._players.begin(), _param._players.end(), player), _param._players.end());
+                    break;
+                }
+            }
         }
         for (auto &inv : inventory) {
             std::stringstream s(inv);
