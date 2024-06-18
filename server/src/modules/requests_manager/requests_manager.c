@@ -173,7 +173,7 @@ void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
-        if (parse_args(client,  &args))
+        if (parse_args(client, &args))
             handle_gui_request(args, gui_current, manager, map);
         free_request_memory(args, client);
     }

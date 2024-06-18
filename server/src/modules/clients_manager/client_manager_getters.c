@@ -3,7 +3,6 @@
 ** Zappy-Server
 ** File description:
 ** client_manager module getters
-*
 */
 
 #include "clients_manager.h"
