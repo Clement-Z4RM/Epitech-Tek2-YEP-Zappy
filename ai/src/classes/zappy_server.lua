@@ -8,13 +8,14 @@ local ZappyServer = {}
 local NetworkZappyAnswer <const> = require("ai/src/constants/network_zappy_answer")
 local NetworkTCPStatus <const> = require("ai/src/enums/network_tcp_status")
 local Socket <const> = require("socket")
+local LookParser <const> = require("ai/src/look_parser")
 
 --- @param host string
 --- @param port number
 --- @return ZappyServer
 function ZappyServer.New(host, port)
     local self = setmetatable({}, {__index = ZappyServer})
-    
+
     self.host = host
     self.port = port
     self.tcp = Socket.tcp()
@@ -75,6 +76,12 @@ function ZappyServer:Disconnect()
     self.tcp:close()
     self.status = NetworkTCPStatus.INTERRUPTED
     return true
+end
+
+--- @param response string
+--- @return table
+function ZappyServer:ParseLookResponse(response)
+    return LookParser.Parse(response)
 end
 
 return ZappyServer
