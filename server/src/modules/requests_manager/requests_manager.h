@@ -13,9 +13,10 @@
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct ai_handler_data_s {
-    client_t *client;
+    ai_client_node_t *client;
     char **args;
     client_manager_t *clients_manager;
+    map_t *map;
 } ai_handler_data_t;
 
 /** @brief represent a ai request handler  **/
@@ -26,7 +27,7 @@ typedef struct ai_request_handler_s {
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct gui_handler_data_s {
-    client_t *client;
+    gui_client_node_t *client;
     char **args;
     client_manager_t *clients_manager;
     map_t *map;

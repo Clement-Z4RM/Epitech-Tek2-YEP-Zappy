@@ -11,7 +11,7 @@
 
 void msz(gui_handler_data_t *data)
 {
-    client_t *client = data->client;
+    client_t *client = data->client->client;
     map_t *map = data->map;
     char width[32];
     char height[32];
