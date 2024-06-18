@@ -31,6 +31,9 @@ void Window::run(Parameters &params)
         for (auto &p : params._eggs._eggsShapes) {
             _window.draw(*p);
         }
+        for (auto &p : params._players) {
+            _window.draw(*p->getPlayerSprite());
+        }
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
         _window.display();
@@ -159,10 +162,7 @@ void Window::rendMap(Parameters &params)
 {
     for (auto &i : params._map) {
         std::shared_ptr<sf::RectangleShape> new_rect = std::make_shared<sf::RectangleShape>();
-        if (params.getPlayerOnCase(i).empty())
-            new_rect->setFillColor(sf::Color(85,107,47, 255));
-        else
-            new_rect->setFillColor(sf::Color(255, 99, 71, 255));
+        new_rect->setFillColor(sf::Color(85,107,47, 255));
         new_rect->setSize(sf::Vector2f(32, 32));
         new_rect->setPosition(i->_x * 32 + 32, i->_y * 32 + 32);
         new_rect->setOutlineColor(sf::Color(128, 128, 128, 255));
