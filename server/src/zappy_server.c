@@ -35,7 +35,7 @@ static void sig_handler(UNUSED int signum)
 static int destroy(network_t *network, map_t *map, int to_return)
 {
     if (network)
-        network_destructor(network);
+        network->destroy(network);
     if (map)
         map->destroy(map);
     return to_return;
@@ -57,6 +57,7 @@ static int server_loop(options_t *options)
             return destroy(network, map, 84);
         if (!network_send_requests(network))
             return destroy(network, map, 84);
+        requests_manager_handle_requests(network->clients_manager);
     }
     LOG_SUCCESS("Server stopped\n");
     return destroy(network, map, 0);
