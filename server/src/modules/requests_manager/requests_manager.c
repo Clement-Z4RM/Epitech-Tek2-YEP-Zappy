@@ -149,7 +149,8 @@ static void handle_none_clients_requests(client_manager_t *manager)
     client_request_node_t *request = NULL;
     client_t *client = NULL;
 
-    SLIST_FOREACH(current, &manager->clients_list, next) {
+    for (current = SLIST_FIRST(&manager->clients_list); current;
+        current = SLIST_NEXT(current, next)) {
         client = current->client;
         if (NONE == client->type && !client->current_request_to_handle) {
             request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
@@ -168,7 +169,8 @@ void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
     char **args = NULL;
 
     handle_none_clients_requests(manager);
-    SLIST_FOREACH(ai_current, &manager->ai_clients_list, next) {
+    for (ai_current = SLIST_FIRST(&manager->ai_clients_list); ai_current;
+        ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
         if (parse_args(client, manager, &args))
             handle_ai_request(args, ai_current, manager, map);
