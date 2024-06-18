@@ -70,6 +70,7 @@ add_executable(zappy_server
 
         #region Player module
         src/modules/player/player.h
+        src/modules/player/player.c
         #endregion
 
         #region Resource module
