@@ -134,6 +134,7 @@ bool clients_manager_add(
     return state;
 }
 
+//TODO: remove from every list
 void clients_manager_remove(client_manager_t *manager, client_t *client)
 {
     client_node_t *current = NULL;

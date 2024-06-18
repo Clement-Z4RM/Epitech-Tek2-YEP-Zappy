@@ -110,3 +110,12 @@ extern bool clients_manager_add_to_team(
     client_t *client,
     const char *team_name
 );
+
+/**
+* @brief get a ai node from the client manager's list by id
+* @param manager the client manager
+* @param id the id of the ai client
+* @return ai_client_node_t* the ai client node (NULL if not found)
+* **/
+extern ai_client_node_t *clients_manager_get_ai_by_id(
+    client_manager_t *manager, uint64_t id);
