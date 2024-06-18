@@ -72,7 +72,7 @@ static void destroy(
  */
 static bool server_loop(network_t *network, map_t *map, updater_t *updater)
 {
-    time_t start = 0; // TODO: update start when the game starts (issue #65)
+    time_t start = 0;
 
     for (time_t elapsed = 0; loop(false); elapsed = mstime(NULL) - start) {
         updater->update(updater, elapsed);
