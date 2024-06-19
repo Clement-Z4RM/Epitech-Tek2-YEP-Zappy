@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include <sstream>$
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <iostream>
