@@ -91,23 +91,17 @@ static void handle_gui_request(
 
 static bool client_have_team(client_t *client, client_manager_t *manager)
 {
-    static uint64_t id_count = 0;
-
     if (client->team_name == NULL) {
         if (add_to_team(client, manager) == false) {
             log_failure_add_to_team(client, client->team_name);
             client->team_name = NULL;
             return false;
         }
-        client->id = id_count;
-        id_count++;
         log_success_add_to_team(client);
-        return false;
     }
     return true;
 }
 
-//TODO: handle errors correctly
 /**
 * @brief parse the arguments of the request
  *
@@ -115,14 +109,11 @@ static bool client_have_team(client_t *client, client_manager_t *manager)
 * @param manager the clients manager
  * @param args a pointer to a char array that will contain the parsed args
 **/
-static bool parse_args(client_t *client,
-    client_manager_t *manager, char ***args)
+static bool parse_args(client_t *client, char ***args)
 {
     if (!client)
         return false;
     remove_newline(client->current_request_to_handle);
-    if (!client_have_team(client, manager))
-        return false;
     *args = str_array_split(client->current_request_to_handle, " ");
     if (*args == NULL || (*args)[0] == NULL)
         return false;
@@ -158,6 +149,10 @@ static void handle_none_clients_requests(client_manager_t *manager)
             CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
             free_request_memory(NULL, client);
         }
+        if (!client->current_request_to_handle)
+            continue;
+        remove_newline(client->current_request_to_handle);
+        client_have_team(client, manager);
     }
 }
 
@@ -172,13 +167,13 @@ void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
     for (ai_current = SLIST_FIRST(&manager->ai_clients_list); ai_current;
         ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
-        if (parse_args(client, manager, &args))
+        if (parse_args(client, &args))
             handle_ai_request(args, ai_current, manager, map);
         free_request_memory(args, client);
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
-        if (parse_args(client, manager, &args))
+        if (parse_args(client, &args))
             handle_gui_request(args, gui_current, manager, map);
         free_request_memory(args, client);
     }

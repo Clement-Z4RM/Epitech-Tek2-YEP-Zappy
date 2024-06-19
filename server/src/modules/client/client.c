@@ -115,7 +115,6 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
     client->requests_queue_to_send_size = 0;
     client->requests_queue_to_handle_size = 0;
     client->type = NONE;
-    client->id = -1;
     CIRCLEQ_INIT(&client->requests_queue_to_send);
     CIRCLEQ_INIT(&client->requests_queue_to_handle);
     return client;
