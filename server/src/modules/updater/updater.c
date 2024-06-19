@@ -5,7 +5,6 @@
 ** updater.c
 */
 
-#include <math.h>
 #include <stdio.h>
 #include "updater.h"
 
@@ -23,6 +22,7 @@ static void update(updater_t *updater, time_t elapsed)
         updater->map->resources.generate(updater->map);
         updater->next_generation = elapsed + updater->generation_interval;
     }
+    updater->previous_time = elapsed;
 }
 
 /**
@@ -51,6 +51,7 @@ updater_t *create_updater(network_t *network, map_t *map)
 
     if (!updater)
         return NULL;
+    updater->previous_time = 0;
     updater->generation_interval = (time_t)(20000 / network->options->freq);
     if (0 == updater->generation_interval)
         updater->generation_interval = 1;
@@ -58,7 +59,7 @@ updater_t *create_updater(network_t *network, map_t *map)
     printf("Generation interval: %ld\n", updater->generation_interval);
     updater->network = network;
     updater->map = map;
-    updater->update = &update;
-    updater->destroy = &updater_destructor;
+    updater->update = update;
+    updater->destroy = updater_destructor;
     return updater;
 }
