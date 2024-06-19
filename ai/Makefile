@@ -9,21 +9,16 @@ AI_NAME = zappy_ai
 
 SRC = src/main.lua
 EXECUTABLE = ../$(AI_NAME)
-DIST_FOLDER = ../..
 
-all: $(AI_NAME)
+all:	build
 
-$(AI_NAME):
-	@mkdir -p $(DIST_FOLDER)
+build:
 	@cp $(SRC) $(EXECUTABLE)
 	@chmod u+x $(EXECUTABLE)
 
-clean:
+fclean:
 	@rm -f $(EXECUTABLE)
 
-fclean: clean
-	@rm -rf $(DIST_FOLDER)/$(EXECUTABLE)
+re:	fclean all
 
-re: fclean all
-
-.PHONY: all $(AI_NAME) clean fclean re
+.PHONY:	all build fclean re
