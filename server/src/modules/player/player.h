@@ -31,7 +31,7 @@ typedef enum player_rotation_e {
  * @brief Player structure.
  * A player (also called a client ; or a Trantorian, an inhabitant of Trantor,
  * the planet where the game takes place) is an entity on the map,
- * which can perform actions like moving, taking objects....
+ * which can perform actions like moving, taking resources....
  */
 typedef struct player_s {
     /** @brief The amount of time (in time units)

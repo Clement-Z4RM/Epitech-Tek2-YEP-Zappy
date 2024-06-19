@@ -11,6 +11,19 @@
     #include "map/map.h"
 
 extern void player_go_forward(ai_client_node_t *client, map_t *map);
+
 extern void player_turn(ai_client_node_t *client, player_rotation_t rotation);
+
+extern bool player_take_resource(
+    ai_client_node_t *client,
+    map_t *map,
+    resource_name_t resource
+);
+
+extern bool player_drop_resource(
+    ai_client_node_t *client,
+    map_t *map,
+    resource_name_t resource
+);
 
 #endif /* !ZAPPY_SERVER_PLAYER_UTILITIES_H_ */

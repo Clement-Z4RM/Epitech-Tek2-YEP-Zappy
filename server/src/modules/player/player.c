@@ -54,3 +54,60 @@ void player_turn(ai_client_node_t *client, player_rotation_t rotation)
     if (0 == player->direction)
         player->direction = PD_LEFT;
 }
+
+/**
+ * @brief Take a resource from the map and give it to the player.
+ *
+ * @param client The client related to the player to give the resource to.
+ * @param map The map where the player and the resource is.
+ * @param resource The resource to take.
+ *
+ * @return true if the resource has been taken,
+ * false otherwise (no resource at the player's position).
+ */
+bool player_take_resource(
+    ai_client_node_t *client,
+    map_t *map,
+    resource_name_t resource
+)
+{
+    u_int64_t x = client->player.x;
+    u_int64_t y = client->player.y;
+
+    if (0 == map->cells[y][x].resources[resource])
+        return false;
+    --map->cells[y][x].resources[resource];
+    if (RN_FOOD == resource)
+        client->player.life_span += 126;
+    else
+        ++client->player.resources[resource];
+    return true;
+}
+
+/**
+ * @brief Drop a resource on the map from the player's inventory.
+ *
+ * @param client The client related to the player to take the resource from.
+ * @param map The map where the player is.
+ * @param resource The resource to drop.
+ *
+ * @return true if the resource has been dropped,
+ * false otherwise (trying to drop a resource the player doesn't have or food).
+ */
+bool player_drop_resource(
+    ai_client_node_t *client,
+    map_t *map,
+    resource_name_t resource
+)
+{
+    u_int64_t x = client->player.x;
+    u_int64_t y = client->player.y;
+
+    if (RN_FOOD == resource)
+        return false;
+    if (0 == client->player.resources[resource])
+        return false;
+    --client->player.resources[resource];
+    ++map->cells[y][x].resources[resource];
+    return true;
+}
