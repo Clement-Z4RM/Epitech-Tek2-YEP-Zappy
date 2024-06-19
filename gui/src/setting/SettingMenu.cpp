@@ -51,3 +51,18 @@ void SettingMenu::createButtons()
     button->changeTexture(button->getTextureButtonClickPath());
     _buttons.push_back(button);
 }
+
+void SettingMenu::checkClick(sf::RenderWindow &window, sf::Event &event)
+{
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            for (auto &button : _buttons) {
+                if (button->_sprite.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                    button->changeTexture(button->getTextureButtonClickPath());
+                else {
+                    button->changeTexture(button->getTextureButtonPath());
+                }
+            }
+        }
+    }
+}

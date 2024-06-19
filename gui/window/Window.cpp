@@ -62,6 +62,7 @@ void Window::getEvent(Parameters &params)
                     _modals.clear();
             }
         }
+        params._settingMenu.checkClick(_window, event);
     }
 }
 
