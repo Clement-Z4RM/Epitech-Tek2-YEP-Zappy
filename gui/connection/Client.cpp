@@ -148,6 +148,7 @@ namespace gui {
         std::deque<std::string> inventory;
         std::deque<std::string> shift;
         std::deque<std::string> death;
+        std::deque<std::string> teams;
 
         _param._map.clear();
         for (auto &i : _map) {
@@ -161,6 +162,8 @@ namespace gui {
                 shift.push_back(i);
             else if (i.find("pdi") != std::string::npos)
                 death.push_back(i);
+            else if (i.find("tna") != std::string::npos)
+                teams.push_back(i);
             else if (_param._eggs.checkMsg(i))
                 continue;
             else
@@ -210,6 +213,13 @@ namespace gui {
                 }
             }
         }
+        for (auto &team : teams) {
+            std::stringstream s(team);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            _param._teams.push_back(tmpData);
+        }
         for (auto &inv : inventory) {
             std::stringstream s(inv);
             std::string tmpData;
@@ -226,6 +236,9 @@ namespace gui {
                     break;
                 }
             }
+        }
+        for (auto &p : otherParam) {
+            std::cout << p << std::endl;
         }
     }
 
