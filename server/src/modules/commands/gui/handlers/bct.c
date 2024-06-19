@@ -5,7 +5,7 @@
 ** command bct
 */
 
-#include "gui_commands.h"
+#include "commands/gui/gui_commands.h"
 #include "requests_manager/requests_manager.h"
 #include "stdlib.h"
 

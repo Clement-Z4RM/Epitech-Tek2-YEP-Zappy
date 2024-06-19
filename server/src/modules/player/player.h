@@ -48,6 +48,12 @@ typedef struct player_s {
 
     /** @brief The resources (foods and stones) in the player's inventory */
     u_int64_t resources[RESOURCES_COUNT];
+
+    /** @brief The player's id */
+    u_int64_t id;
+
+    /** @brief The player's level */
+    u_int8_t level;
 } player_t;
 
 #endif /* !ZAPPY_SERVER_PLAYER_H_ */

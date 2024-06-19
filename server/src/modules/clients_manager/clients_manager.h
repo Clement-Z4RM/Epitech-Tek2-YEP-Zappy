@@ -64,19 +64,19 @@ typedef struct clients_manager_s {
     int nb_teams; ///< actual number of teams
 
     ulong max_clients_per_team; ///< the maximum number of clients per team
-} client_manager_t;
+} clients_manager_t;
 
 /**
 * @brief create a new instance of the client_manager module
 * @return client_manager_t the newly allocated instance
 * **/
-client_manager_t *clients_manager_constructor(ulong max_clients_per_team);
+clients_manager_t *clients_manager_constructor(ulong max_clients_per_team);
 
 /**
  * @brief destroy a client manager instance and all its clients
  * @param manager the client manager to destroy
  */
-extern void clients_manager_destructor(client_manager_t *manager);
+extern void clients_manager_destructor(clients_manager_t *manager);
 
 /**
 * @brief add a new client to the client manager's list
@@ -85,7 +85,7 @@ extern void clients_manager_destructor(client_manager_t *manager);
 * @param type the type of the client
 * **/
 extern bool clients_manager_add(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client,
     const client_type_t type
 );
@@ -95,7 +95,7 @@ extern bool clients_manager_add(
 * @param manager the client manager
 * @param client the client to remove
 * **/
-extern void clients_manager_remove(client_manager_t *manager,
+extern void clients_manager_remove(clients_manager_t *manager,
     client_t *client);
 
 /**
@@ -106,7 +106,16 @@ extern void clients_manager_remove(client_manager_t *manager,
  * @return bool true if the operation was successful, false otherwise
  */
 extern bool clients_manager_add_to_team(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client,
     const char *team_name
 );
+
+/**
+* @brief get a ai node from the client manager's list by id
+* @param manager the client manager
+* @param id the id of the ai client
+* @return ai_client_node_t* the ai client node (NULL if not found)
+* **/
+extern ai_client_node_t *clients_manager_get_ai_by_id(
+    clients_manager_t *manager, uint64_t id);

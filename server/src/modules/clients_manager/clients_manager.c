@@ -14,7 +14,7 @@
 #include "logs/failures/logs_failures.h"
 
 static bool clients_manager_add_new_team(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     const char *team_name,
     client_t *client
 )
@@ -41,7 +41,7 @@ static bool clients_manager_add_new_team(
 }
 
 static bool clients_manager_add_to_existing_team(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client,
     team_node_t *team
 )
@@ -61,7 +61,7 @@ static bool clients_manager_add_to_existing_team(
 }
 
 bool clients_manager_add_to_team(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client,
     const char *team_name
 )
@@ -81,12 +81,18 @@ bool clients_manager_add_to_team(
     return clients_manager_add_new_team(manager, team_name, client);
 }
 
-static bool clients_manager_add_ai(client_manager_t *manager, client_t *client)
+//TODO: init the player struct with map or something
+static bool clients_manager_add_ai(clients_manager_t *manager,
+    client_t *client)
 {
     ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
+    static uint64_t id = 0;
 
     if (new_node == NULL)
         return false;
+    id++;
+    new_node->player.id = id;
+    new_node->player.level = 1;
     new_node->client = client;
     SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
     manager->nb_ai_clients++;
@@ -94,7 +100,7 @@ static bool clients_manager_add_ai(client_manager_t *manager, client_t *client)
 }
 
 static bool clients_manager_add_gui(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client
 )
 {
@@ -108,8 +114,9 @@ static bool clients_manager_add_gui(
     return true;
 }
 
+//TODO: exit here or return to main routine exiting if malloc failed ?
 bool clients_manager_add(
-    client_manager_t *manager,
+    clients_manager_t *manager,
     client_t *client,
     const client_type_t type
 )
@@ -133,7 +140,8 @@ bool clients_manager_add(
     return state;
 }
 
-void clients_manager_remove(client_manager_t *manager, client_t *client)
+//TODO: remove from every list
+void clients_manager_remove(clients_manager_t *manager, client_t *client)
 {
     client_node_t *current = NULL;
     client_node_t *tmp = NULL;
@@ -153,7 +161,7 @@ void clients_manager_remove(client_manager_t *manager, client_t *client)
     }
 }
 
-void clients_manager_destructor(client_manager_t *manager)
+void clients_manager_destructor(clients_manager_t *manager)
 {
     client_node_t *current = NULL;
 
@@ -166,9 +174,9 @@ void clients_manager_destructor(client_manager_t *manager)
     free(manager);
 }
 
-client_manager_t *clients_manager_constructor(ulong max_clients_per_team)
+clients_manager_t *clients_manager_constructor(ulong max_clients_per_team)
 {
-    client_manager_t *manager = malloc(sizeof(client_manager_t));
+    clients_manager_t *manager = malloc(sizeof(clients_manager_t));
 
     if (manager == NULL)
         return NULL;

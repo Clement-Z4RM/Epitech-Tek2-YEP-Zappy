@@ -99,6 +99,7 @@ add_executable(zappy_server
         #region Clients manager module
         src/modules/clients_manager/clients_manager.h
         src/modules/clients_manager/clients_manager.c
+        src/modules/clients_manager/client_manager_getters.c
         #endregion
 
         #region Requests manager module
@@ -109,9 +110,15 @@ add_executable(zappy_server
         #region Commands module
         src/modules/commands/commands.h
         src/modules/commands/gui/gui_commands.h
-        src/modules/commands/gui/msz.c
-        src/modules/commands/gui/bct.c
-        src/modules/commands/gui/mct.c
+        src/modules/commands/gui/handlers/msz.c
+        src/modules/commands/gui/handlers/bct.c
+        src/modules/commands/gui/handlers/mct.c
+        src/modules/commands/gui/events/pex.c
+        src/modules/commands/gui/events/pbc.c
+        src/modules/commands/gui/events/plv.c
+        src/modules/commands/gui/events/pnw.c
+        src/modules/commands/gui/events/pfk.c
+        src/modules/commands/gui/events/pdr.c
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
