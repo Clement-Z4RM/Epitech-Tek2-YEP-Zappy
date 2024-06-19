@@ -33,6 +33,7 @@ void Window::run(Parameters &params)
         }
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
+        params._settingMenu.displaySettingMenu(_window);
         _window.display();
     }
 }

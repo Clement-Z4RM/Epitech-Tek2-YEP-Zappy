@@ -10,24 +10,29 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <memory>
 
-class button {
+class Button {
 public:
-    button() = default;
-    ~button() = default;
-    void displayButton();
+    Button(const std::string& text, sf::Vector2f position);
+    ~Button() = default;
+    sf::Sprite _sprite;
+    sf::Text _text;
 private:
-    std::string _name;
     sf::Vector2f _position;
+    sf::Texture _texture;
+    std::string _texturePath = "./resources/Button.png";
 };
 
 class SettingMenu {
 public:
-    SettingMenu() = default;
+    SettingMenu();
     ~SettingMenu() = default;
-    void displaySettingMenu();
+    void createButtons();
+    void displayButtons(sf::RenderWindow &window);
+    void displaySettingMenu(sf::RenderWindow &window);
 private:
-
+    std::vector<std::shared_ptr<Button>> _buttons;
 };
 
 #endif //ZAPPY_GUI_SETTINGMENU_HPP
