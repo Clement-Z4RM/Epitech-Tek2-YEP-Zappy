@@ -36,6 +36,7 @@ add_executable(zappy_server
         src/utilities/strings/free_double_tab.c
         src/utilities/time/mstime.c
         src/utilities/signals/catch_signal.c
+        src/utilities/network/send_string.c
         #endregion
 
         #region Modules
