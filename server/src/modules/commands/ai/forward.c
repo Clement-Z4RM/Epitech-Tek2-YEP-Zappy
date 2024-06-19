@@ -6,14 +6,14 @@
 */
 
 #include <string.h>
-#include "player/player_utilities.h"
+#include "player/player_methods.h"
 #include "requests_manager/requests_manager.h"
 
 /**
  * @brief Forward command.
  * Move the player forward of one tile in the direction he is facing.
  *
- * This command takes 7 ticks to execute. TODO: time
+ * This command takes 7 ticks to execute. TODO: time (and send ok at end)
  *
  * @param data The structure containing all needed informations.
  */

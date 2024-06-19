@@ -6,14 +6,14 @@
 */
 
 #include <string.h>
-#include "player/player_utilities.h"
+#include "player/player_methods.h"
 #include "requests_manager/requests_manager.h"
 
 /**
  * @brief Right command.
  * Turn the player forward 90° right.
  *
- * This command takes 7 ticks to execute. TODO: time
+ * This command takes 7 ticks to execute. TODO: time (and send ok at end)
  *
  * @param data The structure containing all needed informations.
  */
@@ -27,7 +27,7 @@ void right(ai_handler_data_t *data)
  * @brief Left command.
  * Turn the player forward 90° left.
  *
- * This command takes 7 ticks to execute. TODO: time
+ * This command takes 7 ticks to execute. TODO: time (and send ok at end)
  *
  * @param data The structure containing all needed informations.
  */
