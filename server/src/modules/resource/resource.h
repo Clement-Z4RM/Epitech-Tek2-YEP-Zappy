@@ -9,6 +9,7 @@
     #define ZAPPY_SERVER_RESOURCE_H_
 
     #include <sys/queue.h>
+    #include <stddef.h>
 
 /**
  * @brief The type of a resource
