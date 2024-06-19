@@ -33,9 +33,12 @@ public:
     void displayInformation(const std::shared_ptr<Case>& selectedCase, Parameters &params);
     void addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::shared_ptr<Modal> &modal);
 
+    void changePlayer(Parameters &params, int dir);
+
 private:
     std::shared_ptr<sf::Font> _globalFont;
     sf::RenderWindow _window;
     std::deque<std::shared_ptr<sf::RectangleShape>> _map;
     std::unordered_map<std::string, std::shared_ptr<Modal>> _modals;
+    int _selectedPlayer = -1;
 };

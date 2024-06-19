@@ -36,6 +36,8 @@ void Window::run(Parameters &params)
         }
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
+        if (_modals.find("players") != _modals.end())
+            _modals["players"]->display(_window);
         _window.display();
     }
 }
@@ -47,6 +49,14 @@ void Window::getEvent(Parameters &params)
     while (_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
             _window.close();
+        if (event.type == sf::Event::KeyReleased) {
+            if (event.key.code == sf::Keyboard::Left) {
+                this->changePlayer(params, 1);
+            }
+            if (event.key.code == sf::Keyboard::Right) {
+                this->changePlayer(params, 0);
+            }
+        }
         if (event.type == sf::Event::MouseButtonReleased) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 int index = 0;
@@ -65,6 +75,23 @@ void Window::getEvent(Parameters &params)
             }
         }
     }
+}
+
+void Window::changePlayer(Parameters &params, int dir)
+{
+    if (params._players.size() == 0)
+        return;
+    if (_selectedPlayer == -1 && dir == 0)
+        _selectedPlayer = 0;
+    else if (_selectedPlayer == -1 && dir == 1)
+        _selectedPlayer = params._players.size() - 1;
+    else if (_selectedPlayer == params._players.size() - 1 && dir == 0)
+        _selectedPlayer = 0;
+    else if (_selectedPlayer == 0 && dir == 1)
+        _selectedPlayer = params._players.size() - 1;
+    else
+        _selectedPlayer += dir;
+    std::cout << "Selected player: " << _selectedPlayer << std::endl;
 }
 
 void Window::displayInformation(const std::shared_ptr<Case>& selectedCase, Parameters &params)
