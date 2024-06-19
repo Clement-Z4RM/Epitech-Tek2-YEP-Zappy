@@ -34,13 +34,13 @@ BUILD_TYPE	=	Release
 SERVER_DIR	=	server
 SERVER_NAME	=	zappy_server
 
-AI_DIR  =	ai
-AI_NAME =	zappy_ai
+AI_DIR	=	ai
+AI_NAME	=	zappy_ai
 
 GUI_DIR		=	gui
 GUI_NAME	=	zappy_gui
 
-all: $(SERVER_NAME) $(GUI_NAME) $(AI_NAME)
+all:	$(SERVER_NAME) $(GUI_NAME) $(AI_NAME)
 
 $(SERVER_NAME):
 	@mkdir -p $(SERVER_DIR)/build
@@ -59,7 +59,7 @@ $(GUI_NAME):
 	@mv $(GUI_DIR)/$(GUI_NAME) .
 
 $(AI_NAME):
-    @make -C $(AI_DIR)/
+	@$(MAKE) -C $(AI_DIR)/
 
 debug:
 	@$(MAKE) -s BUILD_TYPE=Debug
