@@ -34,6 +34,12 @@ namespace gui {
         void getCases(std::string &msg);
 
         void parseParameters();
+        void parseMap(std::deque<std::string> &map);
+        void parsePlayer(std::deque<std::string> &player);
+        void parseShift(std::deque<std::string> &shift);
+        void parseDeath(std::deque<std::string> &death);
+        void parseTeam(std::deque<std::string> &teams);
+        void parseInventory(std::deque<std::string> &inventory);
 
         void refreshMap();
 
