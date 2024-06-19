@@ -47,7 +47,7 @@ typedef struct resource_s {
 /**
  * @brief The density of each resource
  */
-static const resource_t RESOURCES[] = {
+static const resource_t RESOURCES[RESOURCES_COUNT] = {
     [RN_FOOD] = {RN_FOOD, RT_FOOD, 0.5f},
     [RN_LINEMATE] = {RN_LINEMATE, RT_STONE, 0.3f},
     [RN_DERAUMERE] = {RN_DERAUMERE, RT_STONE, 0.15f},
@@ -55,6 +55,19 @@ static const resource_t RESOURCES[] = {
     [RN_MENDIANE] = {RN_MENDIANE, RT_STONE, 0.1f},
     [RN_PHIRAS] = {RN_PHIRAS, RT_STONE, 0.08f},
     [RN_THYSTAME] = {RN_THYSTAME, RT_STONE, 0.05f}
+};
+
+/**
+ * @brief The name of each resource as a string
+ */
+static const char *RESOURCE_NAMES[RESOURCES_COUNT] = {
+    NULL,
+    "linemate",
+    "deraumere",
+    "sibur",
+    "mendiane",
+    "phiras",
+    "thystame"
 };
 
 #endif /* !ZAPPY_SERVER_RESOURCE_H_ */
