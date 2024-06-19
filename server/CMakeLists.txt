@@ -70,6 +70,7 @@ add_executable(zappy_server
 
         #region Player module
         src/modules/player/player.h
+        src/modules/player/player_methods.h
         src/modules/player/player.c
         #endregion
 
@@ -98,6 +99,7 @@ add_executable(zappy_server
         #region Clients manager module
         src/modules/clients_manager/clients_manager.h
         src/modules/clients_manager/clients_manager.c
+        src/modules/clients_manager/client_manager_getters.c
         #endregion
 
         #region Requests manager module
@@ -111,18 +113,22 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/msz.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
-        #endregion
-
-        #region Updater module
-        src/modules/updater/updater.c
-        src/modules/updater/updater.h
-        src/modules/clients_manager/client_manager_getters.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
         src/modules/commands/gui/events/plv.c
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
         src/modules/commands/gui/events/pdr.c
+        src/modules/commands/ai/ai_commands.h
+        src/modules/commands/ai/forward.c
+        src/modules/commands/ai/turn.c
+        src/modules/commands/ai/take.c
+        src/modules/commands/ai/set.c
+        #endregion
+
+        #region Updater module
+        src/modules/updater/updater.c
+        src/modules/updater/updater.h
         #endregion
         #endregion
 )

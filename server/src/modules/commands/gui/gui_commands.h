@@ -12,6 +12,13 @@
 #include "sys/types.h"
 #include "responses.h"
 
+/**
+ * @brief gui_handler_data_t definition for circular dependency
+ * with requests manager
+ */
+typedef struct gui_handler_data_s gui_handler_data_t;
+
+
 /** HANDLERS **/
 extern void msz(gui_handler_data_t *data);
 extern void bct(gui_handler_data_t *data);

@@ -16,6 +16,9 @@
  * @brief Updater structure
  */
 typedef struct updater_s {
+    /** @brief The time (in milliseconds) when the last update happened */
+    time_t previous_time;
+
     /** @brief The time (in milliseconds) between two resource generations */
     time_t generation_interval;
     /** @brief The time (in milliseconds) when the next resource generation

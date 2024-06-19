@@ -13,7 +13,7 @@
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
-    player_t player;
+    player_t player; // TODO: init using memset (and members that can be init)
     SLIST_ENTRY(ai_client_node_s) next;
 } ai_client_node_t;
 
