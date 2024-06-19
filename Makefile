@@ -9,7 +9,10 @@
 
 SERVER_NAME	=	zappy_server
 
-all: $(SERVER_NAME)
+AI_DIR  =	ai
+AI_NAME =	zappy_ai
+
+all: $(SERVER_NAME) $(AI_NAME)
 
 $(SERVER_NAME):
 	@mkdir -p server/build
@@ -17,8 +20,11 @@ $(SERVER_NAME):
 	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 	@cmake --build .
 	@cd ../..
+	
+$(AI_NAME):
+    @make -C $(AI_DIR)/
 
 tests_run:
 	@echo "There is actually no tests to run for this project"
 
-.PHONY:	$(SERVER_NAME) tests_run
+.PHONY:	$(SERVER_NAME) $(AI_NAME) tests_run
