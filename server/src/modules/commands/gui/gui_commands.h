@@ -11,6 +11,7 @@
 #include "requests_manager/requests_manager.h"
 #include "sys/types.h"
 #include "responses.h"
+#include "coords.h"
 
 /**
  * @brief gui_handler_data_t definition for circular dependency
