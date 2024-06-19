@@ -11,10 +11,10 @@ Window::Window()
 {
     _window.create(sf::VideoMode(1920, 1080), "Zappy");
     sf::Image *icon = new sf::Image();
-    if (icon->loadFromFile("./resources/empire_nexus.jpeg"))
+    if (icon->loadFromFile("./gui/resources/empire_nexus.jpeg"))
         _window.setIcon(1024, 1024, icon->getPixelsPtr());
     _globalFont = std::make_shared<sf::Font>();
-    if (!_globalFont->loadFromFile("./resources/font.ttf"))
+    if (!_globalFont->loadFromFile("./gui/resources/font.ttf"))
         std::cerr << "Error loading font" << std::endl;
 }
 

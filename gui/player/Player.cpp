@@ -25,7 +25,7 @@ Player::Player(std::stringstream &s)
     _team = str;
     _playerSprite = std::make_shared<sf::Sprite>();
     sf::Texture *texture = new sf::Texture();
-    if (!texture->loadFromFile("./resources/player.png")) {
+    if (!texture->loadFromFile("./gui/resources/player.png")) {
         std::cerr << "Error loading player texture" << std::endl;
     }
     _playerSprite->setTexture(*texture);
