@@ -32,9 +32,8 @@ static bool network_accept_connexion(network_t *network)
         return false;
     }
     client = client_constructor(client_socket, &client_address);
-    if (client == NULL) {
+    if (client == NULL)
         return false;
-    }
     clients_manager_add(network->clients_manager, client);
     log_network_client_connected_success(client);
     return true;
@@ -45,9 +44,8 @@ bool network_send_requests(network_t *network)
     client_node_t *current = NULL;
 
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
-        if (!client_send_all_requests(current->client, &network->write_fds)) {
+        if (!client_send_all_requests(current->client, &network->write_fds))
             return false;
-        }
     }
     return true;
 }
@@ -64,13 +62,13 @@ bool network_receive_requests(network_t *network)
     }
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
     {
-        if (FD_ISSET(current->client->socket, &network->read_fds)) {
+        if (FD_ISSET(current->client->socket, &network->read_fds) &&
+            current->client->requests_queue_to_handle_size < 10) {
             if (recv(current->client->socket, buffer, 1024, 0) == -1) {
                 perror("recv");
                 return false;
             }
-            requests_manager_handle_request(buffer, current->client,
-                network->clients_manager);
+            client_add_request(current->client, strdup(buffer), TO_HANDLE);
         }
     }
     return true;
@@ -100,7 +98,7 @@ bool network_set_and_select_fds(network_t *network)
     return true;
 }
 
-void network_destructor(network_t *network)
+static void network_destructor(network_t *network)
 {
     if (network->endpoint)
         endpoint_destructor(network->endpoint);
@@ -127,5 +125,6 @@ network_t *network_constructor(char *ip, int port)
         network_destructor(network);
         return NULL;
     }
+    network->destroy = &network_destructor;
     return network;
 }

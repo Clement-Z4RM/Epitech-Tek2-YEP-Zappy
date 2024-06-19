@@ -17,7 +17,7 @@ static char **requests_manager_parse_args(char *request)
     return args;
 }
 
-void requests_manager_handle_request(char *request, client_t *client,
+static void requests_manager_handle_request(char *request, client_t *client,
     client_manager_t *clients_manager)
 {
     char **args = requests_manager_parse_args(request);
@@ -34,4 +34,28 @@ void requests_manager_handle_request(char *request, client_t *client,
         }
     }
     free(args);
+}
+
+void requests_manager_handle_requests(client_manager_t *clients_manager)
+{
+    client_node_t *current = NULL;
+    client_request_node_t *current_request = NULL;
+    client_t *client = NULL;
+
+    while (!SLIST_EMPTY(&clients_manager->clients_list)) {
+        current = SLIST_FIRST(&clients_manager->clients_list);
+        client = current->client;
+        SLIST_REMOVE_HEAD(&clients_manager->clients_list, next);
+        if (client->current_request_to_handle == NULL) {
+            current_request = CIRCLEQ_LAST(
+                &client->requests_queue_to_handle);
+            client->current_request_to_handle = current_request->request;
+            CIRCLEQ_REMOVE(&current->client->requests_queue_to_handle,
+                current_request, next);
+            requests_manager_handle_request(
+                current->client->current_request_to_handle,
+                current->client, clients_manager
+            );
+        }
+    }
 }

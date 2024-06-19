@@ -47,7 +47,7 @@ private:
     std::vector<std::shared_ptr<Egg>> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);
     static std::vector<std::string> splitStr(const std::string &str, char delimiter);
-    std::string _eggTexturePath = "./resources/Egg.png";
+    std::string _eggTexturePath = "./gui/resources/Egg.png";
     sf::Texture _eggTexture;
     int _nbEggsCreated = 0;
 };

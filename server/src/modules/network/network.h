@@ -22,6 +22,7 @@ typedef struct network_s {
     fd_set read_fds; ///< the file descriptor set for reading
     fd_set write_fds; ///< the file descriptor set for writing
     client_manager_t *clients_manager; //< the clients manager
+    void (*destroy)(struct network_s *network); ///< the destructor
 } network_t;
 
 /**
@@ -31,12 +32,6 @@ typedef struct network_s {
 * @return network_t the newly allocated instance
 **/
 extern network_t *network_constructor(char *ip, int port);
-
-/**
-* @brief destroy a network instance (freeing memory)
-* @param network the network to destroy
-**/
-extern void network_destructor(network_t *network);
 
 /**
 * @brief set the file descriptors and select them
