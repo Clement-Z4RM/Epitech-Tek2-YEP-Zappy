@@ -20,7 +20,7 @@ $(SERVER_NAME):
 	@cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 	@cmake --build .
 	@cd ../..
-	
+
 $(AI_NAME):
     @make -C $(AI_DIR)/
 
