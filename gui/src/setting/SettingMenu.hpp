@@ -22,6 +22,8 @@ private:
     sf::Vector2f _position;
     sf::Texture _texture;
     std::string _texturePath = "./resources/Button.png";
+    sf::Font _font;
+    std::string _fontPath = "./resources/font.ttf";
 };
 
 class SettingMenu {

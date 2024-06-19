@@ -9,7 +9,13 @@
 
 Button::Button(const std::string& text, sf::Vector2f position)
 {
+    _font.loadFromFile(_fontPath);
     _text.setString(text);
+    _text.setCharacterSize(60);
+    _text.setFillColor(sf::Color::Black);
+    _text.setFont(_font);
+    _text.setPosition(position.x + 40, position.y + 35);
+    _text.setStyle(sf::Text::Bold);
     _position = position;
     _texture.loadFromFile(_texturePath);
     _sprite.setTexture(_texture);
@@ -36,6 +42,6 @@ void SettingMenu::displaySettingMenu(sf::RenderWindow &window)
 
 void SettingMenu::createButtons()
 {
-    auto button = std::make_shared<Button>("Connect", sf::Vector2f(100, 100));
+    auto button = std::make_shared<Button>("Connect", sf::Vector2f(1000, 100));
     _buttons.push_back(button);
 }
