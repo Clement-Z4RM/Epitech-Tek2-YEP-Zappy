@@ -17,7 +17,7 @@ Button::Button(const std::string& text, sf::Vector2f position)
     _text.setPosition(position.x + 40, position.y + 35);
     _text.setStyle(sf::Text::Bold);
     _position = position;
-    _texture.loadFromFile(_texturePath);
+    _texture.loadFromFile(_textureButtonPath);
     _sprite.setTexture(_texture);
     _sprite.setPosition(_position);
 }
@@ -43,5 +43,11 @@ void SettingMenu::displaySettingMenu(sf::RenderWindow &window)
 void SettingMenu::createButtons()
 {
     auto button = std::make_shared<Button>("Connect", sf::Vector2f(1000, 100));
+    _buttons.push_back(button);
+    button = std::make_shared<Button>("Quit", sf::Vector2f(1000, 200));
+    button->changeTexture(button->getTextureButtonOffPath());
+    _buttons.push_back(button);
+    button = std::make_shared<Button>("Settings", sf::Vector2f(1000, 300));
+    button->changeTexture(button->getTextureButtonClickPath());
     _buttons.push_back(button);
 }
