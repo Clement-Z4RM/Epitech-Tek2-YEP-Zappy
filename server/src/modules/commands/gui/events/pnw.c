@@ -8,7 +8,7 @@
 #include "../gui_commands.h"
 
 void pnw(const ai_client_node_t *ai_client, const client_manager_t
-*client_manager)
+    *client_manager)
 {
     gui_client_node_t *node = NULL;
     char response[MAX_RESPONSE_SIZE];

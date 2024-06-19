@@ -19,3 +19,9 @@ extern void mct(gui_handler_data_t *data);
 
 /** EVENTS **/
 extern void plv(const ai_client_node_t *ai_client);
+extern void pfk(const uint64_t id, const client_manager_t *client_manager);
+extern void pnw(const ai_client_node_t *ai_client, const client_manager_t
+    *client_manager);
+extern void pex(const uint64_t id, const client_manager_t *client_manager);
+extern void pbc(const uint64_t id, char *msg, const client_manager_t
+    *client_manager);
