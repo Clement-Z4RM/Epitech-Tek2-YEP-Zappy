@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Zappy-Server
 ** File description:
-** client_manager module getters
+** clients_manager module getters
 */
 
 #include "clients_manager.h"

@@ -11,7 +11,6 @@
 void mct(gui_handler_data_t *data)
 {
     map_t *map = data->map;
-    static const uint8_t MAX_DIGITS = 21;
     char *x_str = (char *)malloc(MAX_DIGITS * sizeof(char));
     char *y_str = (char *)malloc(MAX_DIGITS * sizeof(char));
 

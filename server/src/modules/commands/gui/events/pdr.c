@@ -7,7 +7,7 @@
 
 #include "../gui_commands.h"
 
-void pdr(const uint64_t id,
+void pdr(uint64_t id,
     resource_name_t resource,
     clients_manager_t clients_manager
 )

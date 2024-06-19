@@ -8,7 +8,7 @@
 #include "../gui_commands.h"
 
 void pnw(const ai_client_node_t *ai_client, const clients_manager_t
-    *client_manager)
+    *clients_manager)
 {
     gui_client_node_t *node = NULL;
     char response[MAX_RESPONSE_SIZE];
@@ -24,7 +24,7 @@ void pnw(const ai_client_node_t *ai_client, const clients_manager_t
         ai_client->player.level,
         ai_client->client->team_name
     );
-    SLIST_FOREACH(node, &client_manager->gui_clients_list, next)
+    SLIST_FOREACH(node, &clients_manager->gui_clients_list, next)
     {
         client_add_request(node->client, response, TO_SEND);
     }

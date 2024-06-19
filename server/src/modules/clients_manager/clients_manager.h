@@ -67,8 +67,8 @@ typedef struct clients_manager_s {
 } clients_manager_t;
 
 /**
-* @brief create a new instance of the client_manager module
-* @return client_manager_t the newly allocated instance
+* @brief create a new instance of the clients_manager module
+* @return clients_manager_t the newly allocated instance
 * **/
 clients_manager_t *clients_manager_constructor(ulong max_clients_per_team);
 
