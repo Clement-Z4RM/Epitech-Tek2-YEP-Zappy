@@ -86,6 +86,7 @@ static void handle_gui_request(
             return;
         }
     }
+    client_add_request(client->client, "suc\n", TO_SEND);
     log_failure_request_no_handler(client->client);
 }
 
