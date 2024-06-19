@@ -29,7 +29,9 @@ jobs:
               echo "::error file=$executable,title=Executable problem::This executable does not exist or is not executable"
               exit 1
             fi
-            ./"$executable" -help
+            if [ "$executable" != "zappy_ai" ]; then # disabled because it need a specific package
+              ./"$executable" -help
+            fi
           done
 
   glibchecker:
