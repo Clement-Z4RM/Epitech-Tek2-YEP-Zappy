@@ -18,7 +18,7 @@
 * @param manager the clients manager
 * @return bool true if the client has a team name, false otherwise
 **/
-static bool add_to_team(client_t *client, client_manager_t *manager)
+static bool add_to_team(client_t *client, clients_manager_t *manager)
 {
     client->team_name = client->current_request_to_handle;
     client->current_request_to_handle = NULL;
@@ -52,7 +52,7 @@ static void free_request_memory(char **args, client_t *client)
 static void handle_ai_request(
     char **args,
     ai_client_node_t *client,
-    client_manager_t *manager,
+    clients_manager_t *manager,
     map_t *map
 )
 {
@@ -72,7 +72,7 @@ static void handle_ai_request(
 static void handle_gui_request(
     char **args,
     gui_client_node_t *client,
-    client_manager_t *manager,
+    clients_manager_t *manager,
     map_t *map
 )
 {
@@ -89,7 +89,7 @@ static void handle_gui_request(
     log_failure_request_no_handler(client->client);
 }
 
-static bool client_have_team(client_t *client, client_manager_t *manager)
+static bool client_have_team(client_t *client, clients_manager_t *manager)
 {
     if (client->team_name == NULL) {
         if (add_to_team(client, manager) == false) {
@@ -123,40 +123,40 @@ static bool parse_args(client_t *client, char ***args)
 static client_t *get_client(client_node_t *current)
 {
     client_t *client = current->client;
-    client_request_node_t *request = NULL;
+    char *request = NULL;
 
     if (client->current_request_to_handle == NULL) {
-        request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
-        client->current_request_to_handle = request->request;
-        CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+        request = client_popback_request(client, TO_HANDLE);
+        client->current_request_to_handle = request;
         return client;
     }
     return NULL;
 }
 
-static void handle_none_clients_requests(client_manager_t *manager)
+static void handle_none_clients_requests(clients_manager_t *manager)
 {
     client_node_t *current = NULL;
-    client_request_node_t *request = NULL;
+    char *request = NULL;
     client_t *client = NULL;
 
     for (current = SLIST_FIRST(&manager->clients_list); current;
         current = SLIST_NEXT(current, next)) {
         client = current->client;
-        if (NONE == client->type && !client->current_request_to_handle) {
-            request = CIRCLEQ_LAST(&client->requests_queue_to_handle);
-            client->current_request_to_handle = request->request;
-            CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+        if (NONE == client->type &&
+            client->current_request_to_handle == NULL
+        ) {
+            request = client_popback_request(client, TO_HANDLE);
+            client->current_request_to_handle = request;
             free_request_memory(NULL, client);
         }
-        if (!client->current_request_to_handle)
+        if (client->current_request_to_handle == NULL)
             continue;
         remove_newline(client->current_request_to_handle);
         client_have_team(client, manager);
     }
 }
 
-void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
+void requests_manager_handle_requests(clients_manager_t *manager, map_t *map)
 {
     ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;

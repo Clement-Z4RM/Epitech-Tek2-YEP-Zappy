@@ -9,7 +9,7 @@
 #include "stdlib.h"
 
 ai_client_node_t *clients_manager_get_ai_by_id(
-    client_manager_t *manager, uint64_t id)
+    clients_manager_t *manager, uint64_t id)
 {
     ai_client_node_t *node = NULL;
 

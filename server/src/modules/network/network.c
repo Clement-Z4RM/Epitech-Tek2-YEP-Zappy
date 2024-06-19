@@ -60,9 +60,8 @@ bool network_receive_requests(network_t *network)
     char buffer[1024] = {0};
 
     if (FD_ISSET(network->endpoint->socket, &network->read_fds)) {
-        if (!network_accept_connexion(network)) {
+        if (!network_accept_connexion(network))
             return false;
-        }
     }
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
     {
@@ -72,7 +71,8 @@ bool network_receive_requests(network_t *network)
                 perror("recv");
                 return false;
             }
-            client_add_request(current->client, strdup(buffer), TO_HANDLE);
+            if (current->client->requests_queue_to_handle_size < 10)
+                client_add_request(current->client, strdup(buffer), TO_HANDLE);
         }
     }
     return true;
