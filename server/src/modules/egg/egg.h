@@ -14,6 +14,8 @@
  * @brief Egg structure
  */
 typedef struct egg_s {
+    /** @brief The egg id */
+    uint64_t id;
     /** @brief The next egg in the list */
     SLIST_ENTRY(egg_s) next;
 } egg_t;
