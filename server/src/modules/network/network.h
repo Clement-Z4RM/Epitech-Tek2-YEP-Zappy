@@ -23,7 +23,7 @@ typedef struct network_s {
     endpoint_t *endpoint; ///< used to listen (ip, port, address)
     fd_set read_fds; ///< the file descriptor set for reading
     fd_set write_fds; ///< the file descriptor set for writing
-    client_manager_t *clients_manager; //< the clients manager
+    clients_manager_t *clients_manager; //< the clients manager
     options_t *options;
     void (*destroy)(struct network_s *network); ///< the destructor
 } network_t;

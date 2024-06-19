@@ -7,7 +7,7 @@
 
 #include "../gui_commands.h"
 
-void plv(const player_t *player, const client_manager_t *client_manager)
+void plv(const player_t *player, const clients_manager_t *client_manager)
 {
     char response[MAX_RESPONSE_SIZE];
     const gui_client_node_t *node = NULL;

@@ -7,7 +7,7 @@
 
 #include "../gui_commands.h"
 
-void pbc(const uint64_t id, char *msg, const client_manager_t *client_manager)
+void pbc(const uint64_t id, char *msg, const clients_manager_t *client_manager)
 {
     char response[MAX_RESPONSE_SIZE];
     gui_client_node_t *node = NULL;

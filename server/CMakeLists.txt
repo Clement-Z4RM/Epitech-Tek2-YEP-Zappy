@@ -122,6 +122,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/plv.c
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
+        src/modules/commands/gui/events/pdr.c
         #endregion
         #endregion
 )

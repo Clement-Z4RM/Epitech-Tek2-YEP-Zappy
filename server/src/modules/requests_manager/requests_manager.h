@@ -15,7 +15,7 @@
 typedef struct ai_handler_data_s {
     ai_client_node_t *client;
     char **args;
-    client_manager_t *clients_manager;
+    clients_manager_t *clients_manager;
     map_t *map;
 } ai_handler_data_t;
 
@@ -29,7 +29,7 @@ typedef struct ai_request_handler_s {
 typedef struct gui_handler_data_s {
     gui_client_node_t *client;
     char **args;
-    client_manager_t *clients_manager;
+    clients_manager_t *clients_manager;
     map_t *map;
 } gui_handler_data_t;
 
@@ -41,7 +41,7 @@ typedef struct gui_request_handler_s {
 
 /** @brief  handle clients requests  **/
 extern void requests_manager_handle_requests(
-    client_manager_t *clients_manager,
+    clients_manager_t *clients_manager,
     map_t *map
 );
 

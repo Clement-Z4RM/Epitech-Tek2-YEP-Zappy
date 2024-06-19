@@ -7,7 +7,7 @@
 
 #include "../gui_commands.h"
 
-void pfk(const uint64_t id, const client_manager_t *client_manager)
+void pfk(const uint64_t id, const clients_manager_t *client_manager)
 {
     char response[MAX_RESPONSE_SIZE];
     gui_client_node_t *node = NULL;

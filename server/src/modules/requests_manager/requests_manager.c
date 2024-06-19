@@ -18,7 +18,7 @@
 * @param manager the clients manager
 * @return bool true if the client has a team name, false otherwise
 **/
-static bool add_to_team(client_t *client, client_manager_t *manager)
+static bool add_to_team(client_t *client, clients_manager_t *manager)
 {
     client->team_name = client->current_request_to_handle;
     client->current_request_to_handle = NULL;
@@ -52,7 +52,7 @@ static void free_request_memory(char **args, client_t *client)
 static void handle_ai_request(
     char **args,
     ai_client_node_t *client,
-    client_manager_t *manager,
+    clients_manager_t *manager,
     map_t *map
 )
 {
@@ -72,7 +72,7 @@ static void handle_ai_request(
 static void handle_gui_request(
     char **args,
     gui_client_node_t *client,
-    client_manager_t *manager,
+    clients_manager_t *manager,
     map_t *map
 )
 {
@@ -89,7 +89,7 @@ static void handle_gui_request(
     log_failure_request_no_handler(client->client);
 }
 
-static bool client_have_team(client_t *client, client_manager_t *manager)
+static bool client_have_team(client_t *client, clients_manager_t *manager)
 {
     if (client->team_name == NULL) {
         if (add_to_team(client, manager) == false) {
@@ -134,7 +134,7 @@ static client_t *get_client(client_node_t *current)
     return NULL;
 }
 
-static void handle_none_clients_requests(client_manager_t *manager)
+static void handle_none_clients_requests(clients_manager_t *manager)
 {
     client_node_t *current = NULL;
     client_request_node_t *request = NULL;
@@ -156,7 +156,7 @@ static void handle_none_clients_requests(client_manager_t *manager)
     }
 }
 
-void requests_manager_handle_requests(client_manager_t *manager, map_t *map)
+void requests_manager_handle_requests(clients_manager_t *manager, map_t *map)
 {
     ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;
