@@ -119,6 +119,7 @@ add_executable(zappy_server
         src/modules/clients_manager/client_manager_getters.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
+        src/modules/commands/gui/events/plv.c
         #endregion
         #endregion
 )

@@ -12,5 +12,10 @@
 #include "sys/types.h"
 #include "responses.h"
 
+/** HANDLERS **/
 extern void msz(gui_handler_data_t *data);
 extern void bct(gui_handler_data_t *data);
+extern void mct(gui_handler_data_t *data);
+
+/** EVENTS **/
+extern void plv(const ai_client_node_t *ai_client);
