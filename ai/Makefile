@@ -5,9 +5,10 @@
 ## Makefile
 ##
 
-SRC = src/main.lua
+AI_NAME = zappy_ai
 
-EXECUTABLE = ../zappy_ai
+SRC = src/main.lua
+EXECUTABLE = ../$(AI_NAME)
 
 all:	build
 

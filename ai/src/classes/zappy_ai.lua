@@ -5,7 +5,7 @@
 --- @field public inventory ZappyInventory
 --- @field public status number
 --- @field public worldDimensions {x: number, y: number}
---- @field protected numTicks
+--- @field protected numTicks number
 local ZappyAI <const> = {}
 
 local Posix <const> = require("posix")
@@ -17,12 +17,13 @@ local ZappyAIStatus <const> = require("ai/src/enums/zappy_ai_status")
 local ZappyServer <const> = require("ai/src/classes/zappy_server")
 local ZappyLogger <const> = require("ai/src/classes/zappy_logger")
 local Utils <const> = require("ai/src/utils")
+local LookParser <const> = require("ai/src/look_parser")
 
 --- @param args string[]
 --- @return ZappyAI
 function ZappyAI.New(args)
     local self = setmetatable({}, { __index = ZappyAI })
-    
+
     self.params = ZappyParamsContainer.New(args)
     self.server = ZappyServer.New(self.params:Get("h"), self.params:Get("p"))
     self.logger = ZappyLogger.New()
@@ -30,7 +31,7 @@ function ZappyAI.New(args)
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
     self.numTicks = 0
-    
+
     Posix.signal(Posix.SIGINT, function()
         self.logger:Warn("CTRL + C Pressed in the console, exiting...")
         self.status = ZappyAIStatus.ENDED
@@ -92,7 +93,7 @@ function ZappyAI:SetupInventory()
     local input = self.server:SendSync(ZappyAction.GET_INVENTORY)
     input = input:match("%[(.*)%]")
     input = input:gsub("^%s+", ""):gsub("%s+$", "")
-    
+
     local items = {}
     local function split(str, sep)
         local result = {}
@@ -101,7 +102,7 @@ function ZappyAI:SetupInventory()
         end
         return result
     end
-    
+
     local elements = split(input, ",")
     for _, element in ipairs(elements) do
         element = element:gsub("^%s+", ""):gsub("%s+$", "")
@@ -110,16 +111,20 @@ function ZappyAI:SetupInventory()
             items[item] = tonumber(quantity)
         end
     end
-    
+
     for item, quantity in pairs(items) do
         self.inventory:Add(item, quantity)
     end
     self.logger:Info(("Base inventory: %s"):format(self.inventory))
 end
 
---- @TODO: Implement
 function ZappyAI:LookupEnvironment()
     local result <const> = self.server:SendSync(ZappyAction.LOOKUP_ENVIRONMENT)
+    local parsedResult <const> = LookParser.Parse(result)
+
+    for i, tile in ipairs(parsedResult) do
+        self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
+    end
 end
 
 --[[
