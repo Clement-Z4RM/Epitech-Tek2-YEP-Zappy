@@ -10,6 +10,7 @@
 
     #include <sys/queue.h>
     #include <stddef.h>
+    #include "macros.h"
 
 /**
  * @brief The type of a resource
@@ -60,8 +61,11 @@ static const resource_t RESOURCES[RESOURCES_COUNT] = {
 
 /**
  * @brief The name of each resource as a string
+ *
+ * There is an UNUSED attribute because there is a warning when compiling
+ * (I don't know why).
  */
-static const char *RESOURCE_NAMES[RESOURCES_COUNT] = {
+UNUSED static const char *RESOURCE_NAMES[RESOURCES_COUNT] = {
     NULL,
     "linemate",
     "deraumere",

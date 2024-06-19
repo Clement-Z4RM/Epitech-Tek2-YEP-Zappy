@@ -52,7 +52,9 @@ extern void requests_manager_handle_requests(
 static const ai_request_handler_t AI_HANDLERS[] = {
     {"Forward", forward},
     {"Right", right},
-    {"Left", left}
+    {"Left", left},
+    {"Take", take},
+    {"Set", set}
 };
 
 #define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)

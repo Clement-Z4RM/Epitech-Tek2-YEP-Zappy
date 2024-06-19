@@ -115,6 +115,8 @@ add_executable(zappy_server
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
+        src/modules/commands/ai/take.c
+        src/modules/commands/ai/set.c
         #endregion
 
         #region Updater module

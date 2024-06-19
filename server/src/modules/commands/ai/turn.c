@@ -13,7 +13,7 @@
  * @brief Right command.
  * Turn the player forward 90° right.
  *
- * This command takes 7 ticks to execute. TODO: time (and send ok at end)
+ * This command takes 7 ticks to execute.
  *
  * @param data The structure containing all needed informations.
  */
@@ -27,7 +27,7 @@ void right(ai_handler_data_t *data)
  * @brief Left command.
  * Turn the player forward 90° left.
  *
- * This command takes 7 ticks to execute. TODO: time (and send ok at end)
+ * This command takes 7 ticks to execute.
  *
  * @param data The structure containing all needed informations.
  */

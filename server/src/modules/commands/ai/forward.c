@@ -13,7 +13,7 @@
  * @brief Forward command.
  * Move the player forward of one tile in the direction he is facing.
  *
- * This command takes 7 ticks to execute. TODO: time (and send ok at end)
+ * This command takes 7 ticks to execute.
  *
  * @param data The structure containing all needed informations.
  */
