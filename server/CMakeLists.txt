@@ -132,6 +132,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/smg.c
         src/modules/commands/gui/events/seg.c
         src/modules/commands/gui/events/pgt.c
+        src/modules/commands/gui/events/pdi.c
         #endregion
         #endregion
 )

@@ -33,3 +33,6 @@ extern void pnw(const ai_client_node_t *ai_client, const clients_manager_t
 extern void pex(const uint64_t id, const clients_manager_t *client_manager);
 extern void pbc(const uint64_t id, char *msg, const clients_manager_t
     *client_manager);
+extern void smg(char *msg, const clients_manager_t *clients_manager);
+extern void seg(char *team_name, clients_manager_t *clients_manager);
+extern void pdi(const uint64_t id, clients_manager_t *clients_manager);
