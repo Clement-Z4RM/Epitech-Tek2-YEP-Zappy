@@ -42,6 +42,8 @@ public:
     void checkClick(sf::RenderWindow &window, sf::Event &event);
 private:
     std::vector<std::shared_ptr<Button>> _buttons;
+    std::vector<std::shared_ptr<std::string>> _teamsNames;
+    std::vector<std::shared_ptr<std::string>> _playerDetails;
 };
 
 #endif //ZAPPY_GUI_SETTINGMENU_HPP
