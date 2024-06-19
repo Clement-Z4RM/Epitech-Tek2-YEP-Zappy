@@ -8,7 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "ai_commands.h"
+#include "requests_manager/requests_manager.h"
+#include "inventory.h"
 
 static void fill_inventory(char *inventory, ai_client_node_t *client)
 {

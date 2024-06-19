@@ -10,17 +10,6 @@
 
     #include "requests_manager/requests_manager.h"
 
-    /**
-     * + 7 * <resource_name>
-     * + 7 (commas)
-     * + 70 (values)
-     * + 12 (commas + spaces)
-     * + 2 (brackets)
-     * + 1 (line break)
-     * + 1 (\0)
-     */
-    #define INVENTORY_SIZE 141
-
 /**
  * @brief ai_handler_data_t definition for circular dependency
  * with requests manager
