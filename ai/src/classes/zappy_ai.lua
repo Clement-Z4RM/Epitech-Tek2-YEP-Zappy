@@ -164,7 +164,11 @@ function ZappyAI:ForkPlayer()
     self.logger:Info(("Fork player response: %s"):format(response))
 end
 
-
+-- Eject players from this tile
+function ZappyAI:Eject()
+    local response = self.server:SendSync(ZappyAction.EJECT)
+    self.logger:Info(("Eject response: %s"):format(response))
+end
 
 --[[
     AI Core
