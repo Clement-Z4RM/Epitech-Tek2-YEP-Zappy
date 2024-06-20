@@ -190,6 +190,39 @@ function ZappyAI:StartIncantation()
     self.logger:Info(("Incantation response: %s"):format(response))
 end
 
+--- @param command string
+--- @return void
+function ZappyAI:HandleCommand(command)
+    local cmd, param = command:match("^(%S+)%s*(.*)$")
+    if cmd == "look" then
+        self:LookupEnvironment()
+    elseif cmd == "inventory" then
+        self:SetupInventory()
+    elseif cmd == "forward" then
+        self:MoveForward()
+    elseif cmd == "right" then
+        self:TurnRight()
+    elseif cmd == "left" then
+        self:TurnLeft()
+    elseif cmd == "broadcast" then
+        self:Broadcast(param)
+    elseif cmd == "connect_nbr" then
+        self:ConnectNbr()
+    elseif cmd == "fork" then
+        self:ForkPlayer()
+    elseif cmd == "eject" then
+        self:Eject()
+    elseif cmd == "take" then
+        self:TakeObject(param)
+    elseif cmd == "set" then
+        self:SetObject(param)
+    elseif cmd == "incantation" then
+        self:StartIncantation()
+    else
+        self.logger:Warn(("Unknown command: %s"):format(command))
+    end
+end
+
 --[[
     AI Core
 --]]
