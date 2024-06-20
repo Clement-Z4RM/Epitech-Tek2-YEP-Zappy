@@ -184,6 +184,12 @@ function ZappyAI:SetObject(object)
     self.logger:Info(("Set object response: %s"):format(response))
 end
 
+-- Start an incantation
+function ZappyAI:StartIncantation()
+    local response = self.server:SendSync(ZappyAction.INCANTATION)
+    self.logger:Info(("Incantation response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
