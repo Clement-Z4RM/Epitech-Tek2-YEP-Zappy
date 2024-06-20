@@ -107,16 +107,6 @@ extern void clients_manager_remove(clients_manager_t *manager,
     client_t *client);
 
 /**
- * @brief initialize a team in the client manager's list
- *
- * @param manager the client manager
- * @param team_name the name of the team to initialize
- *
- * @return bool true if the operation was successful, false otherwise
- */
-extern bool add_new_team(clients_manager_t *manager, const char *team_name);
-
-/**
  * @brief add a new ai client to the client manager's list
  * @param manager the client manager
  * @param client the client to add
@@ -139,3 +129,21 @@ extern bool clients_manager_add_to_team(
 * **/
 extern ai_client_node_t *clients_manager_get_ai_by_id(
     clients_manager_t *manager, uint64_t id);
+
+/**
+ * @brief Destroy a team and all its clients and members
+ *
+ * @param team The team to destroy
+ */
+extern void clients_manager_team_destructor(team_node_t *team);
+
+/**
+ * @brief Initialize all teams in the client manager's list
+ *
+ * @param manager The client manager
+ * @param team_names The list of team names
+ */
+extern void clients_manager_init_teams(
+    clients_manager_t *manager,
+    team_names_t *team_names
+);

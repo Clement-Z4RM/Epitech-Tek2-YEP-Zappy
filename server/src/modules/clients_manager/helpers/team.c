@@ -11,7 +11,35 @@
 #include "logs/logs.h"
 #include "player/player_methods.h"
 
-bool add_new_team(clients_manager_t *manager, const char *team_name)
+void clients_manager_team_destructor(team_node_t *team)
+{
+    team_egg_t *egg_current = NULL;
+    ai_client_node_t *current = NULL;
+
+    while (!SLIST_EMPTY(&team->eggs)) {
+        egg_current = SLIST_FIRST(&team->eggs);
+        SLIST_REMOVE_HEAD(&team->eggs, next);
+        free(egg_current);
+    }
+    while (!SLIST_EMPTY(&team->ai_clients)) {
+        current = SLIST_FIRST(&team->ai_clients);
+        SLIST_REMOVE_HEAD(&team->ai_clients, next);
+        client_destructor(current->client);
+        free(current);
+    }
+    free(team->name);
+    free(team);
+}
+
+/**
+ * @brief initialize a team in the client manager's list
+ *
+ * @param manager the client manager
+ * @param team_name the name of the team to initialize
+ *
+ * @return bool true if the operation was successful, false otherwise
+ */
+static bool add_new_team(clients_manager_t *manager, const char *team_name)
 {
     team_node_t *curr_team = malloc(sizeof(team_node_t));
 
@@ -24,6 +52,21 @@ bool add_new_team(clients_manager_t *manager, const char *team_name)
     SLIST_INIT(&curr_team->ai_clients);
     SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
     return true;
+}
+
+void clients_manager_init_teams(clients_manager_t *manager,
+    team_names_t *team_names)
+{
+    team_name_t *current = NULL;
+
+    SLIST_FOREACH(current, team_names, next) {
+        if (!add_new_team(manager, current->name)) {
+            log_failure_init_team(current->name);
+        } else {
+            manager->nb_teams++;
+            log_success_init_team(current->name);
+        }
+    }
 }
 
 static bool add_to_existing_team(
