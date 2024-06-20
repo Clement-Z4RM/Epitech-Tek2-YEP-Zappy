@@ -9,11 +9,14 @@
     #define ZAPPY_SERVER_EGG_H_
 
     #include <sys/queue.h>
+    #include <sys/types.h>
 
 /**
  * @brief Egg structure
  */
 typedef struct egg_s {
+    /** @brief The egg id */
+    u_int64_t id;
     /** @brief The next egg in the list */
     SLIST_ENTRY(egg_s) next;
 } egg_t;

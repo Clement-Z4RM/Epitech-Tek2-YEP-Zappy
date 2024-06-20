@@ -129,6 +129,13 @@ add_executable(zappy_server
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
+        src/modules/commands/gui/events/smg.c
+        src/modules/commands/gui/events/seg.c
+        src/modules/commands/gui/events/pgt.c
+        src/modules/commands/gui/events/pdi.c
+        src/modules/commands/gui/events/pic.c
+        src/modules/commands/gui/events/enw.c
+        include/coords.h
         #endregion
         #endregion
 )
