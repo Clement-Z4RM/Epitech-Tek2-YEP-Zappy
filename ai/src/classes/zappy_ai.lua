@@ -127,6 +127,12 @@ function ZappyAI:LookupEnvironment()
     end
 end
 
+-- Move forward one tile
+function ZappyAI:MoveForward()
+    local response = self.server:SendSync(ZappyAction.MOVE_FORWARD)
+    self.logger:Info(("Move forward response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
