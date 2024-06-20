@@ -127,6 +127,102 @@ function ZappyAI:LookupEnvironment()
     end
 end
 
+-- Move forward one tile
+function ZappyAI:MoveForward()
+    local response = self.server:SendSync(ZappyAction.MOVE_FORWARD)
+    self.logger:Info(("Move forward response: %s"):format(response))
+end
+
+-- Turn 90 degrees to the right
+function ZappyAI:TurnRight()
+    local response = self.server:SendSync(ZappyAction.TURN_RIGHT)
+    self.logger:Info(("Turn right response: %s"):format(response))
+end
+
+-- Turn 90 degrees to the left
+function ZappyAI:TurnLeft()
+    local response = self.server:SendSync(ZappyAction.TURN_LEFT)
+    self.logger:Info(("Turn left response: %s"):format(response))
+end
+
+-- Broadcast a message
+--- @param message string
+function ZappyAI:Broadcast(message)
+    local response = self.server:SendSync(ZappyAction.BROADCAST .. " " .. message)
+    self.logger:Info(("Broadcast response: %s"):format(response))
+end
+
+-- Get number of unused slots in the team
+function ZappyAI:ConnectNbr()
+    local response = self.server:SendSync(ZappyAction.CONNECT_NBR)
+    self.logger:Info(("Connect number response: %s"):format(response))
+end
+
+-- Fork a player
+function ZappyAI:ForkPlayer()
+    local response = self.server:SendSync(ZappyAction.FORK_PLAYER)
+    self.logger:Info(("Fork player response: %s"):format(response))
+end
+
+-- Eject players from this tile
+function ZappyAI:Eject()
+    local response = self.server:SendSync(ZappyAction.EJECT)
+    self.logger:Info(("Eject response: %s"):format(response))
+end
+
+-- Take an object
+--- @param object string
+function ZappyAI:TakeObject(object)
+    local response = self.server:SendSync(ZappyAction.TAKE_OBJECT .. " " .. object)
+    self.logger:Info(("Take object response: %s"):format(response))
+end
+
+-- Set an object
+--- @param object string
+function ZappyAI:SetObject(object)
+    local response = self.server:SendSync(ZappyAction.SET_OBJECT .. " " .. object)
+    self.logger:Info(("Set object response: %s"):format(response))
+end
+
+-- Start an incantation
+function ZappyAI:StartIncantation()
+    local response = self.server:SendSync(ZappyAction.INCANTATION)
+    self.logger:Info(("Incantation response: %s"):format(response))
+end
+
+--- @param command string
+--- @return void
+function ZappyAI:HandleCommand(command)
+    local cmd, param = command:match("^(%S+)%s*(.*)$")
+    if cmd == "look" then
+        self:LookupEnvironment()
+    elseif cmd == "inventory" then
+        self:SetupInventory()
+    elseif cmd == "forward" then
+        self:MoveForward()
+    elseif cmd == "right" then
+        self:TurnRight()
+    elseif cmd == "left" then
+        self:TurnLeft()
+    elseif cmd == "broadcast" then
+        self:Broadcast(param)
+    elseif cmd == "connect_nbr" then
+        self:ConnectNbr()
+    elseif cmd == "fork" then
+        self:ForkPlayer()
+    elseif cmd == "eject" then
+        self:Eject()
+    elseif cmd == "take" then
+        self:TakeObject(param)
+    elseif cmd == "set" then
+        self:SetObject(param)
+    elseif cmd == "incantation" then
+        self:StartIncantation()
+    else
+        self.logger:Warn(("Unknown command: %s"):format(command))
+    end
+end
+
 --[[
     AI Core
 --]]
