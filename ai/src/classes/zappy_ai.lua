@@ -133,6 +133,12 @@ function ZappyAI:MoveForward()
     self.logger:Info(("Move forward response: %s"):format(response))
 end
 
+-- Turn 90 degrees to the right
+function ZappyAI:TurnRight()
+    local response = self.server:SendSync(ZappyAction.TURN_RIGHT)
+    self.logger:Info(("Turn right response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
