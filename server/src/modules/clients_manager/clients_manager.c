@@ -8,82 +8,10 @@
 #include "clients_manager.h"
 #include <stdlib.h>
 #include <string.h>
-
-#include "sys/queue.h"
-#include "stdio.h"
-#include "logs/failures/logs_failures.h"
-
-static bool clients_manager_add_new_team(
-    clients_manager_t *manager,
-    const char *team_name,
-    client_t *client
-)
-{
-    team_node_t *curr_team = malloc(sizeof(team_node_t));
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-
-    if (curr_team == NULL || new_node == NULL) {
-        perror("malloc");
-        return false;
-    }
-    curr_team->name = strdup(team_name);
-    curr_team->nb_clients = 1;
-    curr_team->ai_clients = malloc(sizeof(ai_clients_list_t));
-    if (curr_team->ai_clients == NULL) {
-        perror("malloc");
-        return false;
-    }
-    SLIST_INIT(curr_team->ai_clients);
-    new_node->client = client;
-    SLIST_INSERT_HEAD(curr_team->ai_clients, new_node, next);
-    SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
-    return true;
-}
-
-static bool clients_manager_add_to_existing_team(
-    clients_manager_t *manager,
-    client_t *client,
-    team_node_t *team
-)
-{
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-
-    if (team->nb_clients >= manager->max_clients_per_team) {
-        log_failure_team_full(team->name);
-        return false;
-    }
-    if (new_node == NULL)
-        return false;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(team->ai_clients, new_node, next);
-    team->nb_clients++;
-    return true;
-}
-
-bool clients_manager_add_to_team(
-    clients_manager_t *manager,
-    client_t *client,
-    const char *team_name
-)
-{
-    team_node_t *curr_team = SLIST_FIRST(&manager->team_list);
-
-    while (curr_team != NULL) {
-        if (strcmp(curr_team->name, team_name) == 0) {
-            return clients_manager_add_to_existing_team(
-                manager,
-                client,
-                curr_team
-            );
-        }
-        curr_team = SLIST_NEXT(curr_team, next);
-    }
-    return clients_manager_add_new_team(manager, team_name, client);
-}
+#include <sys/queue.h>
 
 //TODO: init the player struct with map or something
-static bool clients_manager_add_ai(clients_manager_t *manager,
-    client_t *client)
+static bool add_ai(clients_manager_t *manager, client_t *client)
 {
     ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
     static uint64_t id = 0;
@@ -94,15 +22,13 @@ static bool clients_manager_add_ai(clients_manager_t *manager,
     new_node->player.id = id;
     new_node->player.level = 1;
     new_node->client = client;
+    // TODO: init player
     SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
     manager->nb_ai_clients++;
     return true;
 }
 
-static bool clients_manager_add_gui(
-    clients_manager_t *manager,
-    client_t *client
-)
+static bool add_gui(clients_manager_t *manager, client_t *client)
 {
     gui_client_node_t *new_node = malloc(sizeof(gui_client_node_t));
 
@@ -133,9 +59,9 @@ bool clients_manager_add(
         SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
         manager->nb_clients++;
     } else if (type == AI) {
-        state = clients_manager_add_ai(manager, client);
+        state = add_ai(manager, client);
     } else {
-        state = clients_manager_add_gui(manager, client);
+        state = add_gui(manager, client);
     }
     return state;
 }

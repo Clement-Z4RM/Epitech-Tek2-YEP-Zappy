@@ -5,8 +5,8 @@
 ** clients_manager module getters
 */
 
-#include "clients_manager.h"
-#include "stdlib.h"
+#include <stddef.h>
+#include "../clients_manager.h"
 
 ai_client_node_t *clients_manager_get_ai_by_id(
     clients_manager_t *manager, uint64_t id)

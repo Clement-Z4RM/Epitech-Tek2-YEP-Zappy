@@ -100,7 +100,8 @@ add_executable(zappy_server
         #region Clients manager module
         src/modules/clients_manager/clients_manager.h
         src/modules/clients_manager/clients_manager.c
-        src/modules/clients_manager/clients_manager_getters.c
+        src/modules/clients_manager/helpers/getters.c
+        src/modules/clients_manager/helpers/team.c
         #endregion
 
         #region Requests manager module
