@@ -136,6 +136,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/pic.c
         src/modules/commands/gui/events/enw.c
         include/coords.h
+        src/modules/commands/gui/events/sbp.c
         #endregion
         #endregion
 )
