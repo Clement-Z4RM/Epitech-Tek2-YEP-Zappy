@@ -177,6 +177,13 @@ function ZappyAI:TakeObject(object)
     self.logger:Info(("Take object response: %s"):format(response))
 end
 
+-- Set an object
+--- @param object string
+function ZappyAI:SetObject(object)
+    local response = self.server:SendSync(ZappyAction.SET_OBJECT .. " " .. object)
+    self.logger:Info(("Set object response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
