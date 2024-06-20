@@ -21,7 +21,7 @@ typedef struct map_s map_t;
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
-    player_t player; // TODO: init using memset (and members that can be init)
+    player_t player;
     SLIST_ENTRY(ai_client_node_s) next;
 } ai_client_node_t;
 
