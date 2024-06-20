@@ -7,6 +7,7 @@
 
 #pragma once
 #include <sys/queue.h>
+#include "egg/egg.h"
 #include "player/player.h"
 #include "client/client.h"
 
@@ -41,6 +42,8 @@ typedef struct clients_list_s clients_list_t;
 /** @brief linked list of clients per team (ai) **/
 typedef struct team_node_s {
     char *name;
+    team_eggs_t *eggs; // TODO: init eggs
+    ulong nb_eggs;
     ai_clients_list_t *ai_clients;
     ulong nb_clients;
     SLIST_ENTRY(team_node_s) next;

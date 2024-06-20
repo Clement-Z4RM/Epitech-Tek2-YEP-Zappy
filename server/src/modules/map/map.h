@@ -30,7 +30,7 @@ typedef struct cell_s {
     struct cell_s *left;
 
     /** @brief The eggs on the cell */
-    eggs_t eggs;
+    eggs_t eggs; // TODO: init eggs
     /** @brief The players on the cell */
     ai_clients_list_t players;
     /** @brief The resources (foods and stones) on the cell */
