@@ -123,7 +123,8 @@ network_t *network_constructor(char *ip, options_t *options)
         free(network);
         return NULL;
     }
-    network->clients_manager = clients_manager_constructor(options->clients);
+    network->clients_manager = clients_manager_constructor(options->clients,
+        &options->teams);
     if (network->clients_manager == NULL) {
         network_destructor(network);
         return NULL;

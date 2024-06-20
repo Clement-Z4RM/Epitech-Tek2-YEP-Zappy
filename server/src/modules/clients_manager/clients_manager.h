@@ -10,6 +10,13 @@
 #include "egg/egg.h"
 #include "player/player.h"
 #include "client/client.h"
+#include "options/options.h"
+
+/**
+ * @brief map_t definition for circular dependencies
+ * (is we include map.h, it doesn't compile)
+ */
+typedef struct map_s map_t;
 
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
@@ -44,7 +51,7 @@ typedef struct team_node_s {
     char *name;
     team_eggs_t *eggs; // TODO: init eggs
     ulong nb_eggs;
-    ai_clients_list_t *ai_clients;
+    ai_clients_list_t ai_clients;
     ulong nb_clients;
     SLIST_ENTRY(team_node_s) next;
 } team_node_t;
@@ -56,9 +63,6 @@ typedef struct team_list_s team_list_t;
 typedef struct clients_manager_s {
     clients_list_t clients_list; ///< the list of clients
     int nb_clients; ///< actual number of clients
-
-    ai_clients_list_t ai_clients_list; ///< the list of ai clients
-    int nb_ai_clients; ///< actual number of ai clients
 
     gui_clients_list_t gui_clients_list; ///< the list of gui clients
     int nb_gui_clients; ///< actual number of gui clients
@@ -73,7 +77,8 @@ typedef struct clients_manager_s {
 * @brief create a new instance of the clients_manager module
 * @return clients_manager_t the newly allocated instance
 * **/
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team);
+clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
+    team_names_t *team_names);
 
 /**
  * @brief destroy a client manager instance and all its clients
@@ -90,7 +95,7 @@ extern void clients_manager_destructor(clients_manager_t *manager);
 extern bool clients_manager_add(
     clients_manager_t *manager,
     client_t *client,
-    const client_type_t type
+    client_type_t type
 );
 
 /**
@@ -102,16 +107,28 @@ extern void clients_manager_remove(clients_manager_t *manager,
     client_t *client);
 
 /**
+ * @brief initialize a team in the client manager's list
+ *
+ * @param manager the client manager
+ * @param team_name the name of the team to initialize
+ *
+ * @return bool true if the operation was successful, false otherwise
+ */
+extern bool add_new_team(clients_manager_t *manager, const char *team_name);
+
+/**
  * @brief add a new ai client to the client manager's list
  * @param manager the client manager
  * @param client the client to add
  * @param team_name the team name of the client
+ * @param map the map of the server
  * @return bool true if the operation was successful, false otherwise
  */
 extern bool clients_manager_add_to_team(
     clients_manager_t *manager,
     client_t *client,
-    const char *team_name
+    const char *team_name,
+    map_t *map
 );
 
 /**

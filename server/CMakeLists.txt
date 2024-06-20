@@ -133,6 +133,21 @@ add_executable(zappy_server
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
+        src/modules/commands/gui/events/smg.c
+        src/modules/commands/gui/events/seg.c
+        src/modules/commands/gui/events/pgt.c
+        src/modules/commands/gui/events/pdi.c
+        src/modules/commands/gui/events/pic.c
+        src/modules/commands/gui/events/enw.c
+        include/coords.h
+        src/modules/commands/gui/events/sbp.c
+        src/modules/commands/gui/handlers/sst.c
+        src/modules/commands/gui/handlers/sgt.c
+        src/modules/commands/gui/handlers/pin.c
+        src/modules/commands/gui/events/edi.c
+        src/modules/commands/gui/handlers/ppo.c
+        src/modules/commands/gui/handlers/tna.c
+        src/modules/commands/gui/handlers/tna.c
         #endregion
         #endregion
 )

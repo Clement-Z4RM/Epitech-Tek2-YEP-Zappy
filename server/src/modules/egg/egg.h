@@ -15,6 +15,9 @@
  * @brief Egg structure
  */
 typedef struct egg_s {
+    /** @brief The egg id */
+    u_int64_t id;
+
     /** @brief The egg's x position on the map */
     u_int64_t x;
     /** @brief The egg's y position on the map */

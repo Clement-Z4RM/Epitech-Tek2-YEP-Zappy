@@ -70,7 +70,7 @@ static void destroy(
  *
  * @return true if the program ran successfully, false otherwise.
  */
-static bool server_loop(network_t *network, map_t *map, updater_t *updater)
+static bool server_loop(network_t *network, updater_t *updater)
 {
     time_t start = 0;
 
@@ -87,7 +87,7 @@ static bool server_loop(network_t *network, map_t *map, updater_t *updater)
             return false;
         if (!network_send_requests(network))
             return false;
-        requests_manager_handle_requests(network->clients_manager, map);
+        requests_manager_handle_requests(network->clients_manager, updater);
     }
     return true;
 }
@@ -114,7 +114,7 @@ bool server(options_t *options)
     }
     catch_signal(SIGINT, sig_handler);
     catch_signal(SIGTERM, sig_handler);
-    to_return = server_loop(network, map, updater);
+    to_return = server_loop(network, updater);
     destroy(network, map, updater);
     if (to_return)
         LOG_SUCCESS("Server stopped\n");
