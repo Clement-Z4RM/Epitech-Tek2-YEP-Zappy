@@ -158,6 +158,14 @@ function ZappyAI:ConnectNbr()
     self.logger:Info(("Connect number response: %s"):format(response))
 end
 
+-- Fork a player
+function ZappyAI:ForkPlayer()
+    local response = self.server:SendSync(ZappyAction.FORK_PLAYER)
+    self.logger:Info(("Fork player response: %s"):format(response))
+end
+
+
+
 --[[
     AI Core
 --]]
