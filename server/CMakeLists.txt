@@ -18,6 +18,10 @@ add_executable(zappy_server
         include/responses.h
         #endregion
 
+        #region Global structure definitions
+        include/coords.h
+        #endregion
+
         #region Main files
         src/main.c
         src/zappy_server.c
@@ -113,6 +117,12 @@ add_executable(zappy_server
         src/modules/commands/commands.h
         src/modules/commands/gui/gui_commands.h
         src/modules/commands/gui/handlers/msz.c
+        src/modules/commands/gui/handlers/sst.c
+        src/modules/commands/gui/handlers/sgt.c
+        src/modules/commands/gui/handlers/pin.c
+        src/modules/commands/gui/handlers/ppo.c
+        src/modules/commands/gui/handlers/tna.c
+        src/modules/commands/gui/handlers/tna.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
         src/modules/commands/gui/events/pex.c
@@ -121,6 +131,14 @@ add_executable(zappy_server
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
         src/modules/commands/gui/events/pdr.c
+        src/modules/commands/gui/events/smg.c
+        src/modules/commands/gui/events/seg.c
+        src/modules/commands/gui/events/pgt.c
+        src/modules/commands/gui/events/pdi.c
+        src/modules/commands/gui/events/pic.c
+        src/modules/commands/gui/events/enw.c
+        src/modules/commands/gui/events/sbp.c
+        src/modules/commands/gui/events/edi.c
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
@@ -133,21 +151,6 @@ add_executable(zappy_server
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
-        src/modules/commands/gui/events/smg.c
-        src/modules/commands/gui/events/seg.c
-        src/modules/commands/gui/events/pgt.c
-        src/modules/commands/gui/events/pdi.c
-        src/modules/commands/gui/events/pic.c
-        src/modules/commands/gui/events/enw.c
-        include/coords.h
-        src/modules/commands/gui/events/sbp.c
-        src/modules/commands/gui/handlers/sst.c
-        src/modules/commands/gui/handlers/sgt.c
-        src/modules/commands/gui/handlers/pin.c
-        src/modules/commands/gui/events/edi.c
-        src/modules/commands/gui/handlers/ppo.c
-        src/modules/commands/gui/handlers/tna.c
-        src/modules/commands/gui/handlers/tna.c
         #endregion
         #endregion
 )
