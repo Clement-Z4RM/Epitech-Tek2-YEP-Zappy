@@ -9,6 +9,8 @@
 #include "stdio.h"
 #include "../logs_colors.h"
 #include "../../client/client.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
 
 /** @brief macro to print [SUCCESS] in green
  * directly before the rest of the log**/
