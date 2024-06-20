@@ -152,6 +152,12 @@ function ZappyAI:Broadcast(message)
     self.logger:Info(("Broadcast response: %s"):format(response))
 end
 
+-- Get number of unused slots in the team
+function ZappyAI:ConnectNbr()
+    local response = self.server:SendSync(ZappyAction.CONNECT_NBR)
+    self.logger:Info(("Connect number response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
