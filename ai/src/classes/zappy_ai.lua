@@ -145,6 +145,13 @@ function ZappyAI:TurnLeft()
     self.logger:Info(("Turn left response: %s"):format(response))
 end
 
+-- Broadcast a message
+--- @param message string
+function ZappyAI:Broadcast(message)
+    local response = self.server:SendSync(ZappyAction.BROADCAST .. " " .. message)
+    self.logger:Info(("Broadcast response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
