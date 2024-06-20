@@ -36,6 +36,7 @@ add_executable(zappy_server
         src/utilities/strings/free_double_tab.c
         src/utilities/time/mstime.c
         src/utilities/signals/catch_signal.c
+        src/utilities/network/send_string.c
         #endregion
 
         #region Modules
@@ -99,7 +100,8 @@ add_executable(zappy_server
         #region Clients manager module
         src/modules/clients_manager/clients_manager.h
         src/modules/clients_manager/clients_manager.c
-        src/modules/clients_manager/client_manager_getters.c
+        src/modules/clients_manager/helpers/getters.c
+        src/modules/clients_manager/helpers/team.c
         #endregion
 
         #region Requests manager module
@@ -122,6 +124,8 @@ add_executable(zappy_server
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
+        src/modules/commands/ai/inventory.h
+        src/modules/commands/ai/inventory.c
         src/modules/commands/ai/take.c
         src/modules/commands/ai/set.c
         #endregion

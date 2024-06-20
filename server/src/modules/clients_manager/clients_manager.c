@@ -8,75 +8,11 @@
 #include "clients_manager.h"
 #include <stdlib.h>
 #include <string.h>
-
-#include "sys/queue.h"
-#include "stdio.h"
+#include <sys/queue.h>
 #include "logs/failures/logs_failures.h"
 #include "logs/successes/logs_successes.h"
 
-static bool clients_manager_add_new_team(
-    clients_manager_t *manager,
-    const char *team_name
-)
-{
-    team_node_t *curr_team = malloc(sizeof(team_node_t));
-
-    if (curr_team == NULL) {
-        perror("malloc");
-        return false;
-    }
-    curr_team->name = strdup(team_name);
-    curr_team->nb_clients = 0;
-    SLIST_INIT(&curr_team->ai_clients);
-    SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
-    return true;
-}
-
-static bool clients_manager_add_to_existing_team(
-    clients_manager_t *manager,
-    ai_client_node_t *ai_client,
-    team_node_t *team
-)
-{
-    if (team->nb_clients >= manager->max_clients_per_team) {
-        log_failure_team_full(team->name);
-        return false;
-    }
-    SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
-    team->nb_clients++;
-    return true;
-}
-
-bool clients_manager_add_to_team(
-    clients_manager_t *manager,
-    client_t *client,
-    const char *team_name
-)
-{
-    team_node_t *curr_team = SLIST_FIRST(&manager->team_list);
-    ai_client_node_t *ai_client = malloc(sizeof(ai_client_node_t));
-
-    if (ai_client == NULL)
-        return false;
-    ai_client->client = client;
-    while (curr_team != NULL) {
-        if (strcmp(curr_team->name, team_name) == 0) {
-            return clients_manager_add_to_existing_team(
-                manager,
-                ai_client,
-                curr_team
-            );
-        }
-        curr_team = SLIST_NEXT(curr_team, next);
-    }
-    free(ai_client);
-    return false;
-}
-
-static bool clients_manager_add_gui(
-    clients_manager_t *manager,
-    client_t *client
-)
+static bool add_gui(clients_manager_t *manager, client_t *client)
 {
     gui_client_node_t *new_node = malloc(sizeof(gui_client_node_t));
 
@@ -107,7 +43,7 @@ bool clients_manager_add(
         SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
         manager->nb_clients++;
     } else if (type == GUI) {
-        state = clients_manager_add_gui(manager, client);
+        state = add_gui(manager, client);
     }
     return state;
 }
@@ -140,7 +76,7 @@ static void clients_manager_init_teams(clients_manager_t *manager,
 
     SLIST_FOREACH(current, team_names, next)
     {
-        if (!clients_manager_add_new_team(manager, current->name)) {
+        if (!add_new_team(manager, current->name)) {
             log_failure_init_team(current->name);
         } else {
             manager->nb_teams++;

@@ -8,8 +8,10 @@
 #include "client.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "string.h"
-#include "unistd.h"
+#include <string.h>
+#include <unistd.h>
+#include "utilities.h"
+#include "logs/failures/logs_failures.h"
 
 static void client_destroy_lists(client_t *client)
 {
@@ -55,21 +57,25 @@ char *client_popback_request(client_t *client, client_queue_type_t type)
 bool client_send_all_requests(client_t *client, fd_set *write_fds)
 {
     client_request_node_t *current = NULL;
+    bool to_return = true;
 
     if (client == NULL || write_fds == NULL)
         return false;
     while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
         current = CIRCLEQ_LAST(&client->requests_queue_to_send);
-        if (!send(client->socket, current->request,
-            strlen(current->request), 0)) {
+        if (!current->request) {
+            log_failure_null_request(client);
+            to_return = false;
+        }
+        if (!send_string(client->socket, current->request)) {
             perror("send");
-            return false;
+            to_return = false;
         }
         CIRCLEQ_REMOVE(&client->requests_queue_to_send, current, next);
         free(current->request);
         free(current);
     }
-    return true;
+    return to_return;
 }
 
 void client_add_request(client_t *client, char *request,

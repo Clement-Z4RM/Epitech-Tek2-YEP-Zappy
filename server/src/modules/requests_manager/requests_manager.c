@@ -16,9 +16,14 @@
 * @brief check if the client has a team name
 * @param client the client to check
 * @param manager the clients manager
+ * @param map the map
 * @return bool true if the client has a team name, false otherwise
 **/
-static bool add_to_team(client_t *client, clients_manager_t *manager)
+static bool add_to_team(
+    client_t *client,
+    clients_manager_t *manager,
+    map_t *map
+)
 {
     client->team_name = client->current_request_to_handle;
     client->current_request_to_handle = NULL;
@@ -28,7 +33,9 @@ static bool add_to_team(client_t *client, clients_manager_t *manager)
     if (clients_manager_add_to_team(
         manager,
         client,
-        client->team_name) == false) {
+        client->team_name,
+        map
+    ) == false) {
         return false;
     }
     return true;
@@ -89,10 +96,14 @@ static void handle_gui_request(
     log_failure_request_no_handler(client->client);
 }
 
-static bool client_have_team(client_t *client, clients_manager_t *manager)
+static bool client_have_team(
+    client_t *client,
+    clients_manager_t *manager,
+    map_t *map
+)
 {
     if (client->team_name == NULL) {
-        if (add_to_team(client, manager) == false) {
+        if (add_to_team(client, manager, map) == false) {
             log_failure_add_to_team(client, client->team_name);
             client->team_name = NULL;
             return false;
@@ -133,7 +144,10 @@ static client_t *get_client(client_node_t *current)
     return NULL;
 }
 
-static void handle_none_clients_requests(clients_manager_t *manager)
+static void handle_none_clients_requests(
+    clients_manager_t *manager,
+    map_t *map
+)
 {
     client_node_t *current = NULL;
     char *request = NULL;
@@ -152,12 +166,14 @@ static void handle_none_clients_requests(clients_manager_t *manager)
         if (client->current_request_to_handle == NULL)
             continue;
         remove_newline(client->current_request_to_handle);
-        client_have_team(client, manager);
+        client_have_team(client, manager, map);
     }
 }
 
-void requests_manager_handle_requests(clients_manager_t *manager, updater_t
-    *updater)
+void requests_manager_handle_requests(
+    clients_manager_t *manager,
+    updater_t *updater
+)
 {
     ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;
@@ -165,7 +181,7 @@ void requests_manager_handle_requests(clients_manager_t *manager, updater_t
     client_t *client = NULL;
     char **args = NULL;
 
-    handle_none_clients_requests(manager);
+    handle_none_clients_requests(manager, updater->map);
     for (team_current = SLIST_FIRST(&manager->team_list); team_current;
         team_current = SLIST_NEXT(team_current, next)) {
         for (ai_current = SLIST_FIRST(&team_current->ai_clients);

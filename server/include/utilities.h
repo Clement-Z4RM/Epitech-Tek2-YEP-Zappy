@@ -8,6 +8,7 @@
 #ifndef ZAPPY_SERVER_UTILITIES_H_
     #define ZAPPY_SERVER_UTILITIES_H_
 
+    #include <sys/types.h>
     #include <sys/time.h>
     #include <stdbool.h>
 
@@ -29,6 +30,10 @@ extern time_t mstime(time_t *tloc);
 
 //region Signals
 extern void catch_signal(int signum, void (*handler)(int));
+//endregion
+
+//region Network
+extern ssize_t send_string(int sockfd, const char *buf);
 //endregion
 
 #endif /* !ZAPPY_SERVER_UTILITIES_H_ */

@@ -23,6 +23,8 @@ extern void forward(ai_handler_data_t *data);
 extern void right(ai_handler_data_t *data);
 extern void left(ai_handler_data_t *data);
 
+extern void inventory(ai_handler_data_t *data);
+
 extern void take(ai_handler_data_t *data);
 
 extern void set(ai_handler_data_t *data);

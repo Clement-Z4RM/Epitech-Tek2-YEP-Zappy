@@ -5,7 +5,72 @@
 ** player.c
 */
 
+#include <stdlib.h>
+#include <string.h>
 #include "map/map.h"
+
+/**
+ * @brief Get a random egg from a team.
+ *
+ * @param team The team to get the egg from.
+ *
+ * @return The egg, or NULL if the team has no more egg.
+ */
+static team_egg_t *get_random_team_egg(team_node_t *team)
+{
+    team_egg_t *team_egg;
+    ulong egg_index;
+
+    if (0 == team->nb_eggs)
+        return NULL;
+    team_egg = SLIST_FIRST(team->eggs);
+    if (!team_egg)
+        return NULL;
+    egg_index = random() % team->nb_eggs;
+    for (ulong i = 0; i < egg_index; ++i)
+        team_egg = SLIST_NEXT(team_egg, next);
+    SLIST_REMOVE(team->eggs, team_egg, team_egg_s, next);
+    return team_egg;
+}
+
+/**
+ * @brief Initialize the fields of player's structure
+ * and place it on the map at a random egg position from its team.
+ *
+ * @param client The client related to the player to initialize.
+ * @param map The map where to place it.
+ * @param team The player's teams (to get the egg).
+ * @param id The id of the player.
+ *
+ * @return true if the player has been initialized,
+ * false otherwise (no egg for its team).
+ */
+bool initialize_player(
+    ai_client_node_t *client,
+    map_t *map,
+    team_node_t *team,
+    u_int64_t id
+)
+{
+    team_egg_t *team_egg = get_random_team_egg(team);
+    cell_t *cell;
+
+    if (!team_egg)
+        return false;
+    cell = &map->cells[team_egg->egg->y][team_egg->egg->x];
+    client->player.life_span = 1260;
+    SLIST_REMOVE(&cell->eggs, team_egg->egg, egg_s, next);
+    client->player.x = team_egg->egg->x;
+    client->player.y = team_egg->egg->y;
+    free(team_egg->egg);
+    free(team_egg);
+    client->player.direction = random() % 4 + 1;
+    memset(client->player.resources, 0, sizeof(client->player.resources));
+    client->player.id = id;
+    client->player.level = 1;
+    SLIST_INSERT_HEAD(&cell->players, client, next);
+    return true;
+}
 
 /**
  * @brief Move the player forward depending on its direction.
