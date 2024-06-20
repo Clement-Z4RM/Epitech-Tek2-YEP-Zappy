@@ -11,6 +11,7 @@
 #include "clients_manager/clients_manager.h"
 #include "map/map.h"
 #include "commands/commands.h"
+#include "../updater/updater.h"
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct ai_handler_data_s {
@@ -28,10 +29,9 @@ typedef struct ai_request_handler_s {
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct gui_handler_data_s {
-    gui_client_node_t *client;
+    gui_client_node_t *gui_client;
     char **args;
-    clients_manager_t *clients_manager;
-    map_t *map;
+    updater_t *updater;
 } gui_handler_data_t;
 
 /** @brief represent a gui request handler  **/
@@ -42,8 +42,9 @@ typedef struct gui_request_handler_s {
 
 /** @brief  handle clients requests  **/
 extern void requests_manager_handle_requests(
-    clients_manager_t *clients_manager,
-    map_t *map
+    clients_manager_t *manager,
+    updater_t
+    *updater
 );
 
 // TODO: Don't put null element at end of below lists

@@ -17,3 +17,4 @@
 extern void log_failure_request_no_handler(const client_t *client);
 extern void log_failure_team_full(const char *team_name);
 extern void log_failure_add_to_team(client_t *client, const char *team_name);
+extern void log_failure_init_team(const char *team_name);
