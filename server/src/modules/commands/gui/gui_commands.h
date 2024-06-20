@@ -15,6 +15,8 @@
 
 #define MAX_DIGITS 21
 
+#define MAX_DIGITS 21
+
 /**
  * @brief gui_handler_data_t definition for circular dependency
  * with requests manager
