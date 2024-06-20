@@ -5,101 +5,12 @@
 ** module used to manage clients
 */
 
-#include "clients_manager.h"
+#include <sys/queue.h>
 #include <stdlib.h>
 #include <string.h>
+#include "clients_manager.h"
 
-#include "sys/queue.h"
-#include "stdio.h"
-#include "logs/failures/logs_failures.h"
-#include "logs/successes/logs_successes.h"
-
-static bool clients_manager_add_new_team(
-    clients_manager_t *manager,
-    const char *team_name
-)
-{
-    team_node_t *curr_team = malloc(sizeof(team_node_t));
-
-    if (curr_team == NULL) {
-        perror("malloc");
-        return false;
-    }
-    curr_team->name = strdup(team_name);
-    curr_team->nb_clients = 0;
-    curr_team->ai_clients = malloc(sizeof(ai_clients_list_t));
-    if (curr_team->ai_clients == NULL) {
-        perror("malloc");
-        return false;
-    }
-    SLIST_INIT(curr_team->ai_clients);
-    SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
-    return true;
-}
-
-static bool clients_manager_add_to_existing_team(
-    clients_manager_t *manager,
-    client_t *client,
-    team_node_t *team
-)
-{
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-
-    if (team->nb_clients >= manager->max_clients_per_team) {
-        log_failure_team_full(team->name);
-        return false;
-    }
-    if (new_node == NULL)
-        return false;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(team->ai_clients, new_node, next);
-    team->nb_clients++;
-    return true;
-}
-
-bool clients_manager_add_to_team(
-    clients_manager_t *manager,
-    client_t *client,
-    const char *team_name
-)
-{
-    team_node_t *curr_team = SLIST_FIRST(&manager->team_list);
-
-    while (curr_team != NULL) {
-        if (strcmp(curr_team->name, team_name) == 0) {
-            return clients_manager_add_to_existing_team(
-                manager,
-                client,
-                curr_team
-            );
-        }
-        curr_team = SLIST_NEXT(curr_team, next);
-    }
-    return false;
-}
-
-//TODO: init the player struct with map or something
-static bool clients_manager_add_ai(clients_manager_t *manager,
-    client_t *client)
-{
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-    static uint64_t id = 0;
-
-    if (new_node == NULL)
-        return false;
-    id++;
-    new_node->player.id = id;
-    new_node->player.level = 1;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
-    manager->nb_ai_clients++;
-    return true;
-}
-
-static bool clients_manager_add_gui(
-    clients_manager_t *manager,
-    client_t *client
-)
+static bool add_gui(clients_manager_t *manager, client_t *client)
 {
     gui_client_node_t *new_node = malloc(sizeof(gui_client_node_t));
 
@@ -129,10 +40,8 @@ bool clients_manager_add(
         new_node->client = client;
         SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
         manager->nb_clients++;
-    } else if (type == AI) {
-        state = clients_manager_add_ai(manager, client);
-    } else {
-        state = clients_manager_add_gui(manager, client);
+    } else if (type == GUI) {
+        state = add_gui(manager, client);
     }
     return state;
 }
@@ -158,25 +67,21 @@ void clients_manager_remove(clients_manager_t *manager, client_t *client)
     }
 }
 
-static void clients_manager_init_teams(clients_manager_t *manager,
-    team_names_t *team_names)
+static void clients_manager_teams_destructor(clients_manager_t *manager)
 {
-    team_name_t *current = NULL;
+    team_node_t *team_current = NULL;
 
-    SLIST_FOREACH(current, team_names, next)
-    {
-        if (!clients_manager_add_new_team(manager, current->name)) {
-            log_failure_init_team(current->name);
-        } else {
-            manager->nb_teams++;
-            log_success_init_team(current->name);
-        }
+    while (!SLIST_EMPTY(&manager->team_list)) {
+        team_current = SLIST_FIRST(&manager->team_list);
+        SLIST_REMOVE_HEAD(&manager->team_list, next);
+        clients_manager_team_destructor(team_current);
     }
 }
 
 void clients_manager_destructor(clients_manager_t *manager)
 {
     client_node_t *current = NULL;
+    gui_client_node_t *gui_current = NULL;
 
     while (!SLIST_EMPTY(&manager->clients_list)) {
         current = SLIST_FIRST(&manager->clients_list);
@@ -184,25 +89,33 @@ void clients_manager_destructor(clients_manager_t *manager)
         client_destructor(current->client);
         free(current);
     }
+    while (!SLIST_EMPTY(&manager->gui_clients_list)) {
+        gui_current = SLIST_FIRST(&manager->gui_clients_list);
+        SLIST_REMOVE_HEAD(&manager->gui_clients_list, next);
+        client_destructor(gui_current->client);
+        free(gui_current);
+    }
+    clients_manager_teams_destructor(manager);
     free(manager);
 }
 
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
-    team_names_t *team_names)
+clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
 {
     clients_manager_t *manager = malloc(sizeof(clients_manager_t));
 
     if (manager == NULL)
         return NULL;
     SLIST_INIT(&manager->clients_list);
-    SLIST_INIT(&manager->ai_clients_list);
     SLIST_INIT(&manager->gui_clients_list);
     SLIST_INIT(&manager->team_list);
     manager->nb_clients = 0;
-    manager->nb_ai_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
-    manager->max_clients_per_team = max_clients_per_team;
-    clients_manager_init_teams(manager, team_names);
+    manager->max_clients_per_team = options->clients;
+    clients_manager_init_teams(manager, &options->teams);
+    if (!client_manager_init_eggs(manager, options, map)) {
+        clients_manager_destructor(manager);
+        return NULL;
+    }
     return manager;
 }

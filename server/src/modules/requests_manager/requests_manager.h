@@ -54,6 +54,7 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Forward", forward},
     {"Right", right},
     {"Left", left},
+    {"Inventory", inventory},
     {"Take", take},
     {"Set", set}
 };

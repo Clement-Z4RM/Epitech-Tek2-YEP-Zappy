@@ -7,12 +7,12 @@
 
 #include "../gui_commands.h"
 
-//TODO: ask clem how to interpret the time to send it to the gui
-/*
 void sgt(gui_handler_data_t *data)
 {
     char response[MAX_RESPONSE_SIZE];
 
-    snprintf(response, MAX_RESPONSE_SIZE, "sgt %d\n", );
+    snprintf(response, MAX_RESPONSE_SIZE, "sgt %lu\n",
+        1 / data->updater->network->options->freq
+    );
+    client_add_request(data->gui_client->client, response, TO_SEND);
 }
-*/

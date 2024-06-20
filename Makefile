@@ -17,6 +17,7 @@ GUI_NAME	=	zappy_gui
 
 all: $(SERVER_NAME) $(GUI_NAME)
 
+server:	$(SERVER_NAME)
 $(SERVER_NAME):
 	@mkdir -p $(SERVER_DIR)/build
 	@cd $(SERVER_DIR)/build
@@ -25,6 +26,7 @@ $(SERVER_NAME):
 	@cd ../..
 	@mv $(SERVER_DIR)/$(SERVER_NAME) .
 
+gui:	$(GUI_NAME)
 $(GUI_NAME):
 	@mkdir -p $(GUI_DIR)/build
 	@cd $(GUI_DIR)/build

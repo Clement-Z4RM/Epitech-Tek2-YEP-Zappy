@@ -25,6 +25,18 @@ static double get_life_to_remove(updater_t *updater, time_t elapsed)
     ) / 1000;
 }
 
+//TODO: death if client->player.life_span <= 0
+static void update_team_clients_life(team_node_t *team, double life_to_remove)
+{
+    ai_client_node_t *client;
+
+    SLIST_FOREACH(client, &team->ai_clients, next) {
+        client->player.life_span -= life_to_remove;
+        if (client->player.life_span <= 0) {
+        }
+    }
+}
+
 /**
  * @brief Update the map (resources) and the client (actions)
  * depending on the elapsed time and the frequency.
@@ -36,18 +48,14 @@ static double get_life_to_remove(updater_t *updater, time_t elapsed)
 static void update(updater_t *updater, time_t elapsed)
 {
     double life_to_remove = get_life_to_remove(updater, elapsed);
-    ai_client_node_t *client;
+    team_node_t *team;
 
     if (elapsed >= updater->next_generation) {
         updater->map->resources.generate(updater->map);
         updater->next_generation = elapsed + updater->generation_interval;
     }
-    SLIST_FOREACH(client, &updater->network->clients_manager->ai_clients_list, next) {
-        client->player.life_span -= life_to_remove;
-        if (client->player.life_span <= 0) {
-            // TODO: death
-        }
-    }
+    SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
+        update_team_clients_life(team, life_to_remove);
     updater->previous_time = elapsed;
 }
 
@@ -73,8 +81,11 @@ static void updater_destructor(updater_t *updater)
  */
 updater_t *create_updater(network_t *network, map_t *map)
 {
-    updater_t *updater = malloc(sizeof(updater_t));
+    updater_t *updater;
 
+    if (!network || !map)
+        return NULL;
+    updater = malloc(sizeof(updater_t));
     if (!updater)
         return NULL;
     updater->previous_time = 0;
@@ -82,7 +93,6 @@ updater_t *create_updater(network_t *network, map_t *map)
     if (0 == updater->generation_interval)
         updater->generation_interval = 1;
     updater->next_generation = updater->generation_interval;
-    printf("Generation interval: %ld\n", updater->generation_interval);
     updater->network = network;
     updater->map = map;
     updater->update = update;

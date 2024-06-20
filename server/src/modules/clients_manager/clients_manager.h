@@ -7,14 +7,21 @@
 
 #pragma once
 #include <sys/queue.h>
+#include "egg/egg.h"
 #include "player/player.h"
 #include "client/client.h"
 #include "options/options.h"
 
+/**
+ * @brief map_t definition for circular dependencies
+ * (is we include map.h, it doesn't compile)
+ */
+typedef struct map_s map_t;
+
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
-    player_t player; // TODO: init using memset (and members that can be init)
+    player_t player;
     SLIST_ENTRY(ai_client_node_s) next;
 } ai_client_node_t;
 
@@ -42,7 +49,9 @@ typedef struct clients_list_s clients_list_t;
 /** @brief linked list of clients per team (ai) **/
 typedef struct team_node_s {
     char *name;
-    ai_clients_list_t *ai_clients;
+    team_eggs_t eggs;
+    ulong nb_eggs;
+    ai_clients_list_t ai_clients;
     ulong nb_clients;
     SLIST_ENTRY(team_node_s) next;
 } team_node_t;
@@ -55,9 +64,6 @@ typedef struct clients_manager_s {
     clients_list_t clients_list; ///< the list of clients
     int nb_clients; ///< actual number of clients
 
-    ai_clients_list_t ai_clients_list; ///< the list of ai clients
-    int nb_ai_clients; ///< actual number of ai clients
-
     gui_clients_list_t gui_clients_list; ///< the list of gui clients
     int nb_gui_clients; ///< actual number of gui clients
 
@@ -68,11 +74,15 @@ typedef struct clients_manager_s {
 } clients_manager_t;
 
 /**
-* @brief create a new instance of the client_manager module
-* @return client_manager_t the newly allocated instance
+* @brief create a new instance of the clients_manager module
+* @param options the server options
+* @param map the map of the server
+* @return clients_manager_t the newly allocated instance
 * **/
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
-    team_names_t *team_names);
+extern clients_manager_t *clients_manager_constructor(
+    options_t *options,
+    map_t *map
+);
 
 /**
  * @brief destroy a client manager instance and all its clients
@@ -89,7 +99,7 @@ extern void clients_manager_destructor(clients_manager_t *manager);
 extern bool clients_manager_add(
     clients_manager_t *manager,
     client_t *client,
-    const client_type_t type
+    client_type_t type
 );
 
 /**
@@ -105,12 +115,14 @@ extern void clients_manager_remove(clients_manager_t *manager,
  * @param manager the client manager
  * @param client the client to add
  * @param team_name the team name of the client
+ * @param map the map of the server
  * @return bool true if the operation was successful, false otherwise
  */
 extern bool clients_manager_add_to_team(
     clients_manager_t *manager,
     client_t *client,
-    const char *team_name
+    const char *team_name,
+    map_t *map
 );
 
 /**
@@ -121,3 +133,37 @@ extern bool clients_manager_add_to_team(
 * **/
 extern ai_client_node_t *clients_manager_get_ai_by_id(
     clients_manager_t *manager, uint64_t id);
+
+/**
+ * @brief Destroy a team and all its clients and members
+ *
+ * @param team The team to destroy
+ */
+extern void clients_manager_team_destructor(team_node_t *team);
+
+/**
+ * @brief Initialize all teams in the client manager's list
+ *
+ * @param manager The client manager
+ * @param team_names The list of team names
+ */
+extern void clients_manager_init_teams(
+    clients_manager_t *manager,
+    team_names_t *team_names
+);
+
+/**
+ * @brief Initialize all eggs in the the teams and the map
+ *
+ * @param manager The client manager
+ * @param options The server options
+ * @param map The map of the server
+ *
+ * @return true if the operation was successful,
+ * false otherwise (allocation error)
+ */
+bool client_manager_init_eggs(
+    clients_manager_t *manager,
+    options_t *options,
+    map_t *map
+);
