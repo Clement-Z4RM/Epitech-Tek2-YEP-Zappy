@@ -146,6 +146,8 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/pin.c
         src/modules/commands/gui/events/edi.c
         src/modules/commands/gui/handlers/ppo.c
+        src/modules/commands/gui/handlers/tna.c
+        src/modules/commands/gui/handlers/tna.c
         #endregion
         #endregion
 )
