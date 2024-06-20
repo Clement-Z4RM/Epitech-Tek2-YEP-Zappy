@@ -141,6 +141,7 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/sgt.c
         src/modules/commands/gui/handlers/pin.c
         src/modules/commands/gui/events/edi.c
+        src/modules/commands/gui/handlers/ppo.c
         #endregion
         #endregion
 )
