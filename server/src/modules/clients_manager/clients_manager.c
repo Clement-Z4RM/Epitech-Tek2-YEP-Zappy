@@ -99,8 +99,7 @@ void clients_manager_destructor(clients_manager_t *manager)
     free(manager);
 }
 
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
-    team_names_t *team_names)
+clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
 {
     clients_manager_t *manager = malloc(sizeof(clients_manager_t));
 
@@ -112,7 +111,11 @@ clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
     manager->nb_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
-    manager->max_clients_per_team = max_clients_per_team;
-    clients_manager_init_teams(manager, team_names);
+    manager->max_clients_per_team = options->clients;
+    clients_manager_init_teams(manager, &options->teams);
+    if (!client_manager_init_eggs(manager, options, map)) {
+        clients_manager_destructor(manager);
+        return NULL;
+    }
     return manager;
 }

@@ -20,6 +20,7 @@ add_executable(zappy_server
 
         #region Global structure definitions
         include/coords.h
+        include/eggs.h
         #endregion
 
         #region Main files
@@ -106,6 +107,7 @@ add_executable(zappy_server
         src/modules/clients_manager/clients_manager.c
         src/modules/clients_manager/helpers/getters.c
         src/modules/clients_manager/helpers/team.c
+        src/modules/clients_manager/helpers/eggs.c
         #endregion
 
         #region Requests manager module
@@ -154,3 +156,5 @@ add_executable(zappy_server
         #endregion
         #endregion
 )
+
+target_link_libraries(zappy_server PRIVATE m)

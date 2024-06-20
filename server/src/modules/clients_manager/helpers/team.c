@@ -48,6 +48,7 @@ static bool add_new_team(clients_manager_t *manager, const char *team_name)
         return false;
     }
     curr_team->name = strdup(team_name);
+    SLIST_INIT(&curr_team->eggs);
     curr_team->nb_clients = 0;
     SLIST_INIT(&curr_team->ai_clients);
     SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
