@@ -139,6 +139,12 @@ function ZappyAI:TurnRight()
     self.logger:Info(("Turn right response: %s"):format(response))
 end
 
+-- Turn 90 degrees to the left
+function ZappyAI:TurnLeft()
+    local response = self.server:SendSync(ZappyAction.TURN_LEFT)
+    self.logger:Info(("Turn left response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
