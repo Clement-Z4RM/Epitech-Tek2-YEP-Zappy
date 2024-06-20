@@ -170,6 +170,13 @@ function ZappyAI:Eject()
     self.logger:Info(("Eject response: %s"):format(response))
 end
 
+-- Take an object
+--- @param object string
+function ZappyAI:TakeObject(object)
+    local response = self.server:SendSync(ZappyAction.TAKE_OBJECT .. " " .. object)
+    self.logger:Info(("Take object response: %s"):format(response))
+end
+
 --[[
     AI Core
 --]]
