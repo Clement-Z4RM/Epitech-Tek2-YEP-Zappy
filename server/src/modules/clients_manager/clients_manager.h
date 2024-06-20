@@ -42,7 +42,7 @@ typedef struct clients_list_s clients_list_t;
 /** @brief linked list of clients per team (ai) **/
 typedef struct team_node_s {
     char *name;
-    ai_clients_list_t *ai_clients;
+    ai_clients_list_t ai_clients;
     ulong nb_clients;
     SLIST_ENTRY(team_node_s) next;
 } team_node_t;
@@ -54,9 +54,6 @@ typedef struct team_list_s team_list_t;
 typedef struct clients_manager_s {
     clients_list_t clients_list; ///< the list of clients
     int nb_clients; ///< actual number of clients
-
-    ai_clients_list_t ai_clients_list; ///< the list of ai clients
-    int nb_ai_clients; ///< actual number of ai clients
 
     gui_clients_list_t gui_clients_list; ///< the list of gui clients
     int nb_gui_clients; ///< actual number of gui clients

@@ -27,32 +27,22 @@ static bool clients_manager_add_new_team(
     }
     curr_team->name = strdup(team_name);
     curr_team->nb_clients = 0;
-    curr_team->ai_clients = malloc(sizeof(ai_clients_list_t));
-    if (curr_team->ai_clients == NULL) {
-        perror("malloc");
-        return false;
-    }
-    SLIST_INIT(curr_team->ai_clients);
+    SLIST_INIT(&curr_team->ai_clients);
     SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
     return true;
 }
 
 static bool clients_manager_add_to_existing_team(
     clients_manager_t *manager,
-    client_t *client,
+    ai_client_node_t *ai_client,
     team_node_t *team
 )
 {
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-
     if (team->nb_clients >= manager->max_clients_per_team) {
         log_failure_team_full(team->name);
         return false;
     }
-    if (new_node == NULL)
-        return false;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(team->ai_clients, new_node, next);
+    SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
     return true;
 }
@@ -64,36 +54,23 @@ bool clients_manager_add_to_team(
 )
 {
     team_node_t *curr_team = SLIST_FIRST(&manager->team_list);
+    ai_client_node_t *ai_client = malloc(sizeof(ai_client_node_t));
 
+    if (ai_client == NULL)
+        return false;
+    ai_client->client = client;
     while (curr_team != NULL) {
         if (strcmp(curr_team->name, team_name) == 0) {
             return clients_manager_add_to_existing_team(
                 manager,
-                client,
+                ai_client,
                 curr_team
             );
         }
         curr_team = SLIST_NEXT(curr_team, next);
     }
+    free(ai_client);
     return false;
-}
-
-//TODO: init the player struct with map or something
-static bool clients_manager_add_ai(clients_manager_t *manager,
-    client_t *client)
-{
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
-    static uint64_t id = 0;
-
-    if (new_node == NULL)
-        return false;
-    id++;
-    new_node->player.id = id;
-    new_node->player.level = 1;
-    new_node->client = client;
-    SLIST_INSERT_HEAD(&manager->ai_clients_list, new_node, next);
-    manager->nb_ai_clients++;
-    return true;
 }
 
 static bool clients_manager_add_gui(
@@ -129,9 +106,7 @@ bool clients_manager_add(
         new_node->client = client;
         SLIST_INSERT_HEAD(&manager->clients_list, new_node, next);
         manager->nb_clients++;
-    } else if (type == AI) {
-        state = clients_manager_add_ai(manager, client);
-    } else {
+    } else if (type == GUI) {
         state = clients_manager_add_gui(manager, client);
     }
     return state;
@@ -195,11 +170,9 @@ clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
     if (manager == NULL)
         return NULL;
     SLIST_INIT(&manager->clients_list);
-    SLIST_INIT(&manager->ai_clients_list);
     SLIST_INIT(&manager->gui_clients_list);
     SLIST_INIT(&manager->team_list);
     manager->nb_clients = 0;
-    manager->nb_ai_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
     manager->max_clients_per_team = max_clients_per_team;

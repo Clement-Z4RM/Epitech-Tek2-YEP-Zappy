@@ -31,7 +31,7 @@ static bool add_to_team(client_t *client, clients_manager_t *manager)
         client->team_name) == false) {
         return false;
     }
-    return clients_manager_add(manager, client, AI);
+    return true;
 }
 
 /**
@@ -161,16 +161,20 @@ void requests_manager_handle_requests(clients_manager_t *manager, updater_t
 {
     ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;
+    team_node_t *team_current = NULL;
     client_t *client = NULL;
     char **args = NULL;
 
     handle_none_clients_requests(manager);
-    for (ai_current = SLIST_FIRST(&manager->ai_clients_list); ai_current;
-        ai_current = SLIST_NEXT(ai_current, next)) {
-        client = get_client((client_node_t *)ai_current);
-        if (parse_args(client, &args))
-            handle_ai_request(args, ai_current, manager, updater->map);
-        free_request_memory(args, client);
+    for (team_current = SLIST_FIRST(&manager->team_list); team_current;
+        team_current = SLIST_NEXT(team_current, next)) {
+        for (ai_current = SLIST_FIRST(&team_current->ai_clients);
+        ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
+            client = get_client((client_node_t *)ai_current);
+            if (parse_args(client, &args))
+                handle_ai_request(args, ai_current, manager, updater->map);
+            free_request_memory(args, client);
+        }
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);

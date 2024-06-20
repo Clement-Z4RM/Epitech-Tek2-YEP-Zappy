@@ -37,15 +37,20 @@ static void update(updater_t *updater, time_t elapsed)
 {
     double life_to_remove = get_life_to_remove(updater, elapsed);
     ai_client_node_t *client;
+    team_node_t *team;
 
     if (elapsed >= updater->next_generation) {
         updater->map->resources.generate(updater->map);
         updater->next_generation = elapsed + updater->generation_interval;
     }
-    SLIST_FOREACH(client, &updater->network->clients_manager->ai_clients_list, next) {
-        client->player.life_span -= life_to_remove;
-        if (client->player.life_span <= 0) {
-            // TODO: death
+    SLIST_FOREACH(team, &updater->network->clients_manager->team_list,
+    next) {
+        SLIST_FOREACH(client, &team->ai_clients, next)
+        {
+            client->player.life_span -= life_to_remove;
+            if (client->player.life_span <= 0) {
+                //TODO: death
+            }
         }
     }
     updater->previous_time = elapsed;
