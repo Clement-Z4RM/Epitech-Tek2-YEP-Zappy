@@ -15,4 +15,5 @@ void sgt(gui_handler_data_t *data)
         1 / data->updater->network->options->freq
     );
     client_add_request(data->gui_client->client, response, TO_SEND);
+    log_sgt_success(data->gui_client->client);
 }

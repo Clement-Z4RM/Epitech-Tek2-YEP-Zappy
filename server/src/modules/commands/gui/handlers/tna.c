@@ -6,7 +6,6 @@
 */
 
 #include "../gui_commands.h"
-#include "logs/successes/logs_successes.h"
 
 static void send_team(char *name, client_t *client)
 {

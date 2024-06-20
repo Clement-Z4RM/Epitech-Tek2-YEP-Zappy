@@ -152,6 +152,7 @@ add_executable(zappy_server
         src/modules/logs/successes/gui_handlers/tna_success.c
         src/modules/logs/failures/gui_handlers/sst_failure.c
         src/modules/logs/successes/gui_handlers/sst_success.c
+        src/modules/logs/successes/gui_handlers/sgt_success.c
         #endregion
         #endregion
 )

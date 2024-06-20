@@ -6,8 +6,6 @@
 */
 
 #include "../gui_commands.h"
-#include "logs/failures/logs_failures.h"
-#include "logs/successes/logs_successes.h"
 
 void sst(gui_handler_data_t *data)
 {

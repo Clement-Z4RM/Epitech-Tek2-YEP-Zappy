@@ -12,6 +12,7 @@
 #include "sys/types.h"
 #include "responses.h"
 #include "coords.h"
+#include "logs/logs.h"
 
 #define MAX_DIGITS 21
 

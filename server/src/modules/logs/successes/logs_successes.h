@@ -27,3 +27,4 @@ extern void log_success_init_team(const char *team_name);
 //gui
 extern void log_tna_success(const client_t *client);
 extern void log_sst_success(const client_t *client);
+extern void log_sgt_success(const client_t *client);
