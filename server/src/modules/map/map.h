@@ -61,6 +61,9 @@ typedef struct map_resources_s {
  * @brief Map structure. It contains the map width and height, and its cells.
  */
 typedef struct map_s {
+    /** @brief The next egg id */
+    u_int64_t egg_id;
+
     /** @brief The map cells */
     cell_t **cells;
     /** @brief The map width */
