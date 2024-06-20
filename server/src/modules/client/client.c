@@ -54,7 +54,6 @@ char *client_popback_request(client_t *client, client_queue_type_t type)
     return request;
 }
 
-// TODO: better LOG_FAILURE
 bool client_send_all_requests(client_t *client, fd_set *write_fds)
 {
     client_request_node_t *current = NULL;
@@ -65,7 +64,7 @@ bool client_send_all_requests(client_t *client, fd_set *write_fds)
     while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
         current = CIRCLEQ_LAST(&client->requests_queue_to_send);
         if (!current->request) {
-            LOG_FAILURE("current->request is NULL");
+            log_failure_null_request(client);
             to_return = false;
         }
         if (!send_string(client->socket, current->request)) {
