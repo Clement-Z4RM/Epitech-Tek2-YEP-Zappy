@@ -29,5 +29,5 @@ void bct(gui_handler_data_t *data)
         cell->resources[RN_MENDIANE], cell->resources[RN_PHIRAS],
         cell->resources[RN_THYSTAME]
     );
-    client_add_request(data->client->client, response, TO_SEND);
+    client_add_request(data->gui_client->client, response, TO_SEND);
 }

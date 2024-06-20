@@ -29,7 +29,7 @@ typedef struct ai_request_handler_s {
 
 /** @brief represent the data that will be passed to the handler **/
 typedef struct gui_handler_data_s {
-    gui_client_node_t *client;
+    gui_client_node_t *gui_client;
     char **args;
     updater_t *updater;
 } gui_handler_data_t;

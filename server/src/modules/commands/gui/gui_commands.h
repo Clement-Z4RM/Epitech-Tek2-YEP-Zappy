@@ -37,3 +37,4 @@ extern void pbc(const uint64_t id, char *msg, const clients_manager_t
 extern void smg(char *msg, const clients_manager_t *clients_manager);
 extern void seg(char *team_name, clients_manager_t *clients_manager);
 extern void pdi(const uint64_t id, clients_manager_t *clients_manager);
+extern void sbp(const clients_manager_t *clients_manager);

@@ -138,6 +138,8 @@ add_executable(zappy_server
         include/coords.h
         src/modules/commands/gui/events/sbp.c
         src/modules/commands/gui/handlers/sst.c
+        src/modules/commands/gui/handlers/sgt.c
+        src/modules/commands/gui/handlers/pin.c
         #endregion
         #endregion
 )
