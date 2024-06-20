@@ -72,11 +72,10 @@ static void handle_ai_request(
 static void handle_gui_request(
     char **args,
     gui_client_node_t *client,
-    clients_manager_t *manager,
-    map_t *map
+    updater_t *updater
 )
 {
-    gui_handler_data_t handler_data = {client, args, manager, map};
+    gui_handler_data_t handler_data = {client, args, updater};
 
     for (size_t i = 0; i < GUI_HANDLERS_COUNT; i++) {
         if (GUI_HANDLERS[i].command_name == NULL)
@@ -157,7 +156,8 @@ static void handle_none_clients_requests(clients_manager_t *manager)
     }
 }
 
-void requests_manager_handle_requests(clients_manager_t *manager, map_t *map)
+void requests_manager_handle_requests(clients_manager_t *manager, updater_t
+    *updater)
 {
     ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;
@@ -169,13 +169,13 @@ void requests_manager_handle_requests(clients_manager_t *manager, map_t *map)
         ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
         if (parse_args(client, &args))
-            handle_ai_request(args, ai_current, manager, map);
+            handle_ai_request(args, ai_current, manager, updater->map);
         free_request_memory(args, client);
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
         if (parse_args(client, &args))
-            handle_gui_request(args, gui_current, manager, map);
+            handle_gui_request(args, gui_current, updater);
         free_request_memory(args, client);
     }
 }

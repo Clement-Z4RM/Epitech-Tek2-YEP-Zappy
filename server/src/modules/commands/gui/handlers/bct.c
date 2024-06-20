@@ -17,10 +17,10 @@ void bct(gui_handler_data_t *data)
     cell_t *cell = NULL;
     char response[1024];
 
-    if (x < 0 || x >= (int64_t)data->map->width
-        || y < 0 || y >= (int64_t)data->map->height)
+    if (x < 0 || x >= (int64_t)data->updater->map->width
+        || y < 0 || y >= (int64_t)data->updater->map->height)
         return;
-    cell = &data->map->cells[y][x];
+    cell = &data->updater->map->cells[y][x];
     snprintf(response, sizeof(response),
         "bct %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
         x, y,
