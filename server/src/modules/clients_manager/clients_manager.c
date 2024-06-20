@@ -12,30 +12,27 @@
 #include "sys/queue.h"
 #include "stdio.h"
 #include "logs/failures/logs_failures.h"
+#include "logs/successes/logs_successes.h"
 
 static bool clients_manager_add_new_team(
     clients_manager_t *manager,
-    const char *team_name,
-    client_t *client
+    const char *team_name
 )
 {
     team_node_t *curr_team = malloc(sizeof(team_node_t));
-    ai_client_node_t *new_node = malloc(sizeof(ai_client_node_t));
 
-    if (curr_team == NULL || new_node == NULL) {
+    if (curr_team == NULL) {
         perror("malloc");
         return false;
     }
     curr_team->name = strdup(team_name);
-    curr_team->nb_clients = 1;
+    curr_team->nb_clients = 0;
     curr_team->ai_clients = malloc(sizeof(ai_clients_list_t));
     if (curr_team->ai_clients == NULL) {
         perror("malloc");
         return false;
     }
     SLIST_INIT(curr_team->ai_clients);
-    new_node->client = client;
-    SLIST_INSERT_HEAD(curr_team->ai_clients, new_node, next);
     SLIST_INSERT_HEAD(&manager->team_list, curr_team, next);
     return true;
 }
@@ -78,7 +75,7 @@ bool clients_manager_add_to_team(
         }
         curr_team = SLIST_NEXT(curr_team, next);
     }
-    return clients_manager_add_new_team(manager, team_name, client);
+    return false;
 }
 
 //TODO: init the player struct with map or something
@@ -161,6 +158,22 @@ void clients_manager_remove(clients_manager_t *manager, client_t *client)
     }
 }
 
+static void clients_manager_init_teams(clients_manager_t *manager,
+    team_names_t *team_names)
+{
+    team_name_t *current = NULL;
+
+    SLIST_FOREACH(current, team_names, next)
+    {
+        if (!clients_manager_add_new_team(manager, current->name)) {
+            log_failure_init_team(current->name);
+        } else {
+            manager->nb_teams++;
+            log_success_init_team(current->name);
+        }
+    }
+}
+
 void clients_manager_destructor(clients_manager_t *manager)
 {
     client_node_t *current = NULL;
@@ -174,7 +187,8 @@ void clients_manager_destructor(clients_manager_t *manager)
     free(manager);
 }
 
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team)
+clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
+    team_names_t *team_names)
 {
     clients_manager_t *manager = malloc(sizeof(clients_manager_t));
 
@@ -189,5 +203,6 @@ clients_manager_t *clients_manager_constructor(ulong max_clients_per_team)
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
     manager->max_clients_per_team = max_clients_per_team;
+    clients_manager_init_teams(manager, team_names);
     return manager;
 }

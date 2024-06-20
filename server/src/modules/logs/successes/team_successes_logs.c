@@ -10,6 +10,11 @@
 #include "netinet/in.h"
 #include "arpa/inet.h"
 
+void log_success_init_team(const char *team_name)
+{
+    LOG_SUCCESS("Team initiated successfully: %s\n", team_name);
+}
+
 void log_success_add_to_team(client_t *client)
 {
     char *ip = inet_ntoa(client->addr->sin_addr);

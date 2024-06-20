@@ -41,8 +41,11 @@ typedef struct gui_request_handler_s {
 } gui_request_handler_t;
 
 /** @brief  handle clients requests  **/
-extern void requests_manager_handle_requests(clients_manager_t *manager, updater_t
-    *updater);
+extern void requests_manager_handle_requests(
+    clients_manager_t *manager,
+    updater_t
+    *updater
+);
 
 // TODO: Don't put null element at end of below lists
 

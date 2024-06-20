@@ -9,6 +9,7 @@
 #include <sys/queue.h>
 #include "player/player.h"
 #include "client/client.h"
+#include "options/options.h"
 
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
@@ -70,7 +71,8 @@ typedef struct clients_manager_s {
 * @brief create a new instance of the client_manager module
 * @return client_manager_t the newly allocated instance
 * **/
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team);
+clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
+    team_names_t *team_names);
 
 /**
  * @brief destroy a client manager instance and all its clients
