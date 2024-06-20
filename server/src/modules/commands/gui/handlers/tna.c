@@ -6,6 +6,7 @@
 */
 
 #include "../gui_commands.h"
+#include "logs/successes/logs_successes.h"
 
 static void send_team(char *name, client_t *client)
 {
@@ -26,4 +27,5 @@ void tna(gui_handler_data_t *data)
     {
         send_team(current_team->name, data->gui_client->client);
     }
+    log_tna_success(data->gui_client->client);
 }
