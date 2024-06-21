@@ -92,5 +92,5 @@ class Parameters {
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
         Eggs _eggs;
-        SettingMenu _settingMenu;
+        gui::SettingMenu _settingMenu;
 };
