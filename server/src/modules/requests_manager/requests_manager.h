@@ -55,6 +55,7 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Right", right},
     {"Left", left},
     {"Inventory", inventory},
+    {"Connect_nbr", connect_nbr},
     {"Take", take},
     {"Set", set}
 };
