@@ -9,6 +9,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include "raylib.h"
+#include "rlgl.h"
+#include "raymath.h"
 #include <deque>
 #include <memory>
 #include <iostream>
@@ -25,6 +28,6 @@ public:
     void run(Parameters &params);
 
 private:
-    std::shared_ptr<raylib::Camera3D> _camera{};
-    raylib::Vector3D cubePosition = {0.0f, 0.0f, 0.0f};
+    std::shared_ptr<raylib::Camera3> _camera{};
+    Vector3 cubePosition = {0.0f, 0.0f, 0.0f};
 };

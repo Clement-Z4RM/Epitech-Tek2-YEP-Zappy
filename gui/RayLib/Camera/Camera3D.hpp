@@ -6,6 +6,10 @@
 */
 
 #pragma once
+#include <memory>
+#include "raylib.h"
+#include "rlgl.h"
+#include "raymath.h"
 
 namespace raylib {
 
@@ -20,25 +24,19 @@ namespace raylib {
     class Vector3D {
     public:
         Vector3D() = default;
-        Vector3D(float x, float y, float z);
+        Vector3D(Vector3 vec);
         ~Vector3D() = default;
 
-        float x;
-        float y;
-        float z;
+        std::shared_ptr<Vector3> _vec;
     };
 
-    class Camera3D {
+    class Camera3 {
     public:
-        Camera3D() = default;
-        Camera3D(Vector3D position, Vector3D target, Vector3D up, float fovy, int projection);
-        ~Camera3D() = default;
+        Camera3() = default;
+        explicit Camera3(Camera3D camera);
+        ~Camera3() = default;
 
-        Vector3D position{};
-        Vector3D target{};
-        Vector3D up{};
-        float fovy;
-        int projection;
+        std::shared_ptr<Camera3D> _camera;
     };
 
 } // raylib
