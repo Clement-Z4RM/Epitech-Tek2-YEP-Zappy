@@ -6,6 +6,7 @@
 */
 
 #include <stdarg.h>
+#include <string.h>
 #include "../gui_commands.h"
 
 static void fill_response_with_ai_ids(char *response, uint64_t *ids, int *len)
@@ -22,25 +23,35 @@ static void fill_response_with_ai_ids(char *response, uint64_t *ids, int *len)
     }
 }
 
-//TODO: error log on len < 0 or len >= MAX_RESPONSE_SIZE
-void pic(const uint8_t level, va_list *ap, const clients_manager_t
-    *clients_manager)
+static bool fill_response(char *response, uint8_t level, uint64_t *ids)
 {
-    char response[MAX_RESPONSE_SIZE];
-    gui_client_node_t *node = NULL;
-    uint64_t *ids = va_arg(*ap, uint64_t *);
     int len = snprintf(response, MAX_RESPONSE_SIZE, "pic %d", level);
 
     if (len < 0 || len >= MAX_RESPONSE_SIZE)
-        return;
+        return false;
     fill_response_with_ai_ids(response, ids, &len);
     if (len < MAX_RESPONSE_SIZE - 1) {
         response[len] = '\n';
         response[len + 1] = '\0';
-    } else {
-        return;
+        return true;
     }
+    return false;
+}
+
+//TODO: error log on len < 0 or len >= MAX_RESPONSE_SIZE
+void pic(uint8_t level, va_list *ap, const clients_manager_t *clients_manager)
+{
+    char *response = malloc(MAX_RESPONSE_SIZE);
+    gui_client_node_t *node = NULL;
+    uint64_t *ids = va_arg(*ap, uint64_t *);
+
+    if (response)
+        if (!fill_response(response, level, ids))
+            return;
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
-        client_add_request(node->client, response, TO_SEND);
+        if (response)
+            client_add_request(node->client, response, TO_SEND);
+        else
+            client_add_request(node->client, strdup("ok\n"), TO_SEND);
     }
 }

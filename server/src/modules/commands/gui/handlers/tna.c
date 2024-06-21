@@ -5,12 +5,17 @@
 ** tna.c
 */
 
+#include <string.h>
 #include "../gui_commands.h"
 
 static void send_team(char *name, client_t *client)
 {
-    char response[MAX_RESPONSE_SIZE];
+    char *response = malloc(MAX_RESPONSE_SIZE);
 
+    if (!response) {
+        client_add_request(client, strdup("ok\n"), TO_SEND);
+        return;
+    }
     snprintf(response, MAX_RESPONSE_SIZE, "tna %s\n", name);
     client_add_request(client, response, TO_SEND);
 }

@@ -5,6 +5,7 @@
 ** pin.c
 */
 
+#include <string.h>
 #include "../gui_commands.h"
 
 static void fill_response(char *response, ai_client_node_t *ai_client)
@@ -28,7 +29,7 @@ static void fill_response(char *response, ai_client_node_t *ai_client)
 
 void pin(gui_handler_data_t *data)
 {
-    char response[MAX_RESPONSE_SIZE];
+    char *response = malloc(MAX_RESPONSE_SIZE);
     char *endptr = NULL;
     const uint64_t id = strtol(data->args[1], &endptr, 10);
     ai_client_node_t *ai_client = clients_manager_get_ai_by_id(
@@ -36,6 +37,10 @@ void pin(gui_handler_data_t *data)
         id
     );
 
+    if (!response) {
+        client_add_request(data->gui_client->client, strdup("ok\n"), TO_SEND);
+        return;
+    }
     fill_response(response, ai_client);
     client_add_request(data->gui_client->client, response, TO_SEND);
 }
