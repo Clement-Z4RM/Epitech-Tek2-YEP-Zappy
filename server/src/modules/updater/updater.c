@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include "utilities.h"
 #include "updater.h"
 
 /**
@@ -25,15 +26,34 @@ static double get_life_to_remove(updater_t *updater, time_t elapsed)
     ) / 1000;
 }
 
-//TODO: death if client->player.life_span <= 0
-static void update_team_clients_life(team_node_t *team, double life_to_remove)
+static void player_dead(
+    ai_client_node_t *client,
+    team_node_t *team,
+    map_t *map
+)
+{
+    cell_t *cell = &map->cells[client->player.y][client->player.x];
+
+    if (!send_string(client->client->socket, "dead\n"))
+        perror("send");
+    SLIST_REMOVE(&cell->players, client, ai_client_node_s, next);
+    SLIST_REMOVE(&team->ai_clients, client, ai_client_node_s, next);
+    client_destructor(client->client);
+    free(client);
+}
+
+static void update_team_clients_life(
+    team_node_t *team,
+    map_t *map,
+    double life_to_remove
+)
 {
     ai_client_node_t *client;
 
     SLIST_FOREACH(client, &team->ai_clients, next) {
         client->player.life_span -= life_to_remove;
-        if (client->player.life_span <= 0) {
-        }
+        if (client->player.life_span <= 0)
+            player_dead(client, team, map);
     }
 }
 
@@ -55,7 +75,7 @@ static void update(updater_t *updater, time_t elapsed)
         updater->next_generation = elapsed + updater->generation_interval;
     }
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
-        update_team_clients_life(team, life_to_remove);
+        update_team_clients_life(team, updater->map, life_to_remove);
     updater->previous_time = elapsed;
 }
 
