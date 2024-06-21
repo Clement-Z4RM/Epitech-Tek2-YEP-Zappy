@@ -33,13 +33,14 @@ add_executable(zappy_gui
         RayLib/Camera/Camera.hpp
         RayLib/Camera/Camera.cpp
         RayLib/Draw/Draw.hpp
+        RayLib/Draw/Draw.cpp
         RayLib/Draw/Rectangle.hpp
         RayLib/Draw/Rectangle.cpp
-        RayLib/Draw/Draw.cpp
         RayLib/Draw/Text.hpp
         RayLib/Draw/Text.cpp
         RayLib/Draw/Grid.hpp
         RayLib/Draw/Grid.cpp
+        RayLib/Draw/Cube.hpp
         RayLib/Draw/Cube.cpp
         RayLib/Event/Event.hpp
         RayLib/Event/Mouse.hpp
