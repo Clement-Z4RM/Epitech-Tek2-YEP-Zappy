@@ -23,5 +23,5 @@ void sst(gui_handler_data_t *data)
         data->updater->generation_interval;
     snprintf(response, MAX_RESPONSE_SIZE, "sst %lu\n", t);
     client_add_request(data->gui_client->client, response, TO_SEND);
-    log_sst_success(data->gui_client->client);
+    log_success_sst(data->gui_client->client, t);
 }

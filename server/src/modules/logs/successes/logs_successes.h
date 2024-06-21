@@ -11,6 +11,7 @@
 #include "../../client/client.h"
 #include "netinet/in.h"
 #include "arpa/inet.h"
+#include "player/player.h"
 
 /** @brief macro to print [SUCCESS] in green
  * directly before the rest of the log**/
@@ -25,6 +26,7 @@ extern void log_success_add_to_team(client_t *client);
 extern void log_success_init_team(const char *team_name);
 
 //gui
-extern void log_tna_success(const client_t *client);
-extern void log_sst_success(const client_t *client);
-extern void log_sgt_success(const client_t *client);
+extern void log_success_tna(const client_t *client);
+extern void log_success_sst(const client_t *client, uint64_t t);
+extern void log_success_sgt(const client_t *client);
+extern void log_success_ppo(const client_t *client, const player_t *player);

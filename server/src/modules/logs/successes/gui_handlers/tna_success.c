@@ -7,7 +7,7 @@
 
 #include "../logs_successes.h"
 
-void log_tna_success(const client_t *client)
+void log_success_tna(const client_t *client)
 {
     const char *ip = inet_ntoa(client->addr->sin_addr);
     const int port = ntohs(client->addr->sin_port);

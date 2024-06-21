@@ -7,7 +7,7 @@
 
 #include "../logs_successes.h"
 
-void log_sst_success(const client_t *client, uint64_t t)
+void log_success_sst(const client_t *client, uint64_t t)
 {
     const char *ip = inet_ntoa(client->addr->sin_addr);
     const int port = ntohs(client->addr->sin_port);
