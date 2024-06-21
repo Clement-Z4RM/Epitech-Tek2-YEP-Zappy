@@ -26,8 +26,8 @@ static bool fill_response(gui_handler_data_t *data, char *response)
         return false;
     }
     snprintf(response, MAX_RESPONSE_SIZE, "ppo %ld %lu %lu %d\n",
-             ai_client->player.id, ai_client->player.x, ai_client->player.y,
-             ai_client->player.direction);
+        ai_client->player.id, ai_client->player.x, ai_client->player.y,
+        ai_client->player.direction);
     return true;
 }
 

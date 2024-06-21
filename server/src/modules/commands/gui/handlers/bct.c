@@ -13,12 +13,12 @@
 static void fill_response(char *response, cell_t *cell, int64_t x, int64_t y)
 {
     snprintf(response, 1024,
-         "bct %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
-         x, y,
-         cell->resources[RN_FOOD], cell->resources[RN_LINEMATE],
-         cell->resources[RN_DERAUMERE], cell->resources[RN_SIBUR],
-         cell->resources[RN_MENDIANE], cell->resources[RN_PHIRAS],
-         cell->resources[RN_THYSTAME]
+        "bct %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+        x, y,
+        cell->resources[RN_FOOD], cell->resources[RN_LINEMATE],
+        cell->resources[RN_DERAUMERE], cell->resources[RN_SIBUR],
+        cell->resources[RN_MENDIANE], cell->resources[RN_PHIRAS],
+        cell->resources[RN_THYSTAME]
     );
 }
 
