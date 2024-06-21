@@ -36,7 +36,7 @@ typedef enum player_rotation_e {
 typedef struct player_s {
     /** @brief The amount of time (in time units)
      * the player can still stay alive. If it reaches 0, the player dies */
-    double life_span; // TODO: init to 1260
+    double life_span;
 
     /** @brief The player's x position on the map */
     u_int64_t x;

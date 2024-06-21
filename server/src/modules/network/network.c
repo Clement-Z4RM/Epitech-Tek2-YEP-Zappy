@@ -110,26 +110,40 @@ static void network_destructor(network_t *network)
     free(network);
 }
 
-network_t *network_constructor(char *ip, options_t *options)
+static bool initialize_network(
+    network_t *network,
+    char *ip,
+    options_t *options,
+    map_t *map
+)
 {
-    network_t *network = malloc(sizeof(network_t));
+    network->endpoint = endpoint_constructor(ip, options->port, SERVER);
+    if (network->endpoint == NULL) {
+        free(network);
+        return false;
+    }
+    network->clients_manager = clients_manager_constructor(options, map);
+    if (network->clients_manager == NULL) {
+        network_destructor(network);
+        return false;
+    }
+    network->options = options;
+    network->destroy = &network_destructor;
+    return true;
+}
 
+network_t *network_constructor(char *ip, options_t *options, map_t *map)
+{
+    network_t *network;
+
+    if (!map)
+        return NULL;
+    network = malloc(sizeof(network_t));
     if (network == NULL) {
         perror("malloc");
         return NULL;
     }
-    network->endpoint = endpoint_constructor(ip, options->port, SERVER);
-    if (network->endpoint == NULL) {
-        free(network);
+    if (!initialize_network(network, ip, options, map))
         return NULL;
-    }
-    network->clients_manager = clients_manager_constructor(options->clients,
-        &options->teams);
-    if (network->clients_manager == NULL) {
-        network_destructor(network);
-        return NULL;
-    }
-    network->options = options;
-    network->destroy = &network_destructor;
     return network;
 }

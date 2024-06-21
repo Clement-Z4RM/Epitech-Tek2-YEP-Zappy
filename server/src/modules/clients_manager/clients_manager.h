@@ -21,7 +21,7 @@ typedef struct map_s map_t;
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
-    player_t player; // TODO: init using memset (and members that can be init)
+    player_t player;
     SLIST_ENTRY(ai_client_node_s) next;
 } ai_client_node_t;
 
@@ -49,7 +49,7 @@ typedef struct clients_list_s clients_list_t;
 /** @brief linked list of clients per team (ai) **/
 typedef struct team_node_s {
     char *name;
-    team_eggs_t *eggs; // TODO: init eggs
+    team_eggs_t eggs;
     ulong nb_eggs;
     ai_clients_list_t ai_clients;
     ulong nb_clients;
@@ -75,10 +75,14 @@ typedef struct clients_manager_s {
 
 /**
 * @brief create a new instance of the clients_manager module
+* @param options the server options
+* @param map the map of the server
 * @return clients_manager_t the newly allocated instance
 * **/
-clients_manager_t *clients_manager_constructor(ulong max_clients_per_team,
-    team_names_t *team_names);
+extern clients_manager_t *clients_manager_constructor(
+    options_t *options,
+    map_t *map
+);
 
 /**
  * @brief destroy a client manager instance and all its clients
@@ -107,16 +111,6 @@ extern void clients_manager_remove(clients_manager_t *manager,
     client_t *client);
 
 /**
- * @brief initialize a team in the client manager's list
- *
- * @param manager the client manager
- * @param team_name the name of the team to initialize
- *
- * @return bool true if the operation was successful, false otherwise
- */
-extern bool add_new_team(clients_manager_t *manager, const char *team_name);
-
-/**
  * @brief add a new ai client to the client manager's list
  * @param manager the client manager
  * @param client the client to add
@@ -139,3 +133,37 @@ extern bool clients_manager_add_to_team(
 * **/
 extern ai_client_node_t *clients_manager_get_ai_by_id(
     clients_manager_t *manager, uint64_t id);
+
+/**
+ * @brief Destroy a team and all its clients and members
+ *
+ * @param team The team to destroy
+ */
+extern void clients_manager_team_destructor(team_node_t *team);
+
+/**
+ * @brief Initialize all teams in the client manager's list
+ *
+ * @param manager The client manager
+ * @param team_names The list of team names
+ */
+extern void clients_manager_init_teams(
+    clients_manager_t *manager,
+    team_names_t *team_names
+);
+
+/**
+ * @brief Initialize all eggs in the the teams and the map
+ *
+ * @param manager The client manager
+ * @param options The server options
+ * @param map The map of the server
+ *
+ * @return true if the operation was successful,
+ * false otherwise (allocation error)
+ */
+bool client_manager_init_eggs(
+    clients_manager_t *manager,
+    options_t *options,
+    map_t *map
+);

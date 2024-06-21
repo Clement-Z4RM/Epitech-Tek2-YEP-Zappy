@@ -23,13 +23,13 @@ static team_egg_t *get_random_team_egg(team_node_t *team)
 
     if (0 == team->nb_eggs)
         return NULL;
-    team_egg = SLIST_FIRST(team->eggs);
+    team_egg = SLIST_FIRST(&team->eggs);
     if (!team_egg)
         return NULL;
     egg_index = random() % team->nb_eggs;
     for (ulong i = 0; i < egg_index; ++i)
         team_egg = SLIST_NEXT(team_egg, next);
-    SLIST_REMOVE(team->eggs, team_egg, team_egg_s, next);
+    SLIST_REMOVE(&team->eggs, team_egg, team_egg_s, next);
     return team_egg;
 }
 

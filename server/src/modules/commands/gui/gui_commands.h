@@ -30,8 +30,10 @@ extern void bct(gui_handler_data_t *data);
 extern void mct(gui_handler_data_t *data);
 
 /** EVENTS **/
-extern void plv(const player_t *player,
-    const clients_manager_t *clients_manager);
+extern void plv(
+    const player_t *player,
+    const clients_manager_t *clients_manager
+);
 extern void pfk(uint64_t id, const clients_manager_t *clients_manager);
 extern void pnw(const ai_client_node_t *ai_client,
     const clients_manager_t *clients_manager);

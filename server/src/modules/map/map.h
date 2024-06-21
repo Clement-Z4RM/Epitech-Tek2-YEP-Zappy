@@ -30,7 +30,7 @@ typedef struct cell_s {
     struct cell_s *left;
 
     /** @brief The eggs on the cell */
-    eggs_t eggs; // TODO: init eggs
+    eggs_t eggs;
     /** @brief The players on the cell */
     ai_clients_list_t players;
     /** @brief The resources (foods and stones) on the cell */
@@ -61,6 +61,9 @@ typedef struct map_resources_s {
  * @brief Map structure. It contains the map width and height, and its cells.
  */
 typedef struct map_s {
+    /** @brief The next egg id */
+    u_int64_t egg_id;
+
     /** @brief The map cells */
     cell_t **cells;
     /** @brief The map width */

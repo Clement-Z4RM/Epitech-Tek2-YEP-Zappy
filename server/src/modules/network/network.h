@@ -31,11 +31,15 @@ typedef struct network_s {
 /**
 * @brief create a new instance of the network module
 * @param ip the ip of the network server
-* @param port the port of the network server
 * @param options the options of the server
+* @param map the map of the server
 * @return network_t the newly allocated instance
 **/
-extern network_t *network_constructor(char *ip, options_t *options);
+extern network_t *network_constructor(
+    char *ip,
+    options_t *options,
+    map_t *map
+);
 
 /**
 * @brief set the file descriptors and select them

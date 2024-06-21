@@ -18,6 +18,11 @@ add_executable(zappy_server
         include/responses.h
         #endregion
 
+        #region Global structure definitions
+        include/coords.h
+        include/eggs.h
+        #endregion
+
         #region Main files
         src/main.c
         src/zappy_server.c
@@ -49,6 +54,11 @@ add_executable(zappy_server
         src/modules/logs/failures/logs_failures.h
         src/modules/logs/failures/request_failures_logs.c
         src/modules/logs/failures/team_failures_logs.c
+        src/modules/logs/successes/gui_handlers/tna_success.c
+        src/modules/logs/failures/gui_handlers/sst_failure.c
+        src/modules/logs/successes/gui_handlers/sst_success.c
+        src/modules/logs/successes/gui_handlers/sgt_success.c
+        src/modules/logs/successes/gui_handlers/ppo_success.c
         #endregion
 
         #region Options module
@@ -102,6 +112,7 @@ add_executable(zappy_server
         src/modules/clients_manager/clients_manager.c
         src/modules/clients_manager/helpers/getters.c
         src/modules/clients_manager/helpers/team.c
+        src/modules/clients_manager/helpers/eggs.c
         #endregion
 
         #region Requests manager module
@@ -113,6 +124,12 @@ add_executable(zappy_server
         src/modules/commands/commands.h
         src/modules/commands/gui/gui_commands.h
         src/modules/commands/gui/handlers/msz.c
+        src/modules/commands/gui/handlers/sst.c
+        src/modules/commands/gui/handlers/sgt.c
+        src/modules/commands/gui/handlers/pin.c
+        src/modules/commands/gui/handlers/ppo.c
+        src/modules/commands/gui/handlers/tna.c
+        src/modules/commands/gui/handlers/tna.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
         src/modules/commands/gui/events/pex.c
@@ -121,6 +138,15 @@ add_executable(zappy_server
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
         src/modules/commands/gui/events/pdr.c
+        src/modules/commands/gui/events/smg.c
+        src/modules/commands/gui/events/seg.c
+        src/modules/commands/gui/events/pgt.c
+        src/modules/commands/gui/events/pdi.c
+        src/modules/commands/gui/events/pic.c
+        src/modules/commands/gui/events/enw.c
+        src/modules/commands/gui/events/sbp.c
+        src/modules/commands/gui/events/edi.c
+        src/modules/commands/gui/events/ebo.c
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
@@ -133,27 +159,8 @@ add_executable(zappy_server
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
-        src/modules/commands/gui/events/smg.c
-        src/modules/commands/gui/events/seg.c
-        src/modules/commands/gui/events/pgt.c
-        src/modules/commands/gui/events/pdi.c
-        src/modules/commands/gui/events/pic.c
-        src/modules/commands/gui/events/enw.c
-        include/coords.h
-        src/modules/commands/gui/events/sbp.c
-        src/modules/commands/gui/handlers/sst.c
-        src/modules/commands/gui/handlers/sgt.c
-        src/modules/commands/gui/handlers/pin.c
-        src/modules/commands/gui/events/edi.c
-        src/modules/commands/gui/handlers/ppo.c
-        src/modules/commands/gui/handlers/tna.c
-        src/modules/commands/gui/handlers/tna.c
-        src/modules/commands/gui/events/ebo.c
-        src/modules/logs/successes/gui_handlers/tna_success.c
-        src/modules/logs/failures/gui_handlers/sst_failure.c
-        src/modules/logs/successes/gui_handlers/sst_success.c
-        src/modules/logs/successes/gui_handlers/sgt_success.c
-        src/modules/logs/successes/gui_handlers/ppo_success.c
         #endregion
         #endregion
 )
+
+target_link_libraries(zappy_server PRIVATE m)

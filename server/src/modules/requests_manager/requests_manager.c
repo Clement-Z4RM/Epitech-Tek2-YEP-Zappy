@@ -170,12 +170,30 @@ static void handle_none_clients_requests(
     }
 }
 
+static void requests_manager_handle_team_requests(
+    clients_manager_t *manager,
+    updater_t *updater,
+    team_node_t *team_current
+)
+{
+    ai_client_node_t *ai_current = NULL;
+    client_t *client = NULL;
+    char **args = NULL;
+
+    for (ai_current = SLIST_FIRST(&team_current->ai_clients);
+        ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
+        client = get_client((client_node_t *)ai_current);
+        if (parse_args(client, &args))
+            handle_ai_request(args, ai_current, manager, updater->map);
+        free_request_memory(args, client);
+    }
+}
+
 void requests_manager_handle_requests(
     clients_manager_t *manager,
     updater_t *updater
 )
 {
-    ai_client_node_t *ai_current = NULL;
     gui_client_node_t *gui_current = NULL;
     team_node_t *team_current = NULL;
     client_t *client = NULL;
@@ -184,13 +202,7 @@ void requests_manager_handle_requests(
     handle_none_clients_requests(manager, updater->map);
     for (team_current = SLIST_FIRST(&manager->team_list); team_current;
         team_current = SLIST_NEXT(team_current, next)) {
-        for (ai_current = SLIST_FIRST(&team_current->ai_clients);
-        ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
-            client = get_client((client_node_t *)ai_current);
-            if (parse_args(client, &args))
-                handle_ai_request(args, ai_current, manager, updater->map);
-            free_request_memory(args, client);
-        }
+        requests_manager_handle_team_requests(manager, updater, team_current);
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
