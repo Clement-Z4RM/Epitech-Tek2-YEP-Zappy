@@ -92,7 +92,7 @@ void Window::displayInformation(const std::shared_ptr<Case>& selectedCase, Param
     for (auto &p : params._players) {
         if (p->getPosition()._x == selectedCase->_x && p->getPosition()._y == selectedCase->_y) {
             std::shared_ptr<sf::Text> playerText = std::make_shared<sf::Text>();
-            std::string player = "Player: " + std::to_string(p->getId()) + "\n";
+            std::string player = "Player: " + std::to_string(p->getId());
             playerText->setString(player);
             playerText->setCharacterSize(20);
             playerText->setFont(*_globalFont);
@@ -107,7 +107,7 @@ void Window::displayInformation(const std::shared_ptr<Case>& selectedCase, Param
 void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::shared_ptr<Modal> &modal)
 {
     std::shared_ptr<sf::Text> cooText = std::make_shared<sf::Text>();
-    std::string coo = "Case: Y:" + std::to_string(selectedCase->_y) + " X:" + std::to_string(selectedCase->_x) + "\n";
+    std::string coo = "Case: Y:" + std::to_string(selectedCase->_y) + " X:" + std::to_string(selectedCase->_x);
     cooText->setString(coo);
     cooText->setCharacterSize(20);
     cooText->setFont(*_globalFont);
@@ -115,59 +115,66 @@ void Window::addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::
     modal->addText(cooText);
 
     std::shared_ptr<sf::Text> foodText = std::make_shared<sf::Text>();
-    std::string food = "Food: " + std::to_string(selectedCase->_food) + "\n";
+    std::string food = "Food: " + std::to_string(selectedCase->_food);
     foodText->setString(food);
     foodText->setCharacterSize(20);
     foodText->setFont(*_globalFont);
     foodText->setPosition(_window.getSize().x * 0.75 + 10, 100);
+    foodText->setFillColor(sf::Color(168, 93, 0, 255));
     modal->addText(foodText);
 
     std::shared_ptr<sf::Text> linemateText = std::make_shared<sf::Text>();
-    std::string linemate = "Linemate: " + std::to_string(selectedCase->_linemate) + "\n";
+    std::string linemate = "Linemate: " + std::to_string(selectedCase->_linemate);
     linemateText->setString(linemate);
     linemateText->setCharacterSize(20);
     linemateText->setFont(*_globalFont);
     linemateText->setPosition(_window.getSize().x * 0.75 + 10, 125);
+    linemateText->setFillColor(sf::Color(140, 140, 140, 255));
     modal->addText(linemateText);
 
     std::shared_ptr<sf::Text> deraumereText = std::make_shared<sf::Text>();
-    std::string deraumere = "Deraumere: " + std::to_string(selectedCase->_deraumere) + "\n";
+    std::string deraumere = "Deraumere: " + std::to_string(selectedCase->_deraumere);
     deraumereText->setString(deraumere);
     deraumereText->setCharacterSize(20);
     deraumereText->setFont(*_globalFont);
     deraumereText->setPosition(_window.getSize().x * 0.75 + 10, 150);
+    deraumereText->setFillColor(sf::Color(75, 183, 222));
     modal->addText(deraumereText);
 
     std::shared_ptr<sf::Text> siburText = std::make_shared<sf::Text>();
-    std::string sibur = "Sibur: " + std::to_string(selectedCase->_sibur) + "\n";
+    std::string sibur = "Sibur: " + std::to_string(selectedCase->_sibur);
     siburText->setString(sibur);
     siburText->setCharacterSize(20);
     siburText->setFont(*_globalFont);
     siburText->setPosition(_window.getSize().x * 0.75 + 10, 175);
+    siburText->setFillColor(sf::Color(75, 222, 173, 255));
     modal->addText(siburText);
 
     std::shared_ptr<sf::Text> mendianeText = std::make_shared<sf::Text>();
-    std::string mendiane = "Mendiane: " + std::to_string(selectedCase->_mendiane) + "\n";
+    std::string mendiane = "Mendiane: " + std::to_string(selectedCase->_mendiane);
     mendianeText->setString(mendiane);
     mendianeText->setCharacterSize(20);
     mendianeText->setFont(*_globalFont);
+    mendianeText->setFillColor(sf::Color(105, 207, 121));
     mendianeText->setPosition(_window.getSize().x * 0.75 + 10, 200);
     modal->addText(mendianeText);
 
     std::shared_ptr<sf::Text> phirasText = std::make_shared<sf::Text>();
-    std::string phiras = "Phiras: " + std::to_string(selectedCase->_phiras) + "\n";
+    std::string phiras = "Phiras: " + std::to_string(selectedCase->_phiras);
     phirasText->setString(phiras);
     phirasText->setCharacterSize(20);
     phirasText->setFont(*_globalFont);
     phirasText->setPosition(_window.getSize().x * 0.75 + 10, 225);
+    phirasText->setFillColor(sf::Color(175, 105, 207));
     modal->addText(phirasText);
 
     std::shared_ptr<sf::Text> thystameText = std::make_shared<sf::Text>();
-    std::string thystame = "Thystame: " + std::to_string(selectedCase->_thystame) + "\n";
+    std::string thystame = "Thystame: " + std::to_string(selectedCase->_thystame);
     thystameText->setString(thystame);
     thystameText->setCharacterSize(20);
     thystameText->setFont(*_globalFont);
     thystameText->setPosition(_window.getSize().x * 0.75 + 10, 250);
+    thystameText->setFillColor(sf::Color(191, 0, 0));
     modal->addText(thystameText);
 
     modal->setPosition(_window.getSize().x * 0.75, 50);
@@ -198,7 +205,7 @@ void Window::displayPlayerInformation(Parameters &params)
 void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_ptr<Modal> &modal)
 {
     std::shared_ptr<sf::Text> playerText = std::make_shared<sf::Text>();
-    std::string id = std::to_string(p->getId()) + "\n";
+    std::string id = std::to_string(p->getId());
     playerText->setString(id);
     playerText->setCharacterSize(20);
     playerText->setFont(*_globalFont);
@@ -214,7 +221,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(inventoryText);
 
     std::shared_ptr<sf::Text> foodText = std::make_shared<sf::Text>();
-    std::string food = "Food: " + std::to_string(p->getInventory()._food) + "\n";
+    std::string food = "Food: " + std::to_string(p->getInventory()._food);
     foodText->setString(food);
     foodText->setCharacterSize(20);
     foodText->setFont(*_globalFont);
@@ -223,7 +230,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(foodText);
 
     std::shared_ptr<sf::Text> linemateText = std::make_shared<sf::Text>();
-    std::string linemate = "Linemate: " + std::to_string(p->getInventory()._linemate) + "\n";
+    std::string linemate = "Linemate: " + std::to_string(p->getInventory()._linemate);
     linemateText->setString(linemate);
     linemateText->setCharacterSize(20);
     linemateText->setFont(*_globalFont);
@@ -232,7 +239,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(linemateText);
 
     std::shared_ptr<sf::Text> deraumereText = std::make_shared<sf::Text>();
-    std::string deraumere = "Deraumere: " + std::to_string(p->getInventory()._deraumere) + "\n";
+    std::string deraumere = "Deraumere: " + std::to_string(p->getInventory()._deraumere);
     deraumereText->setString(deraumere);
     deraumereText->setCharacterSize(20);
     deraumereText->setFont(*_globalFont);
@@ -241,7 +248,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(deraumereText);
 
     std::shared_ptr<sf::Text> siburText = std::make_shared<sf::Text>();
-    std::string sibur = "Sibur: " + std::to_string(p->getInventory()._sibur) + "\n";
+    std::string sibur = "Sibur: " + std::to_string(p->getInventory()._sibur);
     siburText->setString(sibur);
     siburText->setCharacterSize(20);
     siburText->setFont(*_globalFont);
@@ -250,7 +257,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(siburText);
 
     std::shared_ptr<sf::Text> mendianeText = std::make_shared<sf::Text>();
-    std::string mendiane = "Mendiane: " + std::to_string(p->getInventory()._mendiane) + "\n";
+    std::string mendiane = "Mendiane: " + std::to_string(p->getInventory()._mendiane);
     mendianeText->setString(mendiane);
     mendianeText->setCharacterSize(20);
     mendianeText->setFont(*_globalFont);
@@ -259,7 +266,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(mendianeText);
 
     std::shared_ptr<sf::Text> phirasText = std::make_shared<sf::Text>();
-    std::string phiras = "Phiras: " + std::to_string(p->getInventory()._phiras) + "\n";
+    std::string phiras = "Phiras: " + std::to_string(p->getInventory()._phiras);
     phirasText->setString(phiras);
     phirasText->setCharacterSize(20);
     phirasText->setFont(*_globalFont);
@@ -268,7 +275,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(phirasText);
 
     std::shared_ptr<sf::Text> thystameText = std::make_shared<sf::Text>();
-    std::string thystame = "Thystame: " + std::to_string(p->getInventory()._thystame) + "\n";
+    std::string thystame = "Thystame: " + std::to_string(p->getInventory()._thystame);
     thystameText->setString(thystame);
     thystameText->setCharacterSize(20);
     thystameText->setFont(*_globalFont);
@@ -277,7 +284,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(thystameText);
 
     std::shared_ptr<sf::Text> teamText = std::make_shared<sf::Text>();
-    std::string team = "Team: " + p->getTeam() + "\n";
+    std::string team = "Team: " + p->getTeam();
     teamText->setString(team);
     teamText->setCharacterSize(20);
     teamText->setFont(*_globalFont);
@@ -285,7 +292,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(teamText);
 
     std::shared_ptr<sf::Text> posText = std::make_shared<sf::Text>();
-    std::string pos = "Position: Y:" + std::to_string(p->getPosition()._y) + " X:" + std::to_string(p->getPosition()._x) + "\n";
+    std::string pos = "Position: Y:" + std::to_string(p->getPosition()._y) + " X:" + std::to_string(p->getPosition()._x);
     posText->setString(pos);
     posText->setCharacterSize(20);
     posText->setFont(*_globalFont);
@@ -293,7 +300,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(posText);
 
     std::shared_ptr<sf::Text> orientationText = std::make_shared<sf::Text>();
-    std::string orientation = "Orientation: " + p->getOrientation() + "\n";
+    std::string orientation = "Orientation: " + p->getOrientation();
     orientationText->setString(orientation);
     orientationText->setCharacterSize(20);
     orientationText->setFont(*_globalFont);
@@ -301,7 +308,7 @@ void Window::addPlayerInformation(const std::shared_ptr<Player> &p, std::shared_
     modal->addText(orientationText);
 
     std::shared_ptr<sf::Text> levelText = std::make_shared<sf::Text>();
-    std::string level = "Level: " + std::to_string(p->getLevel()) + "\n";
+    std::string level = "Level: " + std::to_string(p->getLevel());
     levelText->setString(level);
     levelText->setCharacterSize(20);
     levelText->setFont(*_globalFont);
