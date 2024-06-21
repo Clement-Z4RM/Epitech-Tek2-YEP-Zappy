@@ -30,4 +30,5 @@ public:
 private:
     std::shared_ptr<raylib::Camera3> _camera{};
     Vector3 cubePosition = {0.0f, 0.0f, 0.0f};
+    Vector3 cube2Position = {2.0f, 0.0f, 0.0f};
 };

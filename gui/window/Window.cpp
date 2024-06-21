@@ -42,6 +42,9 @@ void Window::run(Parameters &params)
         raylib::Cube::drawCube(cubePosition, 2.0f, 2.0f, 2.0f, {255, 0, 0, 255});
         raylib::Cube::drawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, {88, 57, 39, 255});
 
+        raylib::Cube::drawCube(cube2Position, 2.0f, 2.0f, 2.0f, {255, 0, 0, 255});
+        raylib::Cube::drawCubeWires(cube2Position, 2.0f, 2.0f, 2.0f, {88, 57, 39, 255});
+
         raylib::Camera::end3DMode();
 
         raylib::Rectangle::drawRectangle(10, 10, 220, 100, {102, 191, 255, 255});
