@@ -26,6 +26,10 @@ add_executable(zappy_gui
         window/Modal.cpp
         src/Egg/egg.hpp
         src/Egg/egg.cpp
+        RayLib/Raylib.hpp
+        RayLib/Raylib.cpp
+        RayLib/Camera3D.hpp
+        RayLib/Camera3D.cpp
 )
 
-target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system -lraylib -lGL -lm -lpthread -ldl -lrt -lX11)

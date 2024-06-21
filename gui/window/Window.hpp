@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include "../Parameters.hpp"
 #include "Modal.hpp"
+#include "../RayLib/Raylib.hpp"
 
 class Window {
 public:
@@ -23,19 +24,7 @@ public:
 
     void run(Parameters &params);
 
-    void getEvent(Parameters &params);
-
-    void rendMap(Parameters &params);
-    void clearMap() { _map.clear(); }
-
-    bool isOpen() { return _window.isOpen(); }
-
-    void displayInformation(const std::shared_ptr<Case>& selectedCase, Parameters &params);
-    void addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::shared_ptr<Modal> &modal);
-
 private:
-    std::shared_ptr<sf::Font> _globalFont;
-    sf::RenderWindow _window;
-    std::deque<std::shared_ptr<sf::RectangleShape>> _map;
-    std::unordered_map<std::string, std::shared_ptr<Modal>> _modals;
+    std::shared_ptr<raylib::Camera3D> _camera{};
+    raylib::Vector3D cubePosition = {0.0f, 0.0f, 0.0f};
 };

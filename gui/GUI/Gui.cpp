@@ -26,9 +26,7 @@ namespace gui {
 
         void GUI::run()
         {
-            while (_window.isOpen()) {
-                _client.refreshMap();
-                _window.rendMap(_client.getParam());
+            while (!raylib::Raylib::windowShouldClose()) {
                 _window.run(_client.getParam());
             }
         }
