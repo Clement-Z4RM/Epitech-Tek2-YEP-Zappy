@@ -159,6 +159,8 @@ add_executable(zappy_server
         #region Updater module
         src/modules/updater/updater.c
         src/modules/updater/updater.h
+        src/modules/commands/ai/broadcast.c
+        include/angle_direction.h
         #endregion
         #endregion
 )
