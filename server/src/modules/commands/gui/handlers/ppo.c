@@ -28,6 +28,7 @@ static bool fill_response(gui_handler_data_t *data, char *response)
     snprintf(response, MAX_RESPONSE_SIZE, "ppo %ld %lu %lu %d\n",
         ai_client->player.id, ai_client->player.x, ai_client->player.y,
         ai_client->player.direction);
+    log_success_ppo(ai_client->client, &ai_client->player);
     return true;
 }
 
@@ -42,5 +43,4 @@ void ppo(gui_handler_data_t *data)
     if (!fill_response(data, response))
         return;
     client_add_request(data->gui_client->client, response, TO_SEND);
-    log_success_ppo(ai_client->client, &ai_client->player);
 }
