@@ -7,7 +7,7 @@
 
 #include "SettingMenu.hpp"
 
-Button::Button(const std::string& text, sf::Vector2f position)
+Button::Button(const std::string& text, sf::Vector2f position, ButtonState state)
 {
     _font.loadFromFile(_fontPath);
     _text.setString(text);
@@ -17,9 +17,15 @@ Button::Button(const std::string& text, sf::Vector2f position)
     _text.setPosition(position.x + 40, position.y + 35);
     _text.setStyle(sf::Text::Bold);
     _position = position;
-    _texture.loadFromFile(_textureButtonPath);
+    if (state == BUTTON)
+        _texture.loadFromFile(_textureButtonPath);
+    else if (state == BUTTON_OFF)
+        _texture.loadFromFile(_textureButtonOffPath);
+    else if (state == BUTTON_CLICK)
+        _texture.loadFromFile(_textureButtonClickPath);
     _sprite.setTexture(_texture);
     _sprite.setPosition(_position);
+    _state = state;
 }
 
 SettingMenu::SettingMenu()
@@ -42,13 +48,11 @@ void SettingMenu::displaySettingMenu(sf::RenderWindow &window)
 
 void SettingMenu::createButtons()
 {
-    auto button = std::make_shared<Button>("Connect", sf::Vector2f(1000, 100));
+    auto button = std::make_shared<Button>("Connect", sf::Vector2f(1000, 100), Button::BUTTON_OFF);
     _buttons.push_back(button);
-    button = std::make_shared<Button>("Quit", sf::Vector2f(1000, 200));
-    button->changeTexture(button->getTextureButtonOffPath());
+    button = std::make_shared<Button>("Quit", sf::Vector2f(1000, 200), Button::BUTTON_OFF);
     _buttons.push_back(button);
-    button = std::make_shared<Button>("Settings", sf::Vector2f(1000, 300));
-    button->changeTexture(button->getTextureButtonClickPath());
+    button = std::make_shared<Button>("Settings", sf::Vector2f(1000, 300), Button::BUTTON_OFF);
     _buttons.push_back(button);
 }
 

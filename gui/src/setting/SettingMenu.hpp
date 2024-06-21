@@ -14,7 +14,12 @@
 
 class Button {
 public:
-    Button(const std::string& text, sf::Vector2f position);
+    enum ButtonState {
+        BUTTON,
+        BUTTON_OFF,
+        BUTTON_CLICK
+    };
+    Button(const std::string& text, sf::Vector2f position, ButtonState state);
     ~Button() = default;
     void changeTexture(std::string texturePath) { _texture.loadFromFile(texturePath); _sprite.setTexture(_texture); }
     std::string getTextureButtonPath() { return _textureButtonPath; }
@@ -30,6 +35,7 @@ private:
     std::string _textureButtonClickPath = "./resources/ButtonClick.png";
     sf::Font _font;
     std::string _fontPath = "./resources/font.ttf";
+    ButtonState _state;
 };
 
 class SettingMenu {
