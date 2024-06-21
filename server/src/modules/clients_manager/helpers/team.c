@@ -87,6 +87,7 @@ static bool add_to_existing_team(
     ++id;
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
+    manager->nb_ai_clients++;
     return true;
 }
 
