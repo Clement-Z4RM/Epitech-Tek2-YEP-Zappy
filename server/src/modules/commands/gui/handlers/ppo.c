@@ -28,4 +28,5 @@ void ppo(gui_handler_data_t *data)
         ->player.id, ai_client->player.x, ai_client->player.y,
         ai_client->player.direction);
     client_add_request(data->gui_client->client, response, TO_SEND);
+    log_success_ppo(ai_client->client, &ai_client->player);
 }
