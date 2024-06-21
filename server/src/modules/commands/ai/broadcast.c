@@ -76,9 +76,7 @@ void broadcast(ai_handler_data_t *data)
     SLIST_FOREACH(current_team, &data->clients_manager->team_list, next) {
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
             direction = get_direction_tile(
-                &data->client->player,
-                &current_ai->player,
-                data->map
+                &data->client->player, &current_ai->player, data->map
             );
             snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
                 direction, msg);
