@@ -10,11 +10,13 @@
 #include "angle_direction.h"
 #include "responses.h"
 
-static int calc_cell_direction(int a)
+static int calc_cell_direction(int bpos, int o)
 {
-    int b = -1.5 * a * a * a + 13.5 * a * a - 37 * a + 33;
+    int result = bpos + (2 * (o - 1));
 
-    return b;
+    if (result > 8)
+        result -= 8;
+    return result;
 }
 
 static int get_direction_tile(player_t *emitter, player_t *receiver, map_t *map)
@@ -23,14 +25,14 @@ static int get_direction_tile(player_t *emitter, player_t *receiver, map_t *map)
     double x_diff = (double)receiver->x - (double)emitter->x;
     double y_diff = (double)receiver->y - (double)emitter->y;
     angle_direction_t directions[] = {
-        {-M_PI / 8, M_PI / 8, calc_cell_direction(o)},
-        {M_PI / 8, 3 * M_PI / 8, calc_cell_direction(o) + 1},
-        {3 * M_PI / 8, 5 * M_PI / 8, calc_cell_direction(o) + 2},
-        {5 * M_PI / 8, 7 * M_PI / 8, calc_cell_direction(o) + 3},
-        {7 * M_PI / 8, 9 * M_PI / 8, calc_cell_direction(o) + 4},
-        {9 * M_PI / 8, 11 * M_PI / 8, calc_cell_direction(o) + 5},
-        {11 * M_PI / 8, 13 * M_PI / 8, calc_cell_direction(o) + 6},
-        {13 * M_PI / 8, 15 * M_PI / 8, calc_cell_direction(o) + 7},
+        {3 * M_PI / 8, 5 * M_PI / 8, calc_cell_direction(1, o)}, // haut
+        {5 * M_PI / 8, 7 * M_PI / 8, calc_cell_direction(2 , o)}, //haut gauche
+        {7 * M_PI / 8, 9 * M_PI / 8, calc_cell_direction(3, o)}, // gauche
+        {9 * M_PI / 8, 11 * M_PI / 8, calc_cell_direction(4 , o)}, // bas gauche
+        {11 * M_PI / 8, 13 * M_PI / 8, calc_cell_direction(5, o)}, // bas
+        {13 * M_PI / 8, 15 * M_PI / 8, calc_cell_direction(6, o)}, // bas droite
+        {-M_PI / 8, M_PI / 8, calc_cell_direction(7, o)}, // droite
+        {M_PI / 8, 3 * M_PI / 8, calc_cell_direction(8, o)}, // haut droite
     };
     double theta = 0;
 
