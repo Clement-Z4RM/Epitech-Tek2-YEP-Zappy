@@ -12,6 +12,7 @@
 #include "sys/types.h"
 #include "responses.h"
 #include "coords.h"
+#include "logs/logs.h"
 
 #define MAX_DIGITS 21
 
@@ -34,17 +35,14 @@ extern void plv(
     const clients_manager_t *clients_manager
 );
 extern void pfk(uint64_t id, const clients_manager_t *clients_manager);
-extern void pnw(
-    const ai_client_node_t *ai_client,
-    const clients_manager_t *clients_manager
-);
+extern void pnw(const ai_client_node_t *ai_client,
+    const clients_manager_t *clients_manager);
 extern void pex(uint64_t id, const clients_manager_t *clients_manager);
-extern void pbc(
-    uint64_t id,
-    char *msg,
-    const clients_manager_t *clients_manager
-);
+extern void pbc(uint64_t id, char *msg,
+    const clients_manager_t *clients_manager);
 extern void smg(char *msg, const clients_manager_t *clients_manager);
 extern void seg(char *team_name, clients_manager_t *clients_manager);
 extern void pdi(uint64_t id, clients_manager_t *clients_manager);
 extern void sbp(client_t *client);
+extern void ebo(const uint64_t egg_id,
+    const clients_manager_t *clients_manager);

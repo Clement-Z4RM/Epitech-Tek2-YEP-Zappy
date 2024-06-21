@@ -42,4 +42,5 @@ void ppo(gui_handler_data_t *data)
     if (!fill_response(data, response))
         return;
     client_add_request(data->gui_client->client, response, TO_SEND);
+    log_success_ppo(ai_client->client, &ai_client->player);
 }

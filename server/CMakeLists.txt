@@ -54,6 +54,11 @@ add_executable(zappy_server
         src/modules/logs/failures/logs_failures.h
         src/modules/logs/failures/request_failures_logs.c
         src/modules/logs/failures/team_failures_logs.c
+        src/modules/logs/successes/gui_handlers/tna_success.c
+        src/modules/logs/failures/gui_handlers/sst_failure.c
+        src/modules/logs/successes/gui_handlers/sst_success.c
+        src/modules/logs/successes/gui_handlers/sgt_success.c
+        src/modules/logs/successes/gui_handlers/ppo_success.c
         #endregion
 
         #region Options module
@@ -140,6 +145,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/enw.c
         src/modules/commands/gui/events/sbp.c
         src/modules/commands/gui/events/edi.c
+        src/modules/commands/gui/events/ebo.c
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c

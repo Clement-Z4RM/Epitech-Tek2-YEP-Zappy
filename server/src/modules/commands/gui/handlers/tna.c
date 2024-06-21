@@ -31,4 +31,5 @@ void tna(gui_handler_data_t *data)
     {
         send_team(current_team->name, data->gui_client->client);
     }
+    log_success_tna(data->gui_client->client);
 }
