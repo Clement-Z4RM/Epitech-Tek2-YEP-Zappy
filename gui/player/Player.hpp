@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include <sstream>$
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <iostream>
@@ -59,11 +59,12 @@ public:
     void setInventory(int food, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) { _inventory = Inventory(food, linemate, deraumere, sibur, mendiane, phiras, thystame); }
 
     int getLevel() { return _level; }
-    Orientation getOrientation() { return _orientation; }
+    std::string getOrientation();
     Coordinates getPosition() { return _position; }
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
     std::shared_ptr<sf::Sprite> getPlayerSprite() { return _playerSprite; }
+    std::string getTeam() { return _team; }
 
     void display(sf::RenderWindow &window);
 
