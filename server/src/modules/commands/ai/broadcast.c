@@ -19,21 +19,8 @@ static int calc_cell_direction(int bpos, int o)
     return result;
 }
 
-static int get_direction_tile(player_t *emitter, player_t *receiver, map_t *map)
+static double calc_theta(map_t *map, double x_diff, double y_diff)
 {
-    int o = receiver->direction;
-    double x_diff = (double)receiver->x - (double)emitter->x;
-    double y_diff = (double)receiver->y - (double)emitter->y;
-    angle_direction_t directions[] = {
-        {3 * M_PI / 8, 5 * M_PI / 8, calc_cell_direction(1, o)}, // haut
-        {5 * M_PI / 8, 7 * M_PI / 8, calc_cell_direction(2 , o)}, //haut gauche
-        {7 * M_PI / 8, 9 * M_PI / 8, calc_cell_direction(3, o)}, // gauche
-        {9 * M_PI / 8, 11 * M_PI / 8, calc_cell_direction(4 , o)}, // bas gauche
-        {11 * M_PI / 8, 13 * M_PI / 8, calc_cell_direction(5, o)}, // bas
-        {13 * M_PI / 8, 15 * M_PI / 8, calc_cell_direction(6, o)}, // bas droite
-        {-M_PI / 8, M_PI / 8, calc_cell_direction(7, o)}, // droite
-        {M_PI / 8, 3 * M_PI / 8, calc_cell_direction(8, o)}, // haut droite
-    };
     double theta = 0;
 
     if (x_diff > (double)map->width / 2)
@@ -45,9 +32,33 @@ static int get_direction_tile(player_t *emitter, player_t *receiver, map_t *map)
     else if (y_diff < (double)-map->height / 2)
         y_diff += (double)map->height;
     theta = atan2(y_diff, x_diff);
+    return theta;
+}
+
+static int get_direction_tile(
+    player_t *emitter,
+    player_t *receiver,
+    map_t *map
+)
+{
+    int o = receiver->direction;
+    double x_diff = (double)receiver->x - (double)emitter->x;
+    double y_diff = (double)receiver->y - (double)emitter->y;
+    angle_direction_t directions[] = {
+        {3 * M_PI / 8, 5 * M_PI / 8, calc_cell_direction(1, o)},
+        {5 * M_PI / 8, 7 * M_PI / 8, calc_cell_direction(2, o)},
+        {7 * M_PI / 8, 9 * M_PI / 8, calc_cell_direction(3, o)},
+        {9 * M_PI / 8, 11 * M_PI / 8, calc_cell_direction(4, o)},
+        {11 * M_PI / 8, 13 * M_PI / 8, calc_cell_direction(5, o)},
+        {13 * M_PI / 8, 15 * M_PI / 8, calc_cell_direction(6, o)},
+        {-M_PI / 8, M_PI / 8, calc_cell_direction(7, o)},
+        {M_PI / 8, 3 * M_PI / 8, calc_cell_direction(8, o)},
+    };
+    double t = calc_theta(map, x_diff, y_diff);
+
     for (unsigned long i = 0; i < sizeof(directions) / sizeof(directions[0]);
         ++i)
-        if (theta >= directions[i].min_angle && theta < directions[i].max_angle)
+        if (t >= directions[i].min_angle && t < directions[i].max_angle)
             return directions[i].direction;
     return 0;
 }
