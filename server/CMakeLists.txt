@@ -124,7 +124,6 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/pin.c
         src/modules/commands/gui/handlers/ppo.c
         src/modules/commands/gui/handlers/tna.c
-        src/modules/commands/gui/handlers/tna.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
         src/modules/commands/gui/events/pex.c
