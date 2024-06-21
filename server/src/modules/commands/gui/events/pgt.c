@@ -20,6 +20,6 @@ void pgt(uint64_t id, resource_name_t resource,
         if (response)
             client_add_request(node->client, response, TO_SEND);
         else
-            client_add_request(node->client, strdup("ok\n"), TO_SEND);
+            client_add_request(node->client, strdup("ko\n"), TO_SEND);
     }
 }

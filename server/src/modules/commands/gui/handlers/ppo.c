@@ -36,7 +36,7 @@ void ppo(gui_handler_data_t *data)
     char *response = malloc(MAX_RESPONSE_SIZE);
 
     if (!response) {
-        client_add_request(data->gui_client->client, strdup("ok\n"), TO_SEND);
+        client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     if (!fill_response(data, response))

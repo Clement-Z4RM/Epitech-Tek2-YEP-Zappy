@@ -38,7 +38,7 @@ void pin(gui_handler_data_t *data)
     );
 
     if (!response) {
-        client_add_request(data->gui_client->client, strdup("ok\n"), TO_SEND);
+        client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     fill_response(response, ai_client);

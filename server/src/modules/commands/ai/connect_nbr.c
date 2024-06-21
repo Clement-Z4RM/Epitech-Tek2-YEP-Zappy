@@ -23,12 +23,12 @@ void connect_nbr(ai_handler_data_t *data)
     char *response;
 
     if (!team) {
-        client_add_request(data->client->client, strdup("ok\n"), TO_SEND);
+        client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     response = malloc(12);
     if (!response) {
-        client_add_request(data->client->client, strdup("ok\n"), TO_SEND);
+        client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     snprintf(response, 12, "%lu\n", team->nb_eggs);

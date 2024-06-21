@@ -16,7 +16,7 @@ void msz(gui_handler_data_t *data)
     char *response = malloc(1024);
 
     if (!response) {
-        client_add_request(data->gui_client->client, strdup("ok\n"), TO_SEND);
+        client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     snprintf(response, MAX_RESPONSE_SIZE, "msz %zu %zu\n",
