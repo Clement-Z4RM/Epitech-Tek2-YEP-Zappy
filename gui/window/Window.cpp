@@ -24,6 +24,7 @@ void Window::run(Parameters &params)
 {
     if (_window.isOpen()) {
         getEvent(params);
+        displayPlayerInformation(params);
         _window.clear();
         for (auto &i : _map) {
             _window.draw(*i);
@@ -37,6 +38,8 @@ void Window::run(Parameters &params)
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
         params._settingMenu.displaySettingMenu(_window);
+        if (_modals.find("players") != _modals.end())
+            _modals["players"]->display(_window);
         _window.display();
     }
 }
@@ -65,7 +68,6 @@ void Window::getEvent(Parameters &params)
                     _modals.clear();
             }
         }
-        params._settingMenu.checkClick(_window, event);
     }
 }
 
