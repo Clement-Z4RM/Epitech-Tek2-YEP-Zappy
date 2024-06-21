@@ -63,20 +63,20 @@ static void update_team_clients_life(
  *
  * @param updater The updater structure,
  * containing all the necessary data for the update.
- * @param elapsed The elapsed time since the server startup.
  */
-static void update(updater_t *updater, time_t elapsed)
+static void update(updater_t *updater)
 {
-    double life_to_remove = get_life_to_remove(updater, elapsed);
+    double life_to_remove = get_life_to_remove(updater, updater->elapsed);
     team_node_t *team;
 
-    if (elapsed >= updater->next_generation) {
+    if (updater->elapsed >= updater->next_generation) {
         updater->map->resources.generate(updater->map);
-        updater->next_generation = elapsed + updater->generation_interval;
+        updater->next_generation = updater->elapsed +
+            updater->generation_interval;
     }
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
         update_team_clients_life(team, updater->map, life_to_remove);
-    updater->previous_time = elapsed;
+    updater->previous_time = updater->elapsed;
 }
 
 /**
@@ -108,6 +108,8 @@ updater_t *create_updater(network_t *network, map_t *map)
     updater = malloc(sizeof(updater_t));
     if (!updater)
         return NULL;
+    updater->start = 0;
+    updater->elapsed = 0;
     updater->previous_time = 0;
     updater->generation_interval = (time_t)(20000 / network->options->freq);
     if (0 == updater->generation_interval)

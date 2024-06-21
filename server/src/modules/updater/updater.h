@@ -16,6 +16,13 @@
  * @brief Updater structure
  */
 typedef struct updater_s {
+    /** @brief The time (in milliseconds) when the game started */
+    time_t start;
+
+    /** @brief The total time (in milliseconds) elapsed since the game start
+     * (updated at each loop iteration) */
+    time_t elapsed;
+
     /** @brief The time (in milliseconds) when the last update happened */
     time_t previous_time;
 
@@ -31,7 +38,7 @@ typedef struct updater_s {
     map_t *map;
 
     /** @brief The update function */
-    void (*update)(struct updater_s *updater, time_t elapsed);
+    void (*update)(struct updater_s *updater);
 
     /** @brief Structure destructor */
     void (*destroy)(struct updater_s *updater);
