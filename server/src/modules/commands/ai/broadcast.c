@@ -85,4 +85,5 @@ void broadcast(ai_handler_data_t *data)
             client_add_request(current_ai->client, response, TO_SEND);
         }
     }
+    pbc(data->client->player.id, msg, data->clients_manager);
 }
