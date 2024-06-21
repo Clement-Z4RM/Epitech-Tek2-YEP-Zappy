@@ -15,13 +15,14 @@
 #include <unordered_map>
 #include "../Parameters.hpp"
 #include "Modal.hpp"
+#include "../connection/Client.hpp"
 
 class Window {
 public:
     Window();
     ~Window();
 
-    void run(Parameters &params);
+    void run(Parameters &params, const gui::Client& client);
 
     void getEvent(Parameters &params);
 

@@ -12,6 +12,7 @@ namespace gui {
     public:
         GUI(std::string &ip, std::string &port);
         ~GUI();
+        gui::Client &getClient() { return _client; }
 
         void run();
 

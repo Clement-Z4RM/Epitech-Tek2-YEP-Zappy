@@ -20,7 +20,7 @@ Window::Window()
 
 Window::~Window() = default;
 
-void Window::run(Parameters &params)
+void Window::run(Parameters &params, const gui::Client& client)
 {
     if (_window.isOpen()) {
         getEvent(params);
@@ -38,6 +38,7 @@ void Window::run(Parameters &params)
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
         params._settingMenu.displaySettingMenu(_window);
+        params._settingMenu.checkClick(_window, client);
         if (_modals.find("players") != _modals.end())
             _modals["players"]->display(_window);
         _window.display();
