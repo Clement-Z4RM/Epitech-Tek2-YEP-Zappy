@@ -33,6 +33,8 @@ public:
     void displayInformation(const std::shared_ptr<Case>& selectedCase, Parameters &params);
     void addComponentsModal(const std::shared_ptr<Case> &selectedCase, std::shared_ptr<Modal> &modal);
 
+    void displayPlayerInformation(Parameters &params);
+    void addPlayerInformation(const std::shared_ptr<Player> &player, std::shared_ptr<Modal> &modal);
     void changePlayer(Parameters &params, int dir);
 
 private:

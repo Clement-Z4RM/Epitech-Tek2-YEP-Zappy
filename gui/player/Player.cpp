@@ -68,3 +68,18 @@ void Player::display(sf::RenderWindow &window)
     _playerSprite->setRotation(_orientation * 90);
     window.draw(*_playerSprite);
 }
+
+std::string Player::getOrientation()
+{
+    switch (_orientation) {
+    case NORTH:
+        return "NORTH";
+    case EAST:
+        return "EAST";
+    case SOUTH:
+        return "SOUTH";
+    case WEST:
+        return "WEST";
+    }
+    return "azimuth error";
+}
