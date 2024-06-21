@@ -19,6 +19,6 @@
  */
 void forward(ai_handler_data_t *data)
 {
-    player_go_forward(data->client, data->map);
+    player_go_forward(data->client, data->updater->map);
     client_add_request(data->client->client, strdup("ok\n"), TO_SEND);
 }

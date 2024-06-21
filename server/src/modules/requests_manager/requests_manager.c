@@ -60,10 +60,10 @@ static void handle_ai_request(
     char **args,
     ai_client_node_t *client,
     clients_manager_t *manager,
-    map_t *map
+    updater_t *updater
 )
 {
-    ai_handler_data_t handler_data = {client, args, manager, map};
+    ai_handler_data_t handler_data = {client, args, manager, updater};
 
     for (size_t i = 0; i < AI_HANDLERS_COUNT; i++) {
         if (AI_HANDLERS[i].command_name == NULL)
@@ -184,7 +184,7 @@ static void requests_manager_handle_team_requests(
         ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
         if (parse_args(client, &args))
-            handle_ai_request(args, ai_current, manager, updater->map);
+            handle_ai_request(args, ai_current, manager, updater);
         free_request_memory(args, client);
     }
 }

@@ -25,7 +25,11 @@ void set(ai_handler_data_t *data)
     for (; resource < RESOURCES_COUNT; ++resource)
         if (RESOURCE_NAMES[resource] &&
             !strcmp(RESOURCE_NAMES[resource], data->args[1])) {
-            success = player_drop_resource(data->client, data->map, resource);
+            success = player_drop_resource(
+                data->client,
+                data->updater->map,
+                resource
+            );
             break;
         }
     if (success)
