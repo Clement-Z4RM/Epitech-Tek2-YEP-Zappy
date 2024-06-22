@@ -168,8 +168,13 @@ end
 -- Broadcast a message
 --- @param message string
 function ZappyAI:Broadcast(message)
-    local response = self.server:SendSync(ZappyAction.BROADCAST .. " " .. message)
-    self.logger:Info(("Broadcast response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.BROADCAST, function(answer)
+            if answer ~= "ok" then
+                -- Fail
+                return
+            end
+            -- Success
+        end)
 end
 
 -- Get number of unused slots in the team
