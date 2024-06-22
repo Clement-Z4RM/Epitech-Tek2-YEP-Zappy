@@ -26,6 +26,8 @@ namespace gui {
 
         void GUI::run()
         {
+            _client.getParam().windowWidth = _window.getWindowWidth();
+            _client.getParam().windowHeight = _window.getWindowHeight();
             while (_window.isOpen()) {
                 _client.refreshMap();
                 _window.rendMap(_client.getParam());

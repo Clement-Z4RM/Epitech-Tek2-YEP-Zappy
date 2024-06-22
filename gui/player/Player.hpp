@@ -48,7 +48,7 @@ public:
 class Player {
 public:
     Player() = default;
-    explicit Player(std::stringstream &s);
+    Player(std::stringstream &s);
     ~Player() = default;
 
     void setLevel(int level) { _level = level; }
@@ -63,7 +63,7 @@ public:
     Coordinates getPosition() { return _position; }
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
-    std::shared_ptr<sf::Sprite> getPlayerSprite() { return _playerSprite; }
+    std::shared_ptr<sf::Sprite> getPlayerSprite(int width, int height, int mapWidth, int mapHeight);
     std::string getTeam() { return _team; }
 
     void display(sf::RenderWindow &window);
