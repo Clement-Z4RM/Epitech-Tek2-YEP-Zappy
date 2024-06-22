@@ -163,6 +163,9 @@ add_executable(zappy_server
         src/modules/updater/updater.h
         src/modules/updater/updater.c
         src/modules/updater/command_updater.c
+        src/modules/commands/ai/look.c
+        src/modules/commands/ai/look_fill_buffer.c
+        src/modules/commands/ai/look_directions.c
         #endregion
         #endregion
 )
