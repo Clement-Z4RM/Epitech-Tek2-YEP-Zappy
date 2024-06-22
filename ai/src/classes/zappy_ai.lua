@@ -156,8 +156,13 @@ end
 
 -- Turn 90 degrees to the left
 function ZappyAI:TurnLeft()
-    local response = self.server:SendSync(ZappyAction.TURN_LEFT)
-    self.logger:Info(("Turn left response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.MOVE_LEFT, function(answer)
+            if answer ~= "ok" then
+                -- Fail
+                return
+            end
+            -- Success
+        end)
 end
 
 -- Broadcast a message
