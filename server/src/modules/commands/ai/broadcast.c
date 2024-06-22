@@ -5,8 +5,9 @@
 ** broadcast.c
 */
 
+#include <string.h>
+#include <math.h>
 #include "requests_manager/requests_manager.h"
-#include "math.h"
 #include "angle_direction.h"
 #include "responses.h"
 
@@ -62,25 +63,61 @@ static int get_direction_tile(
     return 0;
 }
 
-void broadcast(ai_handler_data_t *data)
+static bool broadcast_null_value(char *arg, char *response, client_t *client)
 {
-    char *msg = data->args[1];
+    if (!arg || !response) {
+        free(arg);
+        free(response);
+        client_add_request(client, strdup("ko\n"), TO_SEND);
+        return true;
+    }
+    return false;
+}
+
+static void broadcast_updater(
+    ai_client_node_t *client,
+    updater_t *updater,
+    char *arg
+)
+{
     team_node_t *current_team;
     ai_client_node_t *current_ai;
-    int direction;
     char *response = malloc(MAX_RESPONSE_SIZE);
 
-    if (msg == NULL)
+    if (broadcast_null_value(arg, response, client->client))
         return;
-    SLIST_FOREACH(current_team, &data->clients_manager->team_list, next) {
+    SLIST_FOREACH(current_team,
+        &updater->network->clients_manager->team_list,
+        next) {
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
-            direction = get_direction_tile(
-                &data->client->player, &current_ai->player, data->updater->map
-            );
             snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
-                direction, msg);
+                get_direction_tile(&client->player, &current_ai->player,
+                    updater->map), arg
+            );
             client_add_request(current_ai->client, response, TO_SEND);
         }
     }
-    pbc(data->client->player.id, msg, data->clients_manager);
+    pbc(client->player.id, arg, updater->network->clients_manager);
+    free(arg);
+}
+
+/**
+ * @brief Broadcast command.
+ * Send a message to all players, but without the sender, only the source tile.
+ *
+ * This command takes 7 ticks to execute.
+ *
+ * @param data The structure containing all needed informations.
+ */
+// TODO: message parsing (cf. to-do list)
+void broadcast(ai_handler_data_t *data)
+{
+    command_updater_data_t updater_data = {
+        data->updater->elapsed,
+        7,
+        data->client,
+        strdup(data->args[1])
+    };
+
+    updater_add_command(data->updater, &updater_data, broadcast_updater);
 }
