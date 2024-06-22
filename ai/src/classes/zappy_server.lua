@@ -5,9 +5,10 @@
 --- @class ZappyServer
 local ZappyServer = {}
 
+local Socket <const> = require("socket")
+
 local NetworkZappyAnswer <const> = require("ai/src/constants/network_zappy_answer")
 local NetworkTCPStatus <const> = require("ai/src/enums/network_tcp_status")
-local Socket <const> = require("socket")
 local LookParser <const> = require("ai/src/look_parser")
 
 --- @param host string
@@ -21,6 +22,11 @@ function ZappyServer.New(host, port)
     self.tcp = Socket.tcp()
     self.status = NetworkTCPStatus.IDLE
     return self
+end
+
+--- @return number
+function ZappyServer:GetTcpClient()
+    return self.tcp
 end
 
 --- @return number
