@@ -15,4 +15,11 @@ function Utils.SplitString(inputStr, sep)
     return tbl
 end
 
+--- @param str string
+--- @param prefix string
+--- @return boolean
+function Utils.StartsWith(str, prefix)
+    return string.sub(str, 1, string.len(prefix)) == prefix
+end
+
 return Utils
