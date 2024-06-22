@@ -1,10 +1,21 @@
 --- @class ZappyLogger
 local ZappyLogger = {}
 
+local Config <const> = require("ai/src/config")
+
 --- @return ZappyLogger
 function ZappyLogger.New()
     local self = setmetatable({}, {__index = ZappyLogger})
     return self
+end
+
+--- @param message string
+--- @return void
+function ZappyLogger:Debug(message)
+    if not Config.Debug then
+        return
+    end
+    print(("\27[35m[Debug] \27[97m%s"):format(message))
 end
 
 --- @param message string
