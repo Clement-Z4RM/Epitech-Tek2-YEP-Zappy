@@ -59,7 +59,7 @@ static char *player_look_updater(map_t *map, player_t *player)
 
 static void look_updater(
     ai_client_node_t *client,
-    UNUSED updater_t *updater,
+    updater_t *updater,
     UNUSED char *arg
 )
 {

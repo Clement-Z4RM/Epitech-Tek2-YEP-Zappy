@@ -53,13 +53,13 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Forward", forward},
     {"Right", right},
     {"Left", left},
+    {"Look", look},
     {"Inventory", inventory},
     {"Broadcast", broadcast},
     {"Connect_nbr", connect_nbr},
     {"Fork", fork_command},
     {"Take", take},
-    {"Set", set},
-    {"Look", look}
+    {"Set", set}
 };
 
 #define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)

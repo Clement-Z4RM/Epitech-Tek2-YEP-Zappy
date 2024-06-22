@@ -150,6 +150,10 @@ add_executable(zappy_server
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c
+        src/modules/commands/ai/look/look.h
+        src/modules/commands/ai/look/look.c
+        src/modules/commands/ai/look/look_fill_buffer.c
+        src/modules/commands/ai/look/look_directions.c
         src/modules/commands/ai/inventory.h
         src/modules/commands/ai/inventory.c
         src/modules/commands/ai/broadcast.c
@@ -163,9 +167,6 @@ add_executable(zappy_server
         src/modules/updater/updater.h
         src/modules/updater/updater.c
         src/modules/updater/command_updater.c
-        src/modules/commands/ai/look.c
-        src/modules/commands/ai/look_fill_buffer.c
-        src/modules/commands/ai/look_directions.c
         #endregion
         #endregion
 )
