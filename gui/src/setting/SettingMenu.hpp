@@ -13,6 +13,7 @@
 #include <memory>
 #include "../../connection/Client.hpp"
 namespace gui {
+    class Client;
     class Button {
     public:
         enum ButtonState {
