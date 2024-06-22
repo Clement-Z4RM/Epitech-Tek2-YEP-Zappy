@@ -232,8 +232,13 @@ end
 
 -- Start an incantation
 function ZappyAI:StartIncantation()
-    local response = self.server:SendSync(ZappyAction.INCANTATION)
-    self.logger:Info(("Incantation response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.INCANTATION, function(answer)
+        if answer:find("ko") then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 --- @param command string
