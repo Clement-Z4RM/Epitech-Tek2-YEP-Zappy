@@ -21,7 +21,7 @@ static int calc_cell_direction(int bpos, int o)
 
 static double calc_theta(map_t *map, double x_diff, double y_diff)
 {
-    double theta = 0;
+    double theta;
 
     if (x_diff > (double)map->width / 2)
         x_diff -= (double)map->width;
@@ -56,8 +56,7 @@ static int get_direction_tile(
     };
     double t = calc_theta(map, x_diff, y_diff);
 
-    for (unsigned long i = 0; i < sizeof(directions) / sizeof(directions[0]);
-        ++i)
+    for (ulong i = 0; i < sizeof(directions) / sizeof(directions[0]); ++i)
         if (t >= directions[i].min_angle && t < directions[i].max_angle)
             return directions[i].direction;
     return 0;
@@ -68,7 +67,7 @@ void broadcast(ai_handler_data_t *data)
     char *msg = data->args[1];
     team_node_t *current_team;
     ai_client_node_t *current_ai;
-    int direction = 0;
+    int direction;
     char *response = malloc(MAX_RESPONSE_SIZE);
 
     if (msg == NULL)
@@ -76,7 +75,7 @@ void broadcast(ai_handler_data_t *data)
     SLIST_FOREACH(current_team, &data->clients_manager->team_list, next) {
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
             direction = get_direction_tile(
-                &data->client->player, &current_ai->player, data->map
+                &data->client->player, &current_ai->player, data->updater->map
             );
             snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
                 direction, msg);
