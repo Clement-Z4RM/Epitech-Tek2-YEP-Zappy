@@ -21,4 +21,5 @@ void pbc(uint64_t id, char *msg, const clients_manager_t *clients_manager)
         else
             client_add_request(node->client, strdup("ko\n"), TO_SEND);
     }
+    log_success_broadcast(id, msg);
 }

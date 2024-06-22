@@ -7,6 +7,7 @@
 
 #include "commands/gui/gui_commands.h"
 #include "stdlib.h"
+#include "requests_manager/requests_manager.h"
 
 void mct(gui_handler_data_t *data)
 {

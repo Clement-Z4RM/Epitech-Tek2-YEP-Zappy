@@ -17,6 +17,8 @@ static void forward_updater(
 {
     player_go_forward(client, updater->map);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
+    ppo_event(client, updater->network->clients_manager);
+    log_success_forward(&client->player);
 }
 
 /**

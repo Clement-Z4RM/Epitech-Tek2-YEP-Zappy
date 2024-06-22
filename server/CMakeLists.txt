@@ -134,7 +134,7 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/mct.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
-        src/modules/commands/gui/events/plv.c
+        src/modules/commands/gui/events/plv_event.c
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
         src/modules/commands/gui/events/pdr.c
@@ -166,6 +166,15 @@ add_executable(zappy_server
         src/modules/commands/ai/look.c
         src/modules/commands/ai/look_fill_buffer.c
         src/modules/commands/ai/look_directions.c
+        src/modules/commands/gui/events/ppo_event.c
+        src/modules/commands/gui/handlers/plv.c
+        src/modules/logs/successes/events/pdi_success.c
+        src/modules/logs/successes/events/forward_success.c
+        src/modules/logs/successes/events/broadcast_success.c
+        src/modules/logs/successes/events/look_success.c
+        src/modules/logs/successes/events/turn_success.c
+        src/modules/logs/successes/events/set_success.c
+        src/modules/logs/successes/events/take_success.c
         #endregion
         #endregion
 )
