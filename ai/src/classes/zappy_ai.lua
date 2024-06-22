@@ -221,8 +221,13 @@ end
 -- Set an object
 --- @param object string
 function ZappyAI:SetObject(object)
-    local response = self.server:SendSync(ZappyAction.SET_OBJECT .. " " .. object)
-    self.logger:Info(("Set object response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.SET_OBJECT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end, {object})
 end
 
 -- Start an incantation
