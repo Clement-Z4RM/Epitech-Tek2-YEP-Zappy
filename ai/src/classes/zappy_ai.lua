@@ -146,22 +146,22 @@ end
 -- Turn 90 degrees to the right
 function ZappyAI:TurnRight()
     self.commandsQueue:Enqueue(ZappyAction.MOVE_RIGHT, function(answer)
-            if answer ~= "ok" then
-                -- Fail
-                return
-            end
-            -- Success
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
     end)
 end
 
 -- Turn 90 degrees to the left
 function ZappyAI:TurnLeft()
     self.commandsQueue:Enqueue(ZappyAction.MOVE_LEFT, function(answer)
-            if answer ~= "ok" then
-                -- Fail
-                return
-            end
-            -- Success
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
     end)
 end
 
@@ -169,11 +169,11 @@ end
 --- @param message string
 function ZappyAI:Broadcast(message)
     self.commandsQueue:Enqueue(ZappyAction.BROADCAST, function(answer)
-            if answer ~= "ok" then
-                -- Fail
-                return
-            end
-            -- Success
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
     end, {message})
 end
 
@@ -187,22 +187,22 @@ end
 -- Fork a player
 function ZappyAI:ForkPlayer()
     self.commandsQueue:Enqueue(ZappyAction.FORK, function(answer)
-                if answer ~= "ok" then
-                    -- Fail
-                    return
-                end
-                -- Success
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
     end)
 end
 
 -- Eject players from this tile
 function ZappyAI:Eject()
     self.commandsQueue:Enqueue(ZappyAction.EJECT, function(answer)
-                if answer ~= "ok" then
-                    -- Fail
-                    return
-                end
-                -- Success
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
     end)
 end
 
