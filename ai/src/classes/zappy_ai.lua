@@ -179,8 +179,13 @@ end
 
 -- Get number of unused slots in the team
 function ZappyAI:ConnectNbr()
-    local response = self.server:SendSync(ZappyAction.CONNECT_NBR)
-    self.logger:Info(("Connect number response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.CONNECT_NBR, function(answer)
+            if answer ~= "ok" then
+                -- Fail
+                return
+            end
+            -- Success
+        end)
 end
 
 -- Fork a player
