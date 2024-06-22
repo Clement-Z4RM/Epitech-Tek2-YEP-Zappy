@@ -3,6 +3,7 @@
 --- @field public server ZappyServer
 --- @field public logger ZappyLogger
 --- @field public inventory ZappyInventory
+--- @field public commandsQueue ZappyCommandsQueue
 --- @field public status number
 --- @field public worldDimensions {x: number, y: number}
 --- @field protected numTicks number
@@ -10,6 +11,9 @@ local ZappyAI <const> = {}
 
 local Posix <const> = require("posix")
 local Socket <const> = require("socket")
+local Json <const> = require("ai/src/vendors/json")
+
+local ZappyCommandsQueue <const> = require("ai/src/classes/zappy_commands_queue")
 local ZappyAction <const> = require("ai/src/constants/network_zappy_action")
 local ZappyParamsContainer <const> = require("ai/src/classes/zappy_params")
 local ZappyInventory <const> = require("ai/src/classes/zappy_inventory")
@@ -24,10 +28,11 @@ local LookParser <const> = require("ai/src/look_parser")
 function ZappyAI.New(args)
     local self = setmetatable({}, { __index = ZappyAI })
 
+    self.logger = ZappyLogger.New()
     self.params = ZappyParamsContainer.New(args)
     self.server = ZappyServer.New(self.params:Get("h"), self.params:Get("p"))
-    self.logger = ZappyLogger.New()
     self.inventory = ZappyInventory.New()
+    self.commandsQueue = ZappyCommandsQueue.New(self)
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
     self.numTicks = 0
@@ -231,13 +236,61 @@ function ZappyAI:IncreaseTickIndex()
     self.numTicks = self.numTicks + 1
 end
 
---- @return void
-function ZappyAI:Tick()
-    if self.numTicks == 0 then
-        self:SetupInventory()
+---@param zappyAI ZappyAI
+local function listen(zappyAI)
+    local sock <const> =  zappyAI.server:GetTcpClient()
+    while true do
+        sock:settimeout(0)
+        while true do
+            local data, err = sock:receive("*l")
+            if data and not err then
+                zappyAI:HandleIncomingPacket(data)
+            end
+            coroutine.yield()
+        end
     end
+end
+
+--- @param dataStr string
+--- @return void
+function ZappyAI:HandleIncomingPacket(dataStr)
+    if Utils.StartsWith(dataStr, "message") then
+        return self.logger:Debug(("New broadcast packet received: [%s]"):format(dataStr))
+    end
+    if dataStr == "dead" then
+        self.status = ZappyAIStatus.ENDED
+        self.logger:Warn("AI Bot is dead...")
+        return
+    end
+    self.commandsQueue:HandleCommandCallback(dataStr)
+end
+
+--- Setup TCP listen thread and main AI thread
+--- @return void
+function ZappyAI:SetupThreads()
+    self:SetupInventory()
     self:LookupEnvironment()
-    self:IncreaseTickIndex()
+    
+    local tcpListenRoutine <const> = coroutine.create(function() listen(self) end)
+    while self:GetIsPlaying() do
+        if coroutine.status(tcpListenRoutine) ~= "dead" then
+            coroutine.resume(tcpListenRoutine)
+        end
+        if not self.commandsQueue:GetIsBusy() then
+            self:IncreaseTickIndex()
+            self:Decide()
+        end
+        self.commandsQueue:Dequeue()
+        Socket.sleep(0.1)
+    end
+end
+
+--[[
+    Main decision maker
+--]]
+--- Main decision maker function
+--- TODO: Implement
+function ZappyAI:Decide()
 end
 
 -- Export

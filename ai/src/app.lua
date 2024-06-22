@@ -24,13 +24,11 @@ function App.Main(args)
         return ai:Error("Could not connect to the Zappy server.")
     end
     ai.logger:Success("Successfully connected to the Zappy server.")
-    if not ai:SetupBaseInfos() then
+    if not ai:SetupBaseInfos(commandToSendCfg) then
         return ai:Error("Server denied data, is the team name correct ?")
     end
     ai:SetStatus(ZappyAIStatus.PLAYING)
-    while ai:GetIsPlaying() do
-        ai:Tick()
-    end
+    ai:SetupThreads()
 end
 
 return App
