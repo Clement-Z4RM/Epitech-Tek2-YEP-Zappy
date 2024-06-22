@@ -64,7 +64,7 @@ public:
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
     std::shared_ptr<sf::Sprite> getPlayerSprite(int width, int height, int mapWidth, int mapHeight);
-    std::shared_ptr<sf::CircleShape> getPlayerCircle() { return _playerCircle; }
+    std::shared_ptr<sf::CircleShape> getPlayerCircle(int width, int height, int mapWidth, int mapHeight);
     std::string getTeam() { return _team; }
 
     void display(sf::RenderWindow &window);

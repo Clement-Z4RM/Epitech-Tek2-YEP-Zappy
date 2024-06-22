@@ -95,6 +95,17 @@ std::shared_ptr<sf::Sprite> Player::getPlayerSprite(int width, int height, int m
     return _playerSprite;
 }
 
+std::shared_ptr<sf::CircleShape> Player::getPlayerCircle(int width, int height, int mapWidth, int mapHeight)
+{
+    float squareSize = (width * 0.9 / mapWidth) < (height * 0.9 / mapHeight) ? (width * 0.9 / mapWidth) : (height * 0.9 / mapHeight);
+    float scale = squareSize / 100;
+    _playerCircle->setScale(scale, scale);
+    int posX = _position._x * squareSize + width * 0.5 / 2;
+    int posY = _position._y * squareSize + height * 0.1 / 2;
+    _playerCircle->setPosition(posX, posY);
+    return _playerCircle;
+}
+
 sf::Color Player::stringToColor(const std::string &str)
 {
     std::hash<std::string> hasher;
@@ -107,9 +118,12 @@ sf::Color Player::stringToColor(const std::string &str)
 
 void Player::initPlayerCircle()
 {
-    _playerCircle->setRadius(50);
-    _playerCircle->setFillColor(sf::Color::Transparent);
+    _playerCircle = std::make_shared<sf::CircleShape>();
+    int posX = _position._x * 32 + 32;
+    int posY = _position._y * 32 + 32;
     _playerCircle->setOutlineThickness(5);
     _playerCircle->setOutlineColor(stringToColor(_team));
-    _playerCircle->setPosition(_position._x * 100, _position._y * 100);
+    _playerCircle->setPosition(posX, posY);
+    _playerCircle->setRadius(50);
+    _playerCircle->setFillColor(sf::Color::Transparent);
 }
