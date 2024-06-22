@@ -201,8 +201,13 @@ end
 
 -- Eject players from this tile
 function ZappyAI:Eject()
-    local response = self.server:SendSync(ZappyAction.EJECT)
-    self.logger:Info(("Eject response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.EJECT, function(answer)
+                if answer ~= "ok" then
+                    -- Fail
+                    return
+                end
+                -- Success
+            end)
 end
 
 -- Take an object
