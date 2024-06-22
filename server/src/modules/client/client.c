@@ -38,22 +38,20 @@ char *client_popback_request(client_t *client, client_queue_type_t type)
     char *request = NULL;
     client_request_node_t *current = NULL;
 
-    if (type == TO_HANDLE) {
-        if (!CIRCLEQ_EMPTY(&client->requests_queue_to_handle)) {
+    if (type == TO_HANDLE &&
+        !CIRCLEQ_EMPTY(&client->requests_queue_to_handle)) {
             current = CIRCLEQ_LAST(&client->requests_queue_to_handle);
             request = current->request;
             CIRCLEQ_REMOVE(&client->requests_queue_to_handle, current, next);
             free(current);
             client->requests_queue_to_handle_size--;
-        }
-    } else if (type == TO_SEND) {
-        if (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
+    } else if (type == TO_SEND &&
+        !CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
             current = CIRCLEQ_LAST(&client->requests_queue_to_send);
             request = current->request;
             CIRCLEQ_REMOVE(&client->requests_queue_to_send, current, next);
             free(current);
             client->requests_queue_to_send_size--;
-        }
     }
     return request;
 }
