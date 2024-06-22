@@ -57,7 +57,8 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Broadcast", broadcast},
     {"Connect_nbr", connect_nbr},
     {"Take", take},
-    {"Set", set}
+    {"Set", set},
+    {"Look", look}
 };
 
 #define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)
