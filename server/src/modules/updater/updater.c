@@ -15,14 +15,14 @@
  *
  * @param updater The updater structure,
  * containing the frequency and the time of the previous update.
- * @param elapsed The elapsed time since the server startup.
  *
  * @return The amount of life to remove.
  */
-static double get_life_to_remove(updater_t *updater, time_t elapsed)
+static double get_life_to_remove(updater_t *updater)
 {
     return (double)(
-        updater->network->options->freq * (elapsed - updater->previous_time)
+        updater->network->options->freq *
+        (updater->elapsed - updater->previous_time)
     ) / 1000;
 }
 
@@ -66,7 +66,7 @@ static void update_team_clients_life(
  */
 static void update(updater_t *updater)
 {
-    double life_to_remove = get_life_to_remove(updater, updater->elapsed);
+    double life_to_remove = get_life_to_remove(updater);
     team_node_t *team;
 
     if (updater->elapsed >= updater->next_generation) {
@@ -76,6 +76,7 @@ static void update(updater_t *updater)
     }
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
         update_team_clients_life(team, updater->map, life_to_remove);
+    updater_execute_commands(updater);
     updater->previous_time = updater->elapsed;
 }
 
@@ -86,8 +87,15 @@ static void update(updater_t *updater)
  */
 static void updater_destructor(updater_t *updater)
 {
+    command_updater_t *tmp;
+
     if (!updater)
         return;
+    while (!CIRCLEQ_EMPTY(&updater->command_updaters)) {
+        tmp = CIRCLEQ_FIRST(&updater->command_updaters);
+        CIRCLEQ_REMOVE(&updater->command_updaters, tmp, next);
+        free(tmp);
+    }
     free(updater);
 }
 
@@ -115,6 +123,7 @@ updater_t *create_updater(network_t *network, map_t *map)
     if (0 == updater->generation_interval)
         updater->generation_interval = 1;
     updater->next_generation = updater->generation_interval;
+    CIRCLEQ_INIT(&updater->command_updaters);
     updater->network = network;
     updater->map = map;
     updater->update = update;

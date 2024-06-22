@@ -157,8 +157,9 @@ add_executable(zappy_server
         #endregion
 
         #region Updater module
-        src/modules/updater/updater.c
         src/modules/updater/updater.h
+        src/modules/updater/updater.c
+        src/modules/updater/command_updater.c
         #endregion
         #endregion
 )
