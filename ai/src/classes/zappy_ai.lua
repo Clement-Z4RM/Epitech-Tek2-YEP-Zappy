@@ -151,7 +151,7 @@ function ZappyAI:TurnRight()
                 return
             end
             -- Success
-        end)
+    end)
 end
 
 -- Turn 90 degrees to the left
@@ -162,7 +162,7 @@ function ZappyAI:TurnLeft()
                 return
             end
             -- Success
-        end)
+    end)
 end
 
 -- Broadcast a message
@@ -174,18 +174,14 @@ function ZappyAI:Broadcast(message)
                 return
             end
             -- Success
-        end)
+    end, {message})
 end
 
 -- Get number of unused slots in the team
 function ZappyAI:ConnectNbr()
     self.commandsQueue:Enqueue(ZappyAction.CONNECT_NBR, function(answer)
-            if answer ~= "ok" then
-                -- Fail
-                return
-            end
-            -- Success
-        end)
+            self.logger:Info(("Connect number response: %s"):format(answer))
+    end)
 end
 
 -- Fork a player
@@ -196,7 +192,7 @@ function ZappyAI:ForkPlayer()
                     return
                 end
                 -- Success
-            end)
+    end)
 end
 
 -- Eject players from this tile
@@ -207,7 +203,7 @@ function ZappyAI:Eject()
                     return
                 end
                 -- Success
-            end)
+    end)
 end
 
 -- Take an object
