@@ -12,9 +12,9 @@
 #include "netinet/in.h"
 #include "arpa/inet.h"
 
-/** @brief macro to print [SUCCESS] in green
+/** @brief macro to print [ERROR] in red
  * directly before the rest of the log**/
-#define LOG_FAILURE(...) printf(RED "[SUCCESS] " RESET __VA_ARGS__)
+#define LOG_FAILURE(...) printf(RED "[ERROR] " RESET __VA_ARGS__)
 
 extern void log_failure_request_no_handler(const client_t *client);
 extern void log_failure_null_request(const client_t *client);
