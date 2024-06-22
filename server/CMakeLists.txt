@@ -21,6 +21,7 @@ add_executable(zappy_server
         #region Global structure definitions
         include/coords.h
         include/eggs.h
+        include/angle_direction.h
         #endregion
 
         #region Main files
@@ -151,6 +152,7 @@ add_executable(zappy_server
         src/modules/commands/ai/turn.c
         src/modules/commands/ai/inventory.h
         src/modules/commands/ai/inventory.c
+        src/modules/commands/ai/broadcast.c
         src/modules/commands/ai/connect_nbr.c
         src/modules/commands/ai/take.c
         src/modules/commands/ai/set.c
