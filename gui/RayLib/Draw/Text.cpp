@@ -13,8 +13,8 @@ namespace raylib {
         DrawText(text.c_str(), x, y, fontSize, color);
     }
 
-    void Text::drawText(std::string text, int x, int y, int fontSize, Color color) {
-        DrawText(text.c_str(), x, y, fontSize, color);
+    void Text::drawText(const char *text, int x, int y, int fontSize, Color color) {
+        DrawText(text, x, y, fontSize, color);
     }
 
 } // raylib

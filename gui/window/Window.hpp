@@ -27,6 +27,10 @@ public:
 
     void run(Parameters &params);
 
+    void renderMap(Parameters &params);
+    void information(Parameters &params);
+    void displayPlayers(Parameters &params);
+
 private:
     std::shared_ptr<raylib::Camera3> _camera{};
     Vector3 cubePosition = {0.0f, 0.0f, 0.0f};

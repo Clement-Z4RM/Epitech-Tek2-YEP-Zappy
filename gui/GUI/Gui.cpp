@@ -1,6 +1,9 @@
-//
-// Created by mzucchero on 6/3/24.
-//
+/*
+** EPITECH PROJECT, 2024
+** zappy_gui
+** File description:
+** Gui.cpp
+*/
 
 #include "Gui.hpp"
 
@@ -27,6 +30,7 @@ namespace gui {
         void GUI::run()
         {
             while (!raylib::Raylib::windowShouldClose()) {
+                _client.refreshMap();
                 _window.run(_client.getParam());
             }
         }

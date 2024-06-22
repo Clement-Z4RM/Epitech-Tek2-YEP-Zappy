@@ -21,11 +21,11 @@ enum Orientation {
 class Coordinates {
 public:
     Coordinates() = default;
-    Coordinates(int x, int y) : _x(x), _y(y) {};
+    Coordinates(float x, float y) : _x(x), _y(y) {};
     ~Coordinates() = default;
 
-    int _x;
-    int _y;
+    float _x;
+    float _y;
 };
 
 class Inventory {

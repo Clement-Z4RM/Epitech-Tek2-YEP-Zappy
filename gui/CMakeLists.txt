@@ -49,4 +49,4 @@ add_executable(zappy_gui
         RayLib/Event/Keyboard.cpp
 )
 
-target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system -lraylib -lGL -lm -lpthread -ldl -lrt -lX11)
+target_link_libraries(zappy_gui PRIVATE -g sfml-graphics sfml-window sfml-system -lraylib -lGL -lm -lpthread -ldl -lrt -lX11)

@@ -103,9 +103,21 @@ namespace gui {
 
     void Client::getCases(std::string &msg)
     {
+        if (!_refreshMap) {
+            _refreshMap = true;
+            return;
+        }
         for (int i = 0; i < msg.size(); i++) {
             if (msg[i] == '\n') {
                 if (_incompleteCase) {
+                    if (_map.empty()) {
+                        if (!_restMap.empty()) {
+                            _map = _restMap;
+                            _restMap.clear();
+                        } else {
+                            throw std::runtime_error("Incomplete case");
+                        }
+                    }
                     _map.back().append(msg.substr(0, i));
                     _incompleteCase = false;
                     msg = msg.substr(i + 1);
@@ -123,6 +135,7 @@ namespace gui {
         }
         if (_map.empty())
             return;
+        std::deque<std::string> tmp;
         for (auto &line : _map) {
             std::stringstream s(line);
             std::string btc;
@@ -136,6 +149,7 @@ namespace gui {
             } else {
                 this->isMapFinished = true;
                 this->isParamGet = false;
+                return;
             }
         }
     }
@@ -180,33 +194,56 @@ namespace gui {
         }
     }
 
-    void Client::clearData()
+    void Client::getDeltaTime()
     {
-        std::string output;
+        static float lastFrameTime = 0.0f;
+        float currentFrameTime = static_cast<float>(std::clock());
+        _deltaTime += (currentFrameTime - lastFrameTime) / CLOCKS_PER_SEC;
+        lastFrameTime = currentFrameTime;
+        _lastFrameTime = lastFrameTime;
+    }
 
-        for (size_t i = 0; i < tmp.length(); ++i) {
-            if (std::isprint(tmp[i]) || tmp[i] == '\n' && tmp[i] != '@') {
-                output += tmp[i];
-            } else if (!std::isprint(tmp[i])) {
-                while (i < tmp.length() && !std::isprint(tmp[i])) {
-                    ++i;
-                }
-                --i;
+    void Client::clearMap()
+    {
+        std::deque<std::string> tmp;
+        for (auto &line : _map) {
+            std::stringstream s(line);
+            std::string btc;
+            std::string x;
+            std::string y;
+            s >> btc;
+            s >> x;
+            s >> y;
+            if (btc != "bct" || std::strtol(x.c_str(), nullptr, 10) != _param._width - 1 ||
+                std::strtol(y.c_str(), nullptr, 10) != _param._height - 1) {
+                tmp.push_back(line);
+            } else {
+                this->isMapFinished = true;
+                this->isParamGet = false;
+                tmp.push_back(line);
+                break;
             }
         }
-        tmp = output;
+        _restMap = _map;
+        _map.clear();
+        for (auto &line : tmp) {
+            _map.push_back(line);
+        }
     }
 
     void Client::refreshMap()
     {
-        Sleep::sleepInMicroSecond(_param._freq);
+        this->getDeltaTime();
+        if (_deltaTime < 0.1f / _param._freq)
+            return;
+        _deltaTime = 0;
         this->isMapFinished = false;
         _map.clear();
         while (!this->isMapFinished) {
             this->readSocket();
-            this->clearData();
             this->getCases(tmp);
         }
+        this->clearMap();
         this->parseParameters();
     }
 
