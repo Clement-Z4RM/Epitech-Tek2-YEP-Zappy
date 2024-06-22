@@ -38,6 +38,7 @@ void Window::run(Parameters &params)
         int mapHeight = params._height;
         for (auto &p : params._players) {
             _window.draw(*p->getPlayerSprite(width, height, mapWidth, mapHeight));
+            _window.draw(*p->getPlayerCircle());
         }
         if (_modals.find("info") != _modals.end())
             _modals["info"]->display(_window);
