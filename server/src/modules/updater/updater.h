@@ -8,6 +8,7 @@
 #ifndef ZAPPY_SERVER_UPDATER_H_
     #define ZAPPY_SERVER_UPDATER_H_
 
+    #include <sys/queue.h>
     #include <time.h>
     #include "network/network.h"
     #include "map/map.h"
