@@ -23,16 +23,18 @@ extern void forward(ai_handler_data_t *data);
 extern void right(ai_handler_data_t *data);
 extern void left(ai_handler_data_t *data);
 
+extern void look(ai_handler_data_t *data);
+
 extern void inventory(ai_handler_data_t *data);
-
-extern void take(ai_handler_data_t *data);
-
-extern void set(ai_handler_data_t *data);
 
 extern void broadcast(ai_handler_data_t *data);
 
 extern void connect_nbr(ai_handler_data_t *data);
 
-extern void look(ai_handler_data_t *data);
+extern void fork_command(ai_handler_data_t *data);
+
+extern void take(ai_handler_data_t *data);
+
+extern void set(ai_handler_data_t *data);
 
 #endif /* !ZAPPY_SERVER_AI_COMMANDS_H_ */

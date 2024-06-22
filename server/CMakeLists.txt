@@ -154,6 +154,7 @@ add_executable(zappy_server
         src/modules/commands/ai/inventory.c
         src/modules/commands/ai/broadcast.c
         src/modules/commands/ai/connect_nbr.c
+        src/modules/commands/ai/fork.c
         src/modules/commands/ai/take.c
         src/modules/commands/ai/set.c
         #endregion
