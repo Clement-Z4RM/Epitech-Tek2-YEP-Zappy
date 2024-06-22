@@ -124,75 +124,121 @@ function ZappyAI:SetupInventory()
 end
 
 function ZappyAI:LookupEnvironment()
-    local result <const> = self.server:SendSync(ZappyAction.LOOKUP_ENVIRONMENT)
-    local parsedResult <const> = LookParser.Parse(result)
-
-    for i, tile in ipairs(parsedResult) do
-        self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
-    end
+    self.commandsQueue:Enqueue(ZappyAction.LOOKUP_ENVIRONMENT, function(answer)
+        local parsedResult <const> = LookParser.Parse(answer)
+        for i, tile in ipairs(parsedResult) do
+            self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
+        end
+    end)
 end
 
 -- Move forward one tile
 function ZappyAI:MoveForward()
-    local response = self.server:SendSync(ZappyAction.MOVE_FORWARD)
-    self.logger:Info(("Move forward response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.MOVE_FORWARD, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 -- Turn 90 degrees to the right
 function ZappyAI:TurnRight()
-    local response = self.server:SendSync(ZappyAction.TURN_RIGHT)
-    self.logger:Info(("Turn right response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.MOVE_RIGHT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 -- Turn 90 degrees to the left
 function ZappyAI:TurnLeft()
-    local response = self.server:SendSync(ZappyAction.TURN_LEFT)
-    self.logger:Info(("Turn left response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.MOVE_LEFT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 -- Broadcast a message
 --- @param message string
 function ZappyAI:Broadcast(message)
-    local response = self.server:SendSync(ZappyAction.BROADCAST .. " " .. message)
-    self.logger:Info(("Broadcast response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.BROADCAST, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end, {message})
 end
 
 -- Get number of unused slots in the team
 function ZappyAI:ConnectNbr()
-    local response = self.server:SendSync(ZappyAction.CONNECT_NBR)
-    self.logger:Info(("Connect number response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.CONNECT_NBR, function(answer)
+            self.logger:Info(("Connect number response: %s"):format(answer))
+    end)
 end
 
 -- Fork a player
 function ZappyAI:ForkPlayer()
-    local response = self.server:SendSync(ZappyAction.FORK_PLAYER)
-    self.logger:Info(("Fork player response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.FORK, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 -- Eject players from this tile
 function ZappyAI:Eject()
-    local response = self.server:SendSync(ZappyAction.EJECT)
-    self.logger:Info(("Eject response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.EJECT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 -- Take an object
 --- @param object string
 function ZappyAI:TakeObject(object)
-    local response = self.server:SendSync(ZappyAction.TAKE_OBJECT .. " " .. object)
-    self.logger:Info(("Take object response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.TAKE_OBJECT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end, {object})
 end
 
 -- Set an object
 --- @param object string
 function ZappyAI:SetObject(object)
-    local response = self.server:SendSync(ZappyAction.SET_OBJECT .. " " .. object)
-    self.logger:Info(("Set object response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.SET_OBJECT, function(answer)
+        if answer ~= "ok" then
+            -- Fail
+            return
+        end
+        -- Success
+    end, {object})
 end
 
 -- Start an incantation
 function ZappyAI:StartIncantation()
-    local response = self.server:SendSync(ZappyAction.INCANTATION)
-    self.logger:Info(("Incantation response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.INCANTATION, function(answer)
+        if answer:find("ko") then
+            -- Fail
+            return
+        end
+        -- Success
+    end)
 end
 
 --- @param command string
