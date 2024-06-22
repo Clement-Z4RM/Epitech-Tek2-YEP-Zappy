@@ -72,11 +72,9 @@ static void destroy(
  */
 static bool server_loop(network_t *network, updater_t *updater)
 {
-    time_t start = 0;
-
-    for (time_t elapsed = 0; loop(false); elapsed = mstime(NULL) - start) {
-        if (0 != start)
-            updater->update(updater, elapsed);
+    for (; loop(false); updater->elapsed = mstime(NULL) - updater->start) {
+        if (0 != updater->start)
+            updater->update(updater);
         switch (network_set_and_select_fds(network)) {
             case ERROR:
                 return false;

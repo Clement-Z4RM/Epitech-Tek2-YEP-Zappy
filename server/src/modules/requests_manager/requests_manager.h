@@ -9,7 +9,6 @@
 
 #include <stddef.h>
 #include "clients_manager/clients_manager.h"
-#include "map/map.h"
 #include "commands/commands.h"
 #include "../updater/updater.h"
 
@@ -18,7 +17,7 @@ typedef struct ai_handler_data_s {
     ai_client_node_t *client;
     char **args;
     clients_manager_t *clients_manager;
-    map_t *map;
+    updater_t *updater;
 } ai_handler_data_t;
 
 /** @brief represent a ai request handler  **/
@@ -55,6 +54,8 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Right", right},
     {"Left", left},
     {"Inventory", inventory},
+    {"Broadcast", broadcast},
+    {"Connect_nbr", connect_nbr},
     {"Take", take},
     {"Set", set}
 };

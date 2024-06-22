@@ -30,6 +30,7 @@ static team_egg_t *get_random_team_egg(team_node_t *team)
     for (ulong i = 0; i < egg_index; ++i)
         team_egg = SLIST_NEXT(team_egg, next);
     SLIST_REMOVE(&team->eggs, team_egg, team_egg_s, next);
+    --team->nb_eggs;
     return team_egg;
 }
 

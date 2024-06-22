@@ -31,4 +31,6 @@ extern void set(ai_handler_data_t *data);
 
 extern void broadcast(ai_handler_data_t *data);
 
+extern void connect_nbr(ai_handler_data_t *data);
+
 #endif /* !ZAPPY_SERVER_AI_COMMANDS_H_ */

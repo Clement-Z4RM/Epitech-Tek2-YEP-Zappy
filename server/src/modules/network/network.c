@@ -38,7 +38,7 @@ static bool network_accept_connexion(network_t *network)
         return false;
     if (!clients_manager_add(network->clients_manager, client, NONE))
         return false;
-    client_add_request(client, RQST_WELCOME, TO_SEND);
+    client_add_request(client, strdup(RQST_WELCOME), TO_SEND);
     log_success_network_client_connected(client);
     return true;
 }

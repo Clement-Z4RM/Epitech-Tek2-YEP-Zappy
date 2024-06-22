@@ -133,7 +133,23 @@ extern bool clients_manager_add_to_team(
 * @return ai_client_node_t* the ai client node (NULL if not found)
 * **/
 extern ai_client_node_t *clients_manager_get_ai_by_id(
-    clients_manager_t *manager, uint64_t id);
+    clients_manager_t *manager,
+    uint64_t id
+);
+
+/**
+ * @brief Get the team of a client.
+ *
+ * @param manager The clients manager where to search the team.
+ * @param client The client to search the team of.
+ *
+ * @return The team of the client,
+ * or NULL if the client is not in a team or if the team is not found.
+ */
+extern team_node_t *clients_manager_get_team_by_client(
+    clients_manager_t *manager,
+    ai_client_node_t *client
+);
 
 /**
  * @brief Destroy a team and all its clients and members

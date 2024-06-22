@@ -13,18 +13,13 @@ void msz(gui_handler_data_t *data)
 {
     client_t *client = data->gui_client->client;
     map_t *map = data->updater->map;
-    char width[32];
-    char height[32];
-    char response[1024];
+    char *response = malloc(1024);
 
-    snprintf(width, sizeof(width), "%zu", map->width);
-    snprintf(height, sizeof(height), "%zu", map->height);
-    if (strlen(width) < MAX_RESPONSE_SIZE &&
-        strlen(height) < MAX_RESPONSE_SIZE
-    ) {
-        snprintf(response, MAX_RESPONSE_SIZE, "msz %s %s\n", width, height);
-    } else {
+    if (!response) {
+        client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
         return;
     }
+    snprintf(response, MAX_RESPONSE_SIZE, "msz %zu %zu\n",
+        map->width, map->height);
     client_add_request(client, response, TO_SEND);
 }

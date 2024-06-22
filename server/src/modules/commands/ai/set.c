@@ -9,6 +9,32 @@
 #include "player/player_methods.h"
 #include "requests_manager/requests_manager.h"
 
+static void set_updater(
+    ai_client_node_t *client,
+    updater_t *updater,
+    char *arg
+)
+{
+    resource_name_t resource = 0;
+    bool success = false;
+
+    if (!arg) {
+        client_add_request(client->client, strdup("ko\n"), TO_SEND);
+        return;
+    }
+    for (; resource < RESOURCES_COUNT; ++resource)
+        if (RESOURCE_NAMES[resource] &&
+            !strcmp(RESOURCE_NAMES[resource], arg)) {
+            success = player_drop_resource(client, updater->map, resource);
+            break;
+        }
+    if (success)
+        client_add_request(client->client, strdup("ok\n"), TO_SEND);
+    else
+        client_add_request(client->client, strdup("ko\n"), TO_SEND);
+    free(arg);
+}
+
 /**
  * @brief Set command.
  * Set a resource down on the map from the player's inventory.
@@ -19,17 +45,16 @@
  */
 void set(ai_handler_data_t *data)
 {
-    resource_name_t resource = 0;
-    bool success = false;
+    command_updater_data_t updater_data = {
+        .executed_at = data->updater->elapsed,
+        .time = 7,
+        .client = data->client
+    };
 
-    for (; resource < RESOURCES_COUNT; ++resource)
-        if (RESOURCE_NAMES[resource] &&
-            !strcmp(RESOURCE_NAMES[resource], data->args[1])) {
-            success = player_drop_resource(data->client, data->map, resource);
-            break;
-        }
-    if (success)
-        client_add_request(data->client->client, strdup("ok\n"), TO_SEND);
-    else
+    if (!data->args[1]) {
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
+        return;
+    }
+    updater_data.arg = strdup(data->args[1]);
+    updater_add_command(data->updater, &updater_data, set_updater);
 }
