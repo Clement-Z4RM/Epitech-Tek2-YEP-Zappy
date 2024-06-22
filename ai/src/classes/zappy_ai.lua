@@ -190,8 +190,13 @@ end
 
 -- Fork a player
 function ZappyAI:ForkPlayer()
-    local response = self.server:SendSync(ZappyAction.FORK_PLAYER)
-    self.logger:Info(("Fork player response: %s"):format(response))
+    self.commandsQueue:Enqueue(ZappyAction.FORK, function(answer)
+                if answer ~= "ok" then
+                    -- Fail
+                    return
+                end
+                -- Success
+            end)
 end
 
 -- Eject players from this tile
