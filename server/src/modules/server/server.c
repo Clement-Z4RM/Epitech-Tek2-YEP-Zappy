@@ -101,7 +101,7 @@ static bool server_loop(network_t *network, updater_t *updater)
 bool server(options_t *options)
 {
     map_t *map = create_map(options->world.x, options->world.y);
-    network_t *network = network_constructor("127.0.0.1", options, map);
+    network_t *network = network_constructor(options, map);
     updater_t *updater = create_updater(network, map);
     bool to_return;
 

@@ -12,6 +12,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#define ENDPOINT_IP "127.0.0.1"
+
 /**
 * @brief Enum endpoint_type
 * @description
@@ -30,7 +32,6 @@ typedef enum endpoint_type {
 * **/
 typedef struct endpoint_s {
     int socket;
-    char *ip;
     int port;
     endpoint_type_t type;
     struct sockaddr_in addr;
@@ -38,19 +39,13 @@ typedef struct endpoint_s {
 
 /**
 * @brief create a new instance of the endpoint module
-* @param ip the ip of the endpoint
+* @param endpoint the endpoint structure to fill
 * @param port the port of the endpoint
 * @param type the type of the endpoint
-* @return endpoint_t the newly allocated instance (or NULL if failed)
+* @return bool true if the operation was successful, false otherwise
 **/
-extern endpoint_t *endpoint_constructor(
-    char *ip,
+extern bool endpoint_constructor(
+    endpoint_t *endpoint,
     int port,
     endpoint_type_t type
 );
-
-/**
-* @brief destroy an endpoint instance (freeing memory)
-* @param endpoint the endpoint to destroy
-**/
-extern void endpoint_destructor(endpoint_t *endpoint);

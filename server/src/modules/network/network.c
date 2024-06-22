@@ -5,6 +5,7 @@
 ** Network module
 */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -26,7 +27,7 @@ static bool network_accept_connexion(network_t *network)
     struct sockaddr_in client_address = {0};
     client_t *client = NULL;
     socklen_t client_address_size = sizeof(client_address);
-    int client_socket = accept(network->endpoint->socket,
+    int client_socket = accept(network->endpoint.socket,
         (struct sockaddr *)&client_address, &client_address_size);
 
     if (client_socket == -1) {
@@ -59,7 +60,7 @@ bool network_receive_requests(network_t *network)
     struct client_node_s *current = NULL;
     char buffer[1024] = {0};
 
-    if (FD_ISSET(network->endpoint->socket, &network->read_fds)) {
+    if (FD_ISSET(network->endpoint.socket, &network->read_fds)) {
         if (!network_accept_connexion(network))
             return false;
     }
@@ -85,7 +86,7 @@ int8_t network_set_and_select_fds(network_t *network)
 
     FD_ZERO(&network->read_fds);
     FD_ZERO(&network->write_fds);
-    FD_SET(network->endpoint->socket, &network->read_fds);
+    FD_SET(network->endpoint.socket, &network->read_fds);
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
         FD_SET(current->client->socket, &network->read_fds);
         FD_SET(current->client->socket, &network->write_fds);
@@ -103,8 +104,7 @@ int8_t network_set_and_select_fds(network_t *network)
 
 static void network_destructor(network_t *network)
 {
-    if (network->endpoint)
-        endpoint_destructor(network->endpoint);
+    close(network->endpoint.socket);
     if (network->clients_manager)
         clients_manager_destructor(network->clients_manager);
     free(network);
@@ -112,13 +112,11 @@ static void network_destructor(network_t *network)
 
 static bool initialize_network(
     network_t *network,
-    char *ip,
     options_t *options,
     map_t *map
 )
 {
-    network->endpoint = endpoint_constructor(ip, options->port, SERVER);
-    if (network->endpoint == NULL) {
+    if (!endpoint_constructor(&network->endpoint, options->port, SERVER)) {
         free(network);
         return false;
     }
@@ -132,7 +130,7 @@ static bool initialize_network(
     return true;
 }
 
-network_t *network_constructor(char *ip, options_t *options, map_t *map)
+network_t *network_constructor(options_t *options, map_t *map)
 {
     network_t *network;
 
@@ -143,7 +141,7 @@ network_t *network_constructor(char *ip, options_t *options, map_t *map)
         perror("malloc");
         return NULL;
     }
-    if (!initialize_network(network, ip, options, map))
+    if (!initialize_network(network, options, map))
         return NULL;
     return network;
 }

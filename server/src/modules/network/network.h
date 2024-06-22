@@ -20,7 +20,7 @@
 * (sockets and connections)
 **/
 typedef struct network_s {
-    endpoint_t *endpoint; ///< used to listen (ip, port, address)
+    endpoint_t endpoint; ///< used to listen (ip, port, address)
     fd_set read_fds; ///< the file descriptor set for reading
     fd_set write_fds; ///< the file descriptor set for writing
     clients_manager_t *clients_manager; //< the clients manager
@@ -30,16 +30,11 @@ typedef struct network_s {
 
 /**
 * @brief create a new instance of the network module
-* @param ip the ip of the network server
 * @param options the options of the server
 * @param map the map of the server
 * @return network_t the newly allocated instance
 **/
-extern network_t *network_constructor(
-    char *ip,
-    options_t *options,
-    map_t *map
-);
+extern network_t *network_constructor(options_t *options, map_t *map);
 
 /**
 * @brief set the file descriptors and select them
