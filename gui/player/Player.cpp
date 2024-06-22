@@ -37,7 +37,6 @@ void Player::setInventory(std::stringstream &s)
 {
     std::string str;
     s >> str;
-    s >> str;
     _inventory._food = std::stoi(str);
     s >> str;
     _inventory._linemate = std::stoi(str);
