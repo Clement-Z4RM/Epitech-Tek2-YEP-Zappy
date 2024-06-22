@@ -124,12 +124,12 @@ function ZappyAI:SetupInventory()
 end
 
 function ZappyAI:LookupEnvironment()
-    local result <const> = self.server:SendSync(ZappyAction.LOOKUP_ENVIRONMENT)
-    local parsedResult <const> = LookParser.Parse(result)
-
-    for i, tile in ipairs(parsedResult) do
-        self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
-    end
+    self.commandsQueue:Enqueue(ZappyAction.LOOKUP_ENVIRONMENT, function(answer)
+        local parsedResult <const> = LookParser.Parse(answer)
+        for i, tile in ipairs(parsedResult) do
+            self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
+        end
+    end)
 end
 
 -- Move forward one tile
