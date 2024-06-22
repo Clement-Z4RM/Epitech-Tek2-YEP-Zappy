@@ -9,6 +9,16 @@
 #include "player/player_methods.h"
 #include "requests_manager/requests_manager.h"
 
+static void forward_updater(
+    ai_client_node_t *client,
+    updater_t *updater,
+    UNUSED char *arg
+)
+{
+    player_go_forward(client, updater->map);
+    client_add_request(client->client, strdup("ok\n"), TO_SEND);
+}
+
 /**
  * @brief Forward command.
  * Move the player forward of one tile in the direction he is facing.
@@ -19,6 +29,12 @@
  */
 void forward(ai_handler_data_t *data)
 {
-    player_go_forward(data->client, data->updater->map);
-    client_add_request(data->client->client, strdup("ok\n"), TO_SEND);
+    command_updater_data_t updater_data = {
+        data->updater->elapsed,
+        7,
+        data->client,
+        NULL
+    };
+
+    updater_add_command(data->updater, &updater_data, forward_updater);
 }

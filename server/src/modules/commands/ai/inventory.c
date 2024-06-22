@@ -35,6 +35,16 @@ static void fill_inventory(char *inventory, ai_client_node_t *client)
     );
 }
 
+static void inventory_updater(
+    ai_client_node_t *client,
+    UNUSED updater_t *updater,
+    char *arg
+)
+{
+    fill_inventory(arg, client);
+    client_add_request(client->client, arg, TO_SEND);
+}
+
 /**
  * @brief Inventory command.
  * Send to the player his inventory
@@ -47,11 +57,15 @@ static void fill_inventory(char *inventory, ai_client_node_t *client)
 void inventory(ai_handler_data_t *data)
 {
     char *inventory = malloc(INVENTORY_SIZE);
+    command_updater_data_t updater_data;
 
     if (!inventory) {
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
-    fill_inventory(inventory, data->client);
-    client_add_request(data->client->client, inventory, TO_SEND);
+    updater_data.executed_at = data->updater->elapsed;
+    updater_data.time = 1;
+    updater_data.client = data->client;
+    updater_data.arg = inventory;
+    updater_add_command(data->updater, &updater_data, inventory_updater);
 }
