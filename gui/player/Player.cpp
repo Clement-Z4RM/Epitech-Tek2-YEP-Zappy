@@ -82,3 +82,14 @@ std::string Player::getOrientation()
     }
     return "azimuth error";
 }
+
+std::shared_ptr<sf::Sprite> Player::getPlayerSprite(int width, int height, int mapWidth, int mapHeight)
+{
+    float squareSize = (width * 0.9 / mapWidth) < (height * 0.9 / mapHeight) ? (width * 0.9 / mapWidth) : (height * 0.9 / mapHeight);
+    float scale = squareSize / 208;
+    _playerSprite->setScale(scale, scale);
+    int posX = _position._x * squareSize + width * 0.5 / 2;
+    int posY = _position._y * squareSize + height * 0.1 / 2;
+    _playerSprite->setPosition(posX, posY);
+    return _playerSprite;
+}
