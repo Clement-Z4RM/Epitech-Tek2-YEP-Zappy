@@ -40,7 +40,7 @@ static void fork_updater(
  *
  * @param data The structure containing all needed informations.
  */
-void fork(ai_handler_data_t *data)
+void fork_command(ai_handler_data_t *data)
 {
     command_updater_data_t updater_data = {
         data->updater->elapsed,

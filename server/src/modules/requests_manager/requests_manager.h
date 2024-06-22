@@ -56,7 +56,7 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Inventory", inventory},
     {"Broadcast", broadcast},
     {"Connect_nbr", connect_nbr},
-    {"Fork", fork},
+    {"Fork", fork_command},
     {"Take", take},
     {"Set", set}
 };
