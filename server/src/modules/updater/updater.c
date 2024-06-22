@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "utilities.h"
 #include "updater.h"
+#include "commands/gui/gui_commands.h"
 
 /**
  * @brief Get the amount of life to remove from each player,
@@ -45,15 +46,18 @@ static void player_dead(
 static void update_team_clients_life(
     team_node_t *team,
     map_t *map,
-    double life_to_remove
+    double life_to_remove,
+    clients_manager_t *clients_manager
 )
 {
     ai_client_node_t *client;
 
     SLIST_FOREACH(client, &team->ai_clients, next) {
         client->player.life_span -= life_to_remove;
-        if (client->player.life_span <= 0)
+        if (client->player.life_span <= 0) {
             player_dead(client, team, map);
+            pdi(client->player.id, clients_manager);
+        }
     }
 }
 
@@ -75,7 +79,8 @@ static void update(updater_t *updater)
             updater->generation_interval;
     }
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
-        update_team_clients_life(team, updater->map, life_to_remove);
+        update_team_clients_life(team, updater->map, life_to_remove,
+            updater->network->clients_manager);
     updater_execute_commands(updater);
     updater->previous_time = updater->elapsed;
 }

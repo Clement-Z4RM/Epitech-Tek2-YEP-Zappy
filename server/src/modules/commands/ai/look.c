@@ -69,7 +69,10 @@ static void look_updater(
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
     }
+    buffer = strcat(buffer, "\n");
+    buffer[strlen(buffer) - 1] = '\0';
     client_add_request(client->client, buffer, TO_SEND);
+    log_success_look(&client->player);
 }
 
 void look(ai_handler_data_t *data)

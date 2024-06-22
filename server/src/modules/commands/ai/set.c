@@ -8,6 +8,7 @@
 #include <string.h>
 #include "player/player_methods.h"
 #include "requests_manager/requests_manager.h"
+#include "utilities.h"
 
 static void set_updater(
     ai_client_node_t *client,
@@ -28,9 +29,10 @@ static void set_updater(
             success = player_drop_resource(client, updater->map, resource);
             break;
         }
-    if (success)
+    if (success) {
         client_add_request(client->client, strdup("ok\n"), TO_SEND);
-    else
+        pdr(client->player.id, resource, updater->network->clients_manager);
+    } else
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
     free(arg);
 }

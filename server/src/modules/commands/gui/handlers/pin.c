@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "../gui_commands.h"
+#include "requests_manager/requests_manager.h"
 
 static void fill_response(char *response, ai_client_node_t *ai_client)
 {

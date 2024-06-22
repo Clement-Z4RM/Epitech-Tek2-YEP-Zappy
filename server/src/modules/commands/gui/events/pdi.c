@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include "../gui_commands.h"
-
+//TODO: send log failure if response is NULL
 void pdi(const uint64_t id, clients_manager_t *clients_manager)
 {
     char *response = malloc(MAX_RESPONSE_SIZE);
@@ -15,10 +15,10 @@ void pdi(const uint64_t id, clients_manager_t *clients_manager)
 
     if (response)
         snprintf(response, MAX_RESPONSE_SIZE, "pdi #%lu\n", id);
+    else
+        return;
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
-        if (response)
-            client_add_request(node->client, response, TO_SEND);
-        else
-            client_add_request(node->client, strdup("ko\n"), TO_SEND);
+        client_add_request(node->client, response, TO_SEND);
     }
+    log_success_pdi(id);
 }

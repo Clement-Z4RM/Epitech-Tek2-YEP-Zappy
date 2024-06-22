@@ -28,9 +28,10 @@ static void take_updater(
             success = player_take_resource(client, updater->map, resource);
             break;
         }
-    if (success)
+    if (success) {
         client_add_request(client->client, strdup("ok\n"), TO_SEND);
-    else
+        pgt(client->player.id, resource, updater->network->clients_manager);
+    } else
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
     free(arg);
 }
