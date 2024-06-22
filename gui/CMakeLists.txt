@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26.4)
-project(zappy_gui)
+project(../zappy_gui)
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
