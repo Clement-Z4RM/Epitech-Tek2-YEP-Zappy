@@ -170,16 +170,35 @@ extern void clients_manager_init_teams(
 );
 
 /**
- * @brief Initialize all eggs in the the teams and the map
+ * @brief Spawn egg on the map and assign it to a team at a given position
  *
- * @param manager The client manager
+ * @param map The map where to spawn the egg
+ * @param team The team to assign the egg to
+ * @param x The column where to spawn the egg
+ * @param y The row where to spawn the egg
+ *
+ * @return true if the operation was successful,
+ * false otherwise (allocation error)
+ */
+extern bool spawn_egg(
+    map_t *map,
+    team_node_t **team,
+    u_int64_t x,
+    u_int64_t y
+);
+
+/**
+ * @brief Initialize all eggs on the map and assign them to teams
+ * spreading them evently
+ *
+ * @param manager The clients manager
  * @param options The server options
  * @param map The map of the server
  *
  * @return true if the operation was successful,
  * false otherwise (allocation error)
  */
-bool client_manager_init_eggs(
+extern bool client_manager_init_eggs(
     clients_manager_t *manager,
     options_t *options,
     map_t *map

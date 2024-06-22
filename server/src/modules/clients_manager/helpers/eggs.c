@@ -22,7 +22,7 @@
  * @return true if the operation was successful,
  * false otherwise (allocation error)
  */
-static bool spawn_egg(map_t *map, team_node_t **team, u_int64_t x, u_int64_t y)
+bool spawn_egg(map_t *map, team_node_t **team, u_int64_t x, u_int64_t y)
 {
     egg_t *new_egg = malloc(sizeof(egg_t));
     team_egg_t *new_team_egg = malloc(sizeof(team_egg_t));
@@ -93,7 +93,8 @@ static bool spawn_eggs(
 }
 
 /**
- * @brief Evently spread eggs on the map and assign them to teams
+ * @brief Initialize all eggs on the map and assign them to teams
+ * spreading them evently
  *
  * @param manager The clients manager
  * @param options The server options
