@@ -44,14 +44,14 @@ void fill_resource(char **current_cell, int i)
 void fill_current_cell_resource(cell_t *cell, char **current_cell)
 {
     if ((*current_cell) && (*current_cell)[strlen(*current_cell) - 1] != '\0')
-        snprintf(*current_cell + strlen(*current_cell), 255, " ");
+        snprintf(*current_cell + strlen(*current_cell), 254, " ");
     for (int i = 0; i < RESOURCES_COUNT; i++) {
         if (cell->resources[i] > 0) {
             fill_resource(current_cell, i);
         }
         if (*current_cell && i + 1 < RESOURCES_COUNT &&
             cell->resources[i + 1] > 0) {
-            snprintf(*current_cell + strlen(*current_cell), 255, " ");
+            snprintf(*current_cell + strlen(*current_cell), 254, " ");
         }
     }
 }
@@ -82,17 +82,17 @@ void fill_player(char **current_cell)
 
 void fill_cell_info(cell_t *cell, char *buffer)
 {
-    char *current_cell = NULL;
+    char *current_cell = malloc(sizeof(char) * 256);
     ai_client_node_t *player;
 
     SLIST_FOREACH(player, &cell->players, next) {
         if (current_cell && current_cell[strlen(current_cell) - 1] != '\0')
-            snprintf(current_cell + strlen(current_cell), 255, " ");
+            snprintf(current_cell + strlen(current_cell), 254, " ");
         fill_player(&current_cell);
     }
     fill_current_cell_resource(cell, &current_cell);
     if (current_cell && current_cell[0] != '\0') {
-        strncpy(buffer, current_cell, 255);
+        strncpy(buffer, current_cell, 254);
         buffer[255] = '\0';
         free(current_cell);
     } else {
