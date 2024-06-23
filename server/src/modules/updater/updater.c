@@ -109,6 +109,13 @@ static void updater_destructor(updater_t *updater)
     free(updater);
 }
 
+void init_updater(updater_t *updater)
+{
+    updater->end_of_game = false;
+    updater->update = update;
+    updater->destroy = updater_destructor;
+}
+
 /**
  * @brief Initialize the updater structure.
  *
@@ -136,7 +143,6 @@ updater_t *create_updater(network_t *network, map_t *map)
     CIRCLEQ_INIT(&updater->command_updaters);
     updater->network = network;
     updater->map = map;
-    updater->update = update;
-    updater->destroy = updater_destructor;
+    init_updater(updater);
     return updater;
 }
