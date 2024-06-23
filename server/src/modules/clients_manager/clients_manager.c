@@ -97,7 +97,7 @@ static bool check_ai(client_t *client, team_node_t *team_current,
     ai_client_node_t *ai_current = NULL;
 
     SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
-        if (ai_current->client == client) {
+        if (ai_current->client->socket == client->socket) {
             SLIST_REMOVE(
                 &team_current->ai_clients, ai_current,
                 ai_client_node_s, next
