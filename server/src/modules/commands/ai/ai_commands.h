@@ -16,8 +16,6 @@
  */
 typedef struct ai_handler_data_s ai_handler_data_t;
 
-// TODO: time (and send response at end)
-
 extern void forward(ai_handler_data_t *data);
 
 extern void right(ai_handler_data_t *data);

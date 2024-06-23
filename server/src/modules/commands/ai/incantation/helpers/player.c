@@ -7,8 +7,15 @@
 
 #include "../incantation.h"
 
-// TODO: doc
-
+/**
+ * @brief Check if the player have the required resources
+ * for the current level of incantation.
+ *
+ * @param player The player to check resources.
+ * @param level The level of the incantation.
+ *
+ * @return true if the player have the required resources, false otherwise.
+ */
 static bool player_have_required_resources(
     player_t *player,
     u_int8_t level
@@ -21,6 +28,21 @@ static bool player_have_required_resources(
     return true;
 }
 
+/**
+ * @brief Add a player to the incantation.
+ * If the player haven't the required resources for the incantation,
+ * it will not be added.
+ *
+ * @param incantation The incantation to add the player.
+ * @param client The client to add to the incantation.
+ * @param players The number of players in the incantation.
+ * It will be incremented if the player is added.
+ *
+ * @return
+ *  - true if the player was added to the incantation,
+ *  - true if the player haven't the required resources (not added),
+ *  - false if an allocation error occurred.
+ */
 static bool add_player(
     incantation_t *incantation,
     ai_client_node_t *client,
@@ -40,6 +62,21 @@ static bool add_player(
     return true;
 }
 
+/**
+ * @brief Add all the eligible players (with required level and resources)
+ * of a team to the incantation.
+ *
+ * @param incantation The incantation to add the players.
+ * @param team The team to add the players.
+ * @param players The number of players in the incantation.
+ * It will be incremented by the number of players added.
+ * @param requester The client that requested the incantation.
+ * If the requester is found in the team, it will not be added,
+ * because it was already added.
+ *
+ * @return true if all the eligible players were added,
+ * false otherwise (allocation error).
+ */
 static bool add_team_players(
     incantation_t *incantation,
     team_node_t *team,
@@ -57,6 +94,19 @@ static bool add_team_players(
     return true;
 }
 
+/**
+ * @brief Add all the eligible players (with required level and resources)
+ * to the incantation.
+ *
+ * @param incantation The incantation to add the players.
+ * @param client The client that requested the incantation.
+ * @param teams The list of teams to add the players.
+ * @param players The number of players in the incantation.
+ * It will be incremented by the number of players added.
+ *
+ * @return true if all the eligible players were added,
+ * false otherwise (allocation error).
+ */
 bool add_players_to_incantation(
     incantation_t *incantation,
     ai_client_node_t *client,

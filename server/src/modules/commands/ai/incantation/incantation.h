@@ -28,29 +28,58 @@ typedef struct incantation_player_s {
 SLIST_HEAD(incantation_players_s, incantation_player_s);
 typedef struct incantation_players_s incantation_players_t;
 
-// TODO: doc
-
+/**
+ * @brief Incantation structure.
+ * It contains all the data needed to perform an incantation.
+ */
 typedef struct incantation_s {
+    /** @brief The incantation's level (corresponding to the level
+     * of the players at the beginning of the incantation,
+     * it will be incremented at the end of the incantation) */
     u_int8_t level;
+    /** @brief The players involved in the incantation */
     incantation_players_t players;
+
+    /** @brief The incantation's x position on the map */
     u_int64_t x;
+    /** @brief The incantation's y position on the map */
     u_int64_t y;
+
+    /** @brief The incantation's updater structure */
     struct {
+        /** @brief The incantation's command updater.
+         * It is deleted when the incantation is destroyed */
         command_updater_t *command_updater;
+        /** @brief The command updaters list.
+         * It used to delete the command updater on incantation destruction */
         command_updaters_t *command_updaters;
     } updater;
+
+    /** @brief Structure destructor */
     void (*destroy)(struct incantation_s *incantation);
     SLIST_ENTRY(incantation_s) next;
 } incantation_t;
 
+/**
+ * @brief Incantations list
+ */
 SLIST_HEAD(incantations_s, incantation_s);
 typedef struct incantations_s incantations_t;
 
+/**
+ * @brief Incantation's requirements entry.
+ */
 typedef struct incantation_requirements_s {
+    /** @brief The number of players required for the incantation */
     u_int8_t players;
+    /** @brief The number of each resource required for the incantation */
     u_int8_t resources[RESOURCES_COUNT];
 } incantation_requirements_t;
 
+/**
+ * @brief Incantations requirements list,
+ * each entry corresponds to an incantation level.
+ */
 static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [1] = {
         1,

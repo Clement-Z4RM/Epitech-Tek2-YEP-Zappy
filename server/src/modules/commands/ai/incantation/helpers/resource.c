@@ -7,6 +7,13 @@
 
 #include "../incantation.h"
 
+/**
+ * @brief Drop the required resources for the incantation
+ * from the players' inventory on the map.
+ *
+ * @param incantation The incantation where the players are.
+ * @param map The map where the resources will be dropped.
+ */
 void drop_resources(incantation_t *incantation, map_t *map)
 {
     for (
