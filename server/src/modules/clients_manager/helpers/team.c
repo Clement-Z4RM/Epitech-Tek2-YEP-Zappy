@@ -21,6 +21,7 @@ static void send_player_connexion_to_gui(
     ebo(egg_id, clients_manager);
 }
 
+//
 void send_init_player_infos(
     ai_client_node_t *ai_client, map_t *map,
     clients_manager_t *clients_manager)
