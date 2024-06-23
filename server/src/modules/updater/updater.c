@@ -72,11 +72,16 @@ static void update(updater_t *updater)
 {
     double life_to_remove = get_life_to_remove(updater);
     team_node_t *team;
+    gui_client_node_t *gui_client;
 
     if (updater->elapsed >= updater->next_generation) {
         updater->map->resources.generate(updater->map);
         updater->next_generation = updater->elapsed +
             updater->generation_interval;
+    }
+    SLIST_FOREACH(gui_client,
+        &updater->network->clients_manager->gui_clients_list, next) {
+        mct_event(gui_client, updater);
     }
     updater_execute_commands(updater);
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
