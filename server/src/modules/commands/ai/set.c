@@ -49,9 +49,11 @@ static void set_updater(
 void set(ai_handler_data_t *data)
 {
     command_updater_data_t updater_data = {
-        .executed_at = data->updater->elapsed,
-        .time = 7,
-        .client = data->client
+        data->updater->elapsed,
+        7,
+        data->client,
+        data->client->player.id,
+        NULL
     };
 
     if (!data->args[1]) {

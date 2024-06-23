@@ -68,6 +68,7 @@ void incantation(ai_handler_data_t *data)
         data->updater->elapsed,
         300,
         data->client,
+        data->client->player.id,
         NULL
     };
     incantation_t *incantation = start_incantation(data);

@@ -67,6 +67,7 @@ void inventory(ai_handler_data_t *data)
     updater_data.executed_at = data->updater->elapsed;
     updater_data.time = 1;
     updater_data.client = data->client;
+    updater_data.id = data->client->player.id;
     updater_data.arg = (void *)inventory;
     data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, inventory_updater);
