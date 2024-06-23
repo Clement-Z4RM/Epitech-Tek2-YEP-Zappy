@@ -160,9 +160,8 @@ char *look_east(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
-    buffer[4095] = '\0';
-    buffer[0] = '\0';
     snprintf(buffer, 2, "[");
+    buffer[4095] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_y_up(cell, i, y_forward);
         y_forward = 0;
