@@ -9,11 +9,12 @@
 #include "incantation.h"
 
 static void incantation_updater(
-    UNUSED ai_client_node_t *client,
+    ai_client_node_t *client,
     UNUSED updater_t *updater,
     UNUSED char *arg
 )
 {
+    client->client->busy = false;
 }
 
 /**
@@ -38,5 +39,6 @@ void incantation(ai_handler_data_t *data)
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, incantation_updater);
 }

@@ -15,6 +15,7 @@ static void forward_updater(
     UNUSED char *arg
 )
 {
+    client->client->busy = false;
     player_go_forward(client, updater->map);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
 }
@@ -36,5 +37,6 @@ void forward(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, forward_updater);
 }

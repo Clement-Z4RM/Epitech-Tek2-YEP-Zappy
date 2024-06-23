@@ -19,6 +19,7 @@ static void fork_updater(
         client
     );
 
+    client->client->busy = false;
     if (!team) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
@@ -49,5 +50,6 @@ void fork_command(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, fork_updater);
 }

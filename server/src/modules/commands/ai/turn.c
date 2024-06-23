@@ -15,6 +15,7 @@ static void right_updater(
     UNUSED char *arg
 )
 {
+    client->client->busy = false;
     player_turn(client, PR_RIGHT);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
 }
@@ -36,6 +37,7 @@ void right(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, right_updater);
 }
 
@@ -45,6 +47,7 @@ static void left_updater(
     UNUSED char *arg
 )
 {
+    client->client->busy = false;
     player_turn(client, PR_LEFT);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
 }
@@ -66,5 +69,6 @@ void left(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, left_updater);
 }

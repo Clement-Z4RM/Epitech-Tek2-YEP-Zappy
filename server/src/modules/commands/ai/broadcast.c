@@ -84,6 +84,7 @@ static void broadcast_updater(
     ai_client_node_t *current_ai;
     char *response = malloc(MAX_RESPONSE_SIZE);
 
+    client->client->busy = false;
     if (broadcast_null_value(arg, response, client->client))
         return;
     SLIST_FOREACH(current_team,
@@ -119,5 +120,6 @@ void broadcast(ai_handler_data_t *data)
         strdup(data->args[1])
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, broadcast_updater);
 }

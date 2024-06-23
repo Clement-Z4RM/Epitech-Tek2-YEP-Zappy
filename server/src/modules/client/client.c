@@ -120,6 +120,7 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
     client->team_name = NULL;
     client->addr = addr;
     client->current_request_to_handle = NULL;
+    client->busy = false;
     client->requests_queue_to_send_size = 0;
     client->requests_queue_to_handle_size = 0;
     client->type = NONE;

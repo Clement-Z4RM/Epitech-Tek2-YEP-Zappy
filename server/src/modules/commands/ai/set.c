@@ -18,6 +18,7 @@ static void set_updater(
     resource_name_t resource = 0;
     bool success = false;
 
+    client->client->busy = false;
     if (!arg) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
@@ -56,5 +57,6 @@ void set(ai_handler_data_t *data)
         return;
     }
     updater_data.arg = strdup(data->args[1]);
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, set_updater);
 }

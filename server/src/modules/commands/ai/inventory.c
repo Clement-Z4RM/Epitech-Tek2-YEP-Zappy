@@ -41,6 +41,7 @@ static void inventory_updater(
     char *arg
 )
 {
+    client->client->busy = false;
     fill_inventory(arg, client);
     client_add_request(client->client, arg, TO_SEND);
 }
@@ -67,5 +68,6 @@ void inventory(ai_handler_data_t *data)
     updater_data.time = 1;
     updater_data.client = data->client;
     updater_data.arg = inventory;
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, inventory_updater);
 }
