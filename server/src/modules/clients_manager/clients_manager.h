@@ -72,6 +72,7 @@ typedef struct clients_manager_s {
     int nb_ai_clients; ///< actual number of ai clients
 
     ulong max_clients_per_team; ///< the maximum number of clients per team
+    bool is_game_started; ///< true if the game has started
 } clients_manager_t;
 
 /**
@@ -205,3 +206,6 @@ extern bool client_manager_init_eggs(
 );
 
 extern void send_default_eggs(team_node_t *team, client_t *client);
+
+
+extern void send_init_player_infos(ai_client_node_t *ai_client, map_t *map);

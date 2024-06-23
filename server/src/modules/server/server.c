@@ -16,6 +16,24 @@
 #include "macros.h"
 #include "utilities.h"
 
+static void check_game_have_started(clients_manager_t *clients_manager, map_t
+    *map)
+{
+    team_node_t *current_team = NULL;
+    ai_client_node_t *current_client = NULL;
+
+    SLIST_FOREACH(current_team, &clients_manager->team_list, next) {
+        if (current_team->nb_clients == 0)
+            return;
+    }
+    SLIST_FOREACH(current_team, &clients_manager->team_list, next) {
+        SLIST_FOREACH(current_client, &current_team->ai_clients, next) {
+            send_init_player_infos(current_client, map);
+        }
+    }
+    clients_manager->is_game_started = true;
+}
+
 /**
  * @brief Store the loop state.
  *
@@ -86,6 +104,9 @@ static bool server_loop(network_t *network, updater_t *updater)
         if (!network_send_requests(network))
             return false;
         requests_manager_handle_requests(network->clients_manager, updater);
+        if (!updater->network->clients_manager->is_game_started)
+            check_game_have_started(updater->network->clients_manager,
+                updater->map);
     }
     return true;
 }
