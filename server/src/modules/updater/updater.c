@@ -78,10 +78,10 @@ static void update(updater_t *updater)
         updater->next_generation = updater->elapsed +
             updater->generation_interval;
     }
+    updater_execute_commands(updater);
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
         update_team_clients_life(team, updater->map, life_to_remove,
             updater->network->clients_manager);
-    updater_execute_commands(updater);
     updater->previous_time = updater->elapsed;
 }
 
