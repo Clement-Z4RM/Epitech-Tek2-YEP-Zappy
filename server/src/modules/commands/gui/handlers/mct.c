@@ -20,8 +20,8 @@ static void free_mct(char **args, char *x_str, char *y_str)
 void mct(gui_handler_data_t *data)
 {
     map_t *map = data->updater->map;
-    char *x_str = (char *)malloc(11);
-    char *y_str = (char *)malloc(11);
+    char *x_str = (char *)malloc(21);
+    char *y_str = (char *)malloc(21);
 
     data->args = malloc(sizeof(char *) * 4);
     if (!data->args || !x_str || !y_str) {
@@ -32,8 +32,8 @@ void mct(gui_handler_data_t *data)
     data->args[2] = y_str;
     for (size_t y = 0; y < map->height; y++) {
         for (size_t x = 0; x < map->width; x++) {
-            snprintf(x_str, 11, "%zu", x);
-            snprintf(y_str, 11, "%zu", y);
+            snprintf(x_str, 21, "%zu", x);
+            snprintf(y_str, 21, "%zu", y);
             bct(data);
         }
     }
