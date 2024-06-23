@@ -122,7 +122,7 @@ static bool client_has_team(
 **/
 static bool parse_args(client_t *client, char ***args)
 {
-    if (!client)
+    if (!client || !client->current_request_to_handle)
         return false;
     remove_newline(client->current_request_to_handle);
     *args = str_array_split(client->current_request_to_handle, " ");
@@ -161,12 +161,12 @@ static void handle_none_clients_requests(
         ) {
             request = client_popback_request(client, TO_HANDLE);
             client->current_request_to_handle = request;
-            free_request_memory(NULL, client);
         }
         if (client->current_request_to_handle == NULL)
             continue;
         remove_newline(client->current_request_to_handle);
         client_has_team(client, manager, map);
+        free_request_memory(NULL, client);
     }
 }
 

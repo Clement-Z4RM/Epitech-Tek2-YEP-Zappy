@@ -18,7 +18,7 @@ void pdr(uint64_t id,
 
     if (response)
         snprintf(response, MAX_RESPONSE_SIZE,
-            "pdr #%lu %d\n", id, resource);
+            "pdr %lu %d\n", id, resource);
     else
         return;
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {

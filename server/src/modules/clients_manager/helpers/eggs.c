@@ -12,6 +12,7 @@
 #include "../clients_manager.h"
 #include "map/map.h"
 #include <stdio.h>
+#include "logs/logs.h"
 
 void send_default_eggs(team_node_t *team, client_t *client)
 {
@@ -20,12 +21,13 @@ void send_default_eggs(team_node_t *team, client_t *client)
 
     SLIST_FOREACH(egg_current, &team->eggs, next) {
         snprintf(
-            enw_request, 43, "enw #%ld #-1 %ld %ld\n",
+            enw_request, 43, "enw %ld -1 %ld %ld\n",
             egg_current->egg->id,
             egg_current->egg->x,
             egg_current->egg->y
         );
         client_add_request(client, strdup(enw_request), TO_SEND);
+        LOG_SUCCESS("egg sent successfully: %s", enw_request);
     }
 }
 

@@ -14,7 +14,7 @@ void pdi(const uint64_t id, clients_manager_t *clients_manager)
     gui_client_node_t *node = NULL;
 
     if (response)
-        snprintf(response, MAX_RESPONSE_SIZE, "pdi #%lu\n", id);
+        snprintf(response, MAX_RESPONSE_SIZE, "pdi %lu\n", id);
     else
         return;
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
