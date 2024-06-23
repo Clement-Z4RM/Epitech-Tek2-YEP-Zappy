@@ -8,6 +8,19 @@
 #include <string.h>
 #include "../gui_commands.h"
 
+void enw_to_target(const uint64_t egg_id, const uint64_t player_id,
+    client_t *client, const coords_t *coords)
+{
+    char *response = malloc(MAX_RESPONSE_SIZE);
+
+    if (response)
+        snprintf(response, MAX_RESPONSE_SIZE, "enw %lu %lu %zu %zu\n",
+            egg_id, player_id, coords->x, coords->y);
+    client_add_request(client, response, TO_SEND);
+    LOG_SUCCESS("enw sended successfully: %ld %ld %ld %ld\n",
+        egg_id, player_id, coords->x, coords->y);
+}
+
 void enw(const uint64_t egg_id, const uint64_t player_id,
     const clients_manager_t *clients_manager, const coords_t *coords)
 {
