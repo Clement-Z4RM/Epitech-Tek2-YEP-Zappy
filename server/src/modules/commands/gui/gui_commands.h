@@ -12,7 +12,6 @@
 #include "responses.h"
 #include "coords.h"
 #include "logs/logs.h"
-
 #define MAX_DIGITS 21
 
 #define MAX_DIGITS 21
@@ -22,6 +21,8 @@
  * with requests manager
  */
 typedef struct gui_handler_data_s gui_handler_data_t;
+
+typedef struct updater_s updater_t;
 
 /** HANDLERS **/
 extern void msz(gui_handler_data_t *data);
@@ -65,3 +66,6 @@ extern void pgt(
 );
 extern void enw(const uint64_t egg_id, const uint64_t player_id,
     const clients_manager_t *clients_manager, const coords_t *coords);
+extern void mct_event(gui_client_node_t *client, updater_t *updater);
+extern void enw_to_target(const uint64_t egg_id, const uint64_t player_id,
+    client_t *client, const coords_t *coords);
