@@ -10,7 +10,6 @@
 Eggs::Eggs()
 {
     _eggTexture.loadFromFile(_eggTexturePath);
-    _eggButton = std::make_shared<Button>("Eggs", sf::Vector2f(1500, 900));
 }
 
 bool Eggs::startsWith(const std::string &str, const std::string &prefix)
@@ -137,49 +136,11 @@ void Eggs::eggHatching(std::string &msg)
     }
 }
 
-void Eggs::checkClick(sf::RenderWindow &window)
+void Eggs::displayEggs(sf::RenderWindow &window, bool displayEggs)
 {
-    sf::Event event{};
-        if (event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Left)
-                if (_eggButton->_sprite.getGlobalBounds().contains(
-                        window.mapPixelToCoords(
-                                sf::Mouse::getPosition(window))))
-                    _eggButton->changeTexture();
-        }
-}
-
-void Eggs::displayEggs(sf::RenderWindow &window)
-{
-    window.draw(_eggButton->_sprite);
-    window.draw(_eggButton->_text);
-    checkClick(window);
-    if (_eggButton->_state == Button::BUTTON_OFF)
+    if (!displayEggs)
         return;
     for (auto &egg : _eggsShapes) {
         window.draw(*egg);
     }
-}
-
-Button::Button(const std::string &text, sf::Vector2f position) {
-    _state = BUTTON;
-    _font.loadFromFile(_fontPath);
-    _text.setString(text);
-    _text.setCharacterSize(60);
-    _text.setFillColor(sf::Color::Black);
-    _text.setFont(_font);
-    _text.setPosition(position.x + 40, position.y + 35);
-    _text.setStyle(sf::Text::Bold);
-    _position = position;
-    _texture.loadFromFile(_textureButtonPath);
-    _sprite.setTexture(_texture);
-    _sprite.setPosition(_position);
-}
-
-void Button::changeTexture()
-{
-    if (_state == BUTTON)
-        _texture.loadFromFile(_textureButtonPath);
-    else if (_state == BUTTON_OFF)
-        _texture.loadFromFile(_textureButtonOffPath);
 }

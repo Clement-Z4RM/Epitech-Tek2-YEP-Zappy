@@ -7,6 +7,45 @@
 
 #include "Window.hpp"
 
+
+Button::Button(const std::string &textOn, const std::string &textOff, sf::Vector2f position, std::shared_ptr<sf::Font> &globalFont) {
+    _state = BUTTON;
+    _font.loadFromFile(_fontPath);
+    _textOn.setString(textOn);
+    _textOn.setCharacterSize(20);
+    _textOn.setFillColor(sf::Color::Black);
+    _textOn.setFont(*globalFont);
+    _textOn.setPosition(position.x + 7, position.y + 14);
+    _textOff.setString(textOff);
+    _textOff.setCharacterSize(20);
+    _textOff.setFillColor(sf::Color::Black);
+    _textOff.setFont(*globalFont);
+    _textOff.setPosition(position.x + 7, position.y + 14);
+    _position = position;
+    _texture.loadFromFile(_textureButtonPath);
+    _sprite.setTexture(_texture);
+    _sprite.setPosition(_position);
+    _sprite.setScale(0.4, 0.4);
+}
+
+void Button::changeTexture()
+{
+    if (_state == BUTTON) {
+        _text = _textOff;
+        _texture.loadFromFile(_textureButtonPath);
+    }
+    else if (_state == BUTTON_OFF) {
+        _text = _textOn;
+        _texture.loadFromFile(_textureButtonOffPath);
+    }
+}
+
+void Button::draw(sf::RenderWindow &window)
+{
+    window.draw(_sprite);
+    window.draw(_text);
+}
+
 Window::Window()
 {
     _window.create(sf::VideoMode(1920, 1080), "Zappy");
@@ -16,6 +55,8 @@ Window::Window()
     _globalFont = std::make_shared<sf::Font>();
     if (!_globalFont->loadFromFile("./gui/resources/font.ttf"))
         std::cerr << "Error loading font" << std::endl;
+    _hideEggsButton = std::make_shared<Button>("Hide Eggs", "Display Eggs", sf::Vector2f(0, 0), _globalFont);
+    _hideEggsButton->changeTexture();
 }
 
 Window::~Window() = default;
@@ -29,10 +70,7 @@ void Window::run(Parameters &params, const gui::Client& client)
         for (auto &i : _map) {
             _window.draw(*i);
         }
-        for (auto &p : params._eggs._eggsShapes) {
-            _window.draw(*p);
-        }
-        params._eggs.displayEggs(_window);
+        params._eggs.displayEggs(_window, params._displayEggs);
         unsigned int width = _window.getSize().x;
         unsigned int height = _window.getSize().y;
         int mapWidth = params._width;
@@ -45,6 +83,7 @@ void Window::run(Parameters &params, const gui::Client& client)
             _modals["info"]->display(_window);
         if (_modals.find("players") != _modals.end())
             _modals["players"]->display(_window);
+        _hideEggsButton->draw(_window);
         _window.display();
     }
 }
@@ -75,19 +114,25 @@ void Window::getEvent(Parameters &params)
         }
         if (event.type == sf::Event::MouseButtonReleased) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                int index = 0;
-                bool found = false;
-                for (auto &i : _map) {
-                    if (i->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                        auto it = params._map[index];
-                        displayInformation(it, params);
-                        found = true;
-                        break;
+                if (_hideEggsButton->_sprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                    params._displayEggs = !params._displayEggs;
+                    _hideEggsButton->_state = _hideEggsButton->_state == Button::BUTTON ? Button::BUTTON_OFF : Button::BUTTON;
+                    _hideEggsButton->changeTexture();
+                } else {
+                    int index = 0;
+                    bool found = false;
+                    for (auto &i: _map) {
+                        if (i->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                            auto it = params._map[index];
+                            displayInformation(it, params);
+                            found = true;
+                            break;
+                        }
+                        index++;
                     }
-                    index++;
+                    if (!found)
+                        _modals.clear();
                 }
-                if (!found)
-                    _modals.clear();
             }
         }
     }

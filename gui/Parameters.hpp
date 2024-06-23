@@ -84,4 +84,5 @@ class Parameters {
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
         Eggs _eggs;
+        bool _displayEggs{true};
 };
