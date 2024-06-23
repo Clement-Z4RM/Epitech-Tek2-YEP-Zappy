@@ -94,6 +94,8 @@ typedef struct updater_s {
     /** @brief A pointer to the map structure */
     map_t *map;
 
+    bool end_of_game;
+
     /** @brief The update function */
     void (*update)(struct updater_s *updater);
 

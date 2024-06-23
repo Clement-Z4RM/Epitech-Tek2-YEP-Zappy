@@ -66,3 +66,9 @@ extern void pgt(
 );
 extern void enw(const uint64_t egg_id, const uint64_t player_id,
     const clients_manager_t *clients_manager, const coords_t *coords);
+extern void pie(
+    uint64_t x,
+    uint64_t y,
+    bool result,
+    clients_manager_t *clients_manager
+);

@@ -183,6 +183,7 @@ add_executable(zappy_server
         src/modules/updater/updater.c
         src/modules/updater/command_updater.c
         src/modules/commands/gui/handlers/enw_handler.c
+        src/modules/commands/gui/events/pie.c
         #endregion
         #endregion
 )
