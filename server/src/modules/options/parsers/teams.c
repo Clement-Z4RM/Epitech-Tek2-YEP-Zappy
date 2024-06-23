@@ -28,6 +28,7 @@ static bool insert_team(
         SLIST_INSERT_HEAD(&options->teams, *team, next);
     else
         SLIST_INSERT_AFTER(prev, *team, next);
+    ++options->team_count;
     return true;
 }
 

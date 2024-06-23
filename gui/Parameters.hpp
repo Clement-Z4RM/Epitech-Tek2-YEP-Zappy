@@ -65,21 +65,14 @@ class Parameters {
         Parameters() = default;
         ~Parameters() = default;
 
-        std::deque<std::shared_ptr<Player>> getPlayerOnCase(std::shared_ptr<Case> c) {
-            std::deque<std::shared_ptr<Player>> players;
-            for (auto &player : _players) {
-                if (player->getPosition()._x == c->_x && player->getPosition()._y == c->_y)
-                    players.push_back(player);
-            }
-            return players;
-        }
-
         void clear()
         {
             _players.clear();
             _map.clear();
         }
 
+        int windowWidth{-1};
+        int windowHeight{-1};
         int _width{-1};
         int _height{-1};
         int _port;
@@ -91,4 +84,5 @@ class Parameters {
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
         Eggs _eggs;
+        bool _displayEggs{true};
 };

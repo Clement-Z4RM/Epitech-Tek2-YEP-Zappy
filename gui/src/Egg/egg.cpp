@@ -56,10 +56,11 @@ void Eggs::deleteEgg(int id)
 {
     std::vector<std::shared_ptr<Egg>> tmp;
     for (auto egg : _eggs) {
-        if (egg->getId() == id) {
+        int eggId = egg->getId();
+        if (eggId == id)
             continue;
-        }
-        tmp.push_back(egg);
+        else
+            tmp.push_back(egg);
     }
     _eggs = tmp;
 }
@@ -71,12 +72,17 @@ void Eggs::addEgg(int id,int team, int x, int y)
     _nbEggsCreated++;
 }
 
-void Eggs::renderEggs()
+void Eggs::renderEggs(int width, int height, int mapWidth, int mapHeight)
 {
     _eggsShapes.clear();
+    float squareSize = (width * 0.9 / mapWidth) < (height * 0.9 / mapHeight) ? (width * 0.9 / mapWidth) : (height * 0.9 / mapHeight);
+    float scale = squareSize / 32;
     for (auto &egg : _eggs) {
+        int posX = egg->_x * squareSize + width * 0.5 / 2;
+        int posY = egg->_y * squareSize + height * 0.1 / 2;
         std::shared_ptr<sf::Sprite> shape = std::make_shared<sf::Sprite>();
-        shape->setPosition(egg->_x * 32 + 32, egg->_y * 32 + 32);
+        shape->setPosition(posX, posY);
+        shape->setScale(scale, scale);
         shape->setTexture(_eggTexture);
         _eggsShapes.push_back(shape);
     }
@@ -127,5 +133,14 @@ void Eggs::eggHatching(std::string &msg)
             egg->setIsLaying(false);
             return;
         }
+    }
+}
+
+void Eggs::displayEggs(sf::RenderWindow &window, bool displayEggs)
+{
+    if (!displayEggs)
+        return;
+    for (auto &egg : _eggsShapes) {
+        window.draw(*egg);
     }
 }

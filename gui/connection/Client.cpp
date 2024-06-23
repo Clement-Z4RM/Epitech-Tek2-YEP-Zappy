@@ -33,8 +33,10 @@ namespace gui {
     {
         char buff[4096];
 
-        if (!isReady())
+        if (!isReady()) {
+            tmp = "";
             return;
+        }
         std::memset(buff, 0, 4096);
         ssize_t bytes_received;
         bytes_received = Socket::read_socket(_sfd, buff, 4095);
@@ -47,15 +49,13 @@ namespace gui {
     {
         fd_set readfds;
         struct timeval timeout{};
-        int ready;
 
         FD_ZERO(&readfds);
         FD_SET(_sfd, &readfds);
         timeout.tv_sec = static_cast<time_t>(0.1);
         timeout.tv_usec = 0;
-        ready = Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
-        if (ready == -1) {
-            std::cout << "select" << std::endl;
+        Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
+        if (FD_ISSET(_sfd, &readfds) == 0) {
             return false;
         }
         return true;
@@ -103,22 +103,13 @@ namespace gui {
 
     void Client::getCases(std::string &msg)
     {
-        if (!_refreshMap) {
-            _refreshMap = true;
-            return;
-        }
         for (int i = 0; i < msg.size(); i++) {
             if (msg[i] == '\n') {
                 if (_incompleteCase) {
-                    if (_map.empty()) {
-                        if (!_restMap.empty()) {
-                            _map = _restMap;
-                            _restMap.clear();
-                        } else {
-                            throw std::runtime_error("Incomplete case");
-                        }
-                    }
-                    _map.back().append(msg.substr(0, i));
+                    if (_map.empty())
+                        _map.push_back(msg.substr(0, i));
+                    else
+                        _map.back().append(msg.substr(0, i));
                     _incompleteCase = false;
                     msg = msg.substr(i + 1);
                     i = 0;
@@ -135,7 +126,6 @@ namespace gui {
         }
         if (_map.empty())
             return;
-        std::deque<std::string> tmp;
         for (auto &line : _map) {
             std::stringstream s(line);
             std::string btc;
@@ -149,7 +139,6 @@ namespace gui {
             } else {
                 this->isMapFinished = true;
                 this->isParamGet = false;
-                return;
             }
         }
     }
@@ -165,6 +154,8 @@ namespace gui {
         std::deque<std::string> teams;
 
         _param._map.clear();
+        if (_map.empty())
+            return;
         for (auto &i : _map) {
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
@@ -189,9 +180,8 @@ namespace gui {
         this->parseDeath(death);
         this->parseTeam(teams);
         this->parseInventory(inventory);
-        for (auto &p : otherParam) {
-            std::cout << p << std::endl;
-        }
+        if (tmpMap.empty())
+            _param._map = _saveMap;
     }
 
     void Client::getDeltaTime()
@@ -224,7 +214,6 @@ namespace gui {
                 break;
             }
         }
-        _restMap = _map;
         _map.clear();
         for (auto &line : tmp) {
             _map.push_back(line);
@@ -233,17 +222,15 @@ namespace gui {
 
     void Client::refreshMap()
     {
-        this->getDeltaTime();
-        if (_deltaTime < 0.1f / _param._freq)
+        if (!isReady())
             return;
-        _deltaTime = 0;
+        _saveMap = _param._map;
         this->isMapFinished = false;
         _map.clear();
-        while (!this->isMapFinished) {
+        while (!this->isMapFinished && isReady()) {
             this->readSocket();
             this->getCases(tmp);
         }
-        this->clearMap();
         this->parseParameters();
     }
 

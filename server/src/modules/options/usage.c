@@ -6,7 +6,7 @@
 */
 
 #include <stdio.h>
-#include "options/options.h"
+#include "options.h"
 
 /**
  * @brief Display the usage of the program depending on the options

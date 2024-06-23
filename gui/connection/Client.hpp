@@ -60,19 +60,10 @@ namespace gui {
         int _sfd;
         Parameters _param;
         std::deque<std::string> _map;
-        std::deque<std::string> _restMap;
         bool _incompleteCase = false;
+        std::deque<std::shared_ptr<Case>> _saveMap;
         float _deltaTime{0.0f};
         float _lastFrameTime{0.0f};
-
-        bool _refreshMap{true};
-        std::deque<std::string> _tmpMap;
-        std::deque<std::string> _otherParam;
-        std::deque<std::string> _players;
-        std::deque<std::string> _inventory;
-        std::deque<std::string> _shift;
-        std::deque<std::string> _death;
-        std::deque<std::string> _teams;
     };
 
 } // gui

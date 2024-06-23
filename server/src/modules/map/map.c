@@ -7,25 +7,16 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "map.h"
 
 static void destroy_cell_elements(cell_t *cell)
 {
     void *tmp;
 
-    while (!SLIST_EMPTY(&cell->players)) {
-        tmp = SLIST_FIRST(&cell->players);
-        SLIST_REMOVE_HEAD(&cell->players, next);
-        free(tmp);
-    }
     while (!SLIST_EMPTY(&cell->eggs)) {
         tmp = SLIST_FIRST(&cell->eggs);
         SLIST_REMOVE_HEAD(&cell->eggs, next);
-        free(tmp);
-    }
-    while (!SLIST_EMPTY(&cell->resources)) {
-        tmp = SLIST_FIRST(&cell->resources);
-        SLIST_REMOVE_HEAD(&cell->resources, next);
         free(tmp);
     }
 }
@@ -82,13 +73,14 @@ static void link_cell(map_t *map, size_t y, size_t x)
  */
 static void link_cells(map_t *map)
 {
+    cell_t *cell;
+
     for (size_t y = 0; y < map->y; ++y)
         for (size_t x = 0; x < map->x; ++x) {
-            map->cells[y][x].x = x;
-            map->cells[y][x].y = y;
-            SLIST_INIT(&map->cells[y][x].players);
-            SLIST_INIT(&map->cells[y][x].eggs);
-            SLIST_INIT(&map->cells[y][x].resources);
+            cell = &map->cells[y][x];
+            SLIST_INIT(&cell->players);
+            SLIST_INIT(&cell->eggs);
+            memset(&cell->resources, 0, sizeof(cell->resources));
             link_cell(map, y, x);
         }
 }
@@ -144,6 +136,7 @@ map_t *create_map(size_t width, size_t height)
         perror("malloc");
         return NULL;
     }
+    map->egg_id = 1;
     map->width = width;
     map->height = height;
     if (!initialize_map_cells(map))

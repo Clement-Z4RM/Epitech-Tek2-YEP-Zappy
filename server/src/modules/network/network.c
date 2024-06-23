@@ -5,11 +5,33 @@
 ** Network module
 */
 
-#include "network.h"
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include "../requests_manager/requests_manager.h"
-#include "../logs/logs.h"
+#include <errno.h>
+#include "macros.h"
+#include "requests_manager/requests_manager.h"
+#include "logs/logs.h"
+#include "network.h"
+
+static int get_client_socket(
+    network_t *network,
+    struct sockaddr_in *client_address
+)
+{
+    socklen_t client_address_size = sizeof(struct sockaddr_in);
+    int client_socket = accept(
+        network->endpoint.socket,
+        (struct sockaddr *)client_address,
+        &client_address_size
+    );
+
+    if (client_socket == -1) {
+        perror("accept");
+        return -1;
+    }
+    return client_socket;
+}
 
 /**
 * @brief accept a new client connection
@@ -21,21 +43,24 @@
 **/
 static bool network_accept_connexion(network_t *network)
 {
-    struct sockaddr_in client_address = {0};
+    struct sockaddr_in *client_address = malloc(sizeof(struct sockaddr_in));
     client_t *client = NULL;
-    socklen_t client_address_size = sizeof(client_address);
-    int client_socket = accept(network->endpoint->socket,
-        (struct sockaddr *)&client_address, &client_address_size);
+    int client_socket;
 
-    if (client_socket == -1) {
-        perror("accept");
+    if (!client_address) {
+        perror("malloc");
         return false;
     }
-    client = client_constructor(client_socket, &client_address);
+    client_socket = get_client_socket(network, client_address);
+    if (client_socket == -1)
+        return false;
+    client = client_constructor(client_socket, client_address);
     if (client == NULL)
         return false;
-    clients_manager_add(network->clients_manager, client);
-    log_network_client_connected_success(client);
+    if (!clients_manager_add(network->clients_manager, client, NONE))
+        return false;
+    client_add_request(client, strdup(RQST_WELCOME), TO_SEND);
+    log_success_network_client_connected(client);
     return true;
 }
 
@@ -50,81 +75,110 @@ bool network_send_requests(network_t *network)
     return true;
 }
 
+static void network_check_request(
+    ssize_t size,
+    network_t *network,
+    client_node_t **current,
+    char *buffer
+)
+{
+    client_node_t *tmp;
+
+    if (size == -1)
+        perror("recv");
+    if (size <= 0) {
+        tmp = *current;
+        *current = SLIST_NEXT(*current, next);
+        clients_manager_remove(network->clients_manager, tmp->client);
+        return;
+    } else if ((*current)->client->requests_queue_to_handle_size < 10)
+        client_add_request((*current)->client, strdup(buffer), TO_HANDLE);
+    *current = SLIST_NEXT(*current, next);
+}
+
 bool network_receive_requests(network_t *network)
 {
-    struct client_node_s *current = NULL;
     char buffer[1024] = {0};
+    ssize_t size;
 
-    if (FD_ISSET(network->endpoint->socket, &network->read_fds)) {
-        if (!network_accept_connexion(network)) {
+    if (FD_ISSET(network->endpoint.socket, &network->read_fds))
+        if (!network_accept_connexion(network))
             return false;
-        }
-    }
-    SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
-    {
-        if (FD_ISSET(current->client->socket, &network->read_fds) &&
-            current->client->requests_queue_to_handle_size < 10) {
-            if (recv(current->client->socket, buffer, 1024, 0) == -1) {
-                perror("recv");
-                return false;
-            }
-            client_add_request(current->client, strdup(buffer), TO_HANDLE);
-        }
+    for (client_node_t *current = SLIST_FIRST(
+        &network->clients_manager->clients_list
+    ); current;) {
+        if (FD_ISSET(current->client->socket, &network->read_fds)) {
+            size = recv(current->client->socket, buffer, 1024, 0);
+            network_check_request(size, network, &current, buffer);
+        } else
+            current = SLIST_NEXT(current, next);
     }
     return true;
 }
 
-bool network_set_and_select_fds(network_t *network)
+int8_t network_set_and_select_fds(network_t *network)
 {
     struct client_node_s *current = NULL;
-    struct timeval timeout = {0};
+    struct timeval timeout = {0, 100};
 
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100;
     FD_ZERO(&network->read_fds);
     FD_ZERO(&network->write_fds);
-    FD_SET(network->endpoint->socket, &network->read_fds);
-    SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
-    {
+    FD_SET(network->endpoint.socket, &network->read_fds);
+    SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
         FD_SET(current->client->socket, &network->read_fds);
         FD_SET(current->client->socket, &network->write_fds);
     }
     if (select(FD_SETSIZE,
             &network->read_fds, &network->write_fds,
             NULL, &timeout) < 0) {
+        if (errno == EINTR)
+            return EINTR;
         perror("select");
-        return false;
+        return ERROR;
     }
-    return true;
+    return SUCCESS;
 }
 
 static void network_destructor(network_t *network)
 {
-    if (network->endpoint)
-        endpoint_destructor(network->endpoint);
+    close(network->endpoint.socket);
     if (network->clients_manager)
         clients_manager_destructor(network->clients_manager);
     free(network);
 }
 
-network_t *network_constructor(char *ip, int port)
+static bool initialize_network(
+    network_t *network,
+    options_t *options,
+    map_t *map
+)
 {
-    network_t *network = malloc(sizeof(network_t));
+    if (!endpoint_constructor(&network->endpoint, options->port, SERVER)) {
+        free(network);
+        return false;
+    }
+    network->clients_manager = clients_manager_constructor(options, map);
+    if (network->clients_manager == NULL) {
+        network_destructor(network);
+        return false;
+    }
+    network->options = options;
+    network->destroy = &network_destructor;
+    return true;
+}
 
+network_t *network_constructor(options_t *options, map_t *map)
+{
+    network_t *network;
+
+    if (!map)
+        return NULL;
+    network = malloc(sizeof(network_t));
     if (network == NULL) {
         perror("malloc");
         return NULL;
     }
-    network->endpoint = endpoint_constructor(ip, port, SERVER);
-    if (network->endpoint == NULL) {
-        free(network);
+    if (!initialize_network(network, options, map))
         return NULL;
-    }
-    network->clients_manager = clients_manager_constructor();
-    if (network->clients_manager == NULL) {
-        network_destructor(network);
-        return NULL;
-    }
-    network->destroy = &network_destructor;
     return network;
 }

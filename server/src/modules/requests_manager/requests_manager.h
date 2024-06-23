@@ -6,27 +6,78 @@
 */
 
 #pragma once
-#include "../clients_manager/clients_manager.h"
 
-#define HANDLERS_COUNT 1
+#include <stddef.h>
+#include "clients_manager/clients_manager.h"
+#include "commands/commands.h"
+#include "../updater/updater.h"
 
 /** @brief represent the data that will be passed to the handler **/
-typedef struct handler_data {
-    client_t *client;
+typedef struct ai_handler_data_s {
+    ai_client_node_t *client;
     char **args;
-    client_manager_t *clients_manager;
-} handler_data_t;
+    clients_manager_t *clients_manager;
+    updater_t *updater;
+} ai_handler_data_t;
 
-/** @brief represent a request handler  **/
-typedef struct request_handler {
+/** @brief represent a ai request handler  **/
+typedef struct ai_request_handler_s {
     const char *command_name;
-    void (*handler)(handler_data_t *);
-} request_handler_t;
+    void (*handler)(ai_handler_data_t *);
+} ai_request_handler_t;
+
+/** @brief represent the data that will be passed to the handler **/
+typedef struct gui_handler_data_s {
+    gui_client_node_t *gui_client;
+    char **args;
+    updater_t *updater;
+} gui_handler_data_t;
+
+/** @brief represent a gui request handler  **/
+typedef struct gui_request_handler_s {
+    const char *command_name;
+    void (*handler)(gui_handler_data_t *);
+} gui_request_handler_t;
 
 /** @brief  handle clients requests  **/
 extern void requests_manager_handle_requests(
-    client_manager_t *clients_manager
+    clients_manager_t *manager,
+    updater_t
+    *updater
 );
 
-/** @brief the list of request handlers **/
-static const request_handler_t request_handlers[HANDLERS_COUNT] = {0};
+// TODO: Don't put null element at end of below lists
+
+/** @brief the list of ai request handlers **/
+static const ai_request_handler_t AI_HANDLERS[] = {
+    {"Forward", forward},
+    {"Right", right},
+    {"Left", left},
+    {"Look", look},
+    {"Inventory", inventory},
+    {"Broadcast", broadcast},
+    {"Connect_nbr", connect_nbr},
+    {"Fork", fork_command},
+    {"Eject", eject},
+    {"Take", take},
+    {"Set", set},
+    {"Incantation", incantation}
+};
+
+#define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)
+
+/** @brief the list of gui request handlers **/
+static const gui_request_handler_t GUI_HANDLERS[] = {
+    {"msz", msz},
+    {"bct", bct},
+    {"mct", mct},
+    {"pin", pin},
+    {"ppo", ppo},
+    {"plv", plv},
+    {"sgt", sgt},
+    {"sst", sst},
+    {"tna", tna},
+    {"enw", enw_handler}
+};
+
+#define GUI_HANDLERS_COUNT sizeof(GUI_HANDLERS) / sizeof(gui_request_handler_t)

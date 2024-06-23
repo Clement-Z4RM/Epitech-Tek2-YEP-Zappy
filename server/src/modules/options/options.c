@@ -41,6 +41,7 @@ static options_t *options_constructor(void)
         return NULL;
     memset(options, 0, sizeof(options_t));
     SLIST_INIT(&options->teams);
+    options->freq = 100;
     options->destroy = options_destructor;
     return options;
 }

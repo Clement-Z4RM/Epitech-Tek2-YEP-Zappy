@@ -34,8 +34,6 @@ void Window::run(Parameters &params)
 
         raylib::Raylib::clearBackground({255, 255, 255, 255});
 
-        std::cout << params._players.size() << std::endl;
-
         this->renderMap(params);
         this->information(params);
 
@@ -49,15 +47,21 @@ void Window::renderMap(Parameters &params)
 
     for (float z = 0; z < params._height + 1; z++) {
         for (float x = 0; x < params._width + 1; x++) {
+            std::cout << "Draw cube at: " << x << " " << z << std::endl;
             raylib::Cube::drawCube({x, 0.0f, z}, 1.0f, 1.0f, 1.0f, {0, 153, 0, 255});
             raylib::Cube::drawCubeWires({x, 0.0f, z}, 1.0f, 1.0f, 1.0f, {51, 51, 0, 255});
         }
     }
 
-//    if (!params._players.empty()) {
-        raylib::Cube::drawCube({16, 1.0f, 16}, 1.0f, 1.0f, 1.0f, {0, 0, 255, 255});
-        raylib::Cube::drawCubeWires({16, 1.0f, 16}, 1.0f, 1.0f, 1.0f, {51, 51, 0, 255});
-//    }
+    if (!params._players.empty()) {
+        for (int i = 0; i < params._players.size(); i++) {
+            auto player = params._players[i];
+            std::cout << "Draw player: " << player->getId() << " at: " << player->getPosition()._x << " " << player->getPosition()._y << std::endl;
+            Vector3 pos = {player->getPosition()._x, 1.0f, player->getPosition()._y};
+            raylib::Cube::drawCube(pos, 1.0f, 1.0f, 1.0f, {255, 0, 0, 255});
+            raylib::Cube::drawCubeWires(pos, 1.0f, 1.0f, 1.0f, {0, 0, 0, 255});
+        }
+    }
 
     raylib::Camera::end3DMode();
 }

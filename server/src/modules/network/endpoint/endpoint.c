@@ -5,11 +5,10 @@
 ** Endpoint submodule of network module
 */
 
+#include <stdio.h>
+#include <unistd.h>
+#include "macros.h"
 #include "endpoint.h"
-#include "stdlib.h"
-#include "string.h"
-#include "stdio.h"
-#include "unistd.h"
 
 /**
 * @brief initialize the socket of the endpoint
@@ -44,7 +43,7 @@ static void endpoint_init_address(endpoint_t *endpoint)
 {
     endpoint->addr.sin_family = AF_INET;
     endpoint->addr.sin_port = htons(endpoint->port);
-    endpoint->addr.sin_addr.s_addr = inet_addr(endpoint->ip);
+    endpoint->addr.sin_addr.s_addr = inet_addr(ENDPOINT_IP);
 }
 
 /**
@@ -55,13 +54,18 @@ static void endpoint_init_address(endpoint_t *endpoint)
 * @param endpoint the endpoint to bind the address to
 * @return bool true if the operation was successful, false otherwise
 **/
-static bool endpoint_bind_adress(endpoint_t *endpoint)
+static bool endpoint_bind_address(endpoint_t *endpoint)
 {
     if (endpoint->type == CLIENT)
         return true;
-    if (bind(endpoint->socket, (struct sockaddr *)&endpoint->addr,
-        sizeof(endpoint->addr)) == -1)
+    if (bind(
+        endpoint->socket,
+        (struct sockaddr *)&endpoint->addr,
+        sizeof(endpoint->addr)
+    ) == ERROR) {
+        perror("bind");
         return false;
+    }
     return true;
 }
 
@@ -78,36 +82,26 @@ static bool endpoint_init_mode(endpoint_t *endpoint)
     if (endpoint->type == SERVER) {
         if (listen(endpoint->socket, 10) == -1)
             return false;
-        printf("Server listening on %s:%d\n", endpoint->ip, endpoint->port);
+        printf("Server listening on %s:%d\n", ENDPOINT_IP, endpoint->port);
         return true;
     }
     if (connect(endpoint->socket, (struct sockaddr *)&endpoint->addr,
         sizeof(endpoint->addr)) == -1)
         return false;
-    printf("Connected to %s:%d\n", endpoint->ip, endpoint->port);
+    printf("Connected to %s:%d\n", ENDPOINT_IP, endpoint->port);
     return true;
 }
 
-void endpoint_destructor(endpoint_t *endpoint)
+bool endpoint_constructor(endpoint_t *endpoint, int port, endpoint_type_t type)
 {
-    free(endpoint->ip);
-    close(endpoint->socket);
-    free(endpoint);
-}
-
-endpoint_t *endpoint_constructor(char *ip, int port, endpoint_type_t type)
-{
-    endpoint_t *endpoint = malloc(sizeof(endpoint_t));
-
-    endpoint->ip = strdup(ip);
     endpoint->port = port;
     endpoint->type = type;
     if (!endpoint_init_socket(endpoint))
-        return NULL;
+        return false;
     endpoint_init_address(endpoint);
-    if (!endpoint_bind_adress(endpoint))
-        return NULL;
+    if (!endpoint_bind_address(endpoint))
+        return false;
     if (!endpoint_init_mode(endpoint))
-        return NULL;
-    return endpoint;
+        return false;
+    return true;
 }

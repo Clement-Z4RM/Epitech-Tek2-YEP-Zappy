@@ -8,8 +8,10 @@
 #include "client.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "string.h"
-#include "unistd.h"
+#include <string.h>
+#include <unistd.h>
+#include "utilities.h"
+#include "logs/failures/logs_failures.h"
 
 static void client_destroy_lists(client_t *client)
 {
@@ -36,18 +38,20 @@ char *client_popback_request(client_t *client, client_queue_type_t type)
     char *request = NULL;
     client_request_node_t *current = NULL;
 
-    if (type == TO_HANDLE) {
-        current = CIRCLEQ_LAST(&client->requests_queue_to_handle);
-        request = current->request;
-        CIRCLEQ_REMOVE(&client->requests_queue_to_handle, current, next);
-        free(current);
-        client->requests_queue_to_handle_size--;
-    } else if (type == TO_SEND) {
-        current = CIRCLEQ_LAST(&client->requests_queue_to_send);
-        request = current->request;
-        CIRCLEQ_REMOVE(&client->requests_queue_to_send, current, next);
-        free(current);
-        client->requests_queue_to_send_size--;
+    if (type == TO_HANDLE &&
+        !CIRCLEQ_EMPTY(&client->requests_queue_to_handle)) {
+            current = CIRCLEQ_LAST(&client->requests_queue_to_handle);
+            request = current->request;
+            CIRCLEQ_REMOVE(&client->requests_queue_to_handle, current, next);
+            free(current);
+            client->requests_queue_to_handle_size--;
+    } else if (type == TO_SEND &&
+        !CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
+            current = CIRCLEQ_LAST(&client->requests_queue_to_send);
+            request = current->request;
+            CIRCLEQ_REMOVE(&client->requests_queue_to_send, current, next);
+            free(current);
+            client->requests_queue_to_send_size--;
     }
     return request;
 }
@@ -55,21 +59,25 @@ char *client_popback_request(client_t *client, client_queue_type_t type)
 bool client_send_all_requests(client_t *client, fd_set *write_fds)
 {
     client_request_node_t *current = NULL;
+    bool to_return = true;
 
-    if (!client || !write_fds)
+    if (client == NULL || write_fds == NULL)
         return false;
     while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
         current = CIRCLEQ_LAST(&client->requests_queue_to_send);
-        if (!send(client->socket, current->request,
-            strlen(current->request), 0)) {
+        if (!current->request) {
+            log_failure_null_request(client);
+            to_return = false;
+        }
+        if (!send_string(client->socket, current->request)) {
             perror("send");
-            return false;
+            to_return = false;
         }
         CIRCLEQ_REMOVE(&client->requests_queue_to_send, current, next);
         free(current->request);
         free(current);
     }
-    return true;
+    return to_return;
 }
 
 void client_add_request(client_t *client, char *request,
@@ -77,8 +85,10 @@ void client_add_request(client_t *client, char *request,
 {
     client_request_node_t *new_node = malloc(sizeof(client_request_node_t));
 
-    if (!new_node)
+    if (new_node == NULL) {
+        free(request);
         return;
+    }
     new_node->request = request;
     if (type == TO_HANDLE) {
         CIRCLEQ_INSERT_HEAD(&client->requests_queue_to_handle, new_node, next);
@@ -86,15 +96,32 @@ void client_add_request(client_t *client, char *request,
     } else if (type == TO_SEND) {
         CIRCLEQ_INSERT_HEAD(&client->requests_queue_to_send, new_node, next);
         client->requests_queue_to_send_size++;
+    } else {
+        free(new_node);
     }
 }
 
 void client_destructor(client_t *client)
 {
+    client_request_node_t *request;
+
+    while (!CIRCLEQ_EMPTY(&client->requests_queue_to_handle)) {
+        request = CIRCLEQ_FIRST(&client->requests_queue_to_handle);
+        CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+        free(request->request);
+        free(request);
+    }
+    while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
+        request = CIRCLEQ_FIRST(&client->requests_queue_to_send);
+        CIRCLEQ_REMOVE(&client->requests_queue_to_send, request, next);
+        free(request->request);
+        free(request);
+    }
     if (client->team_name)
         free(client->team_name);
     client_destroy_lists(client);
     close(client->socket);
+    free(client->addr);
     free(client);
 }
 
@@ -102,7 +129,7 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
 {
     client_t *client = malloc(sizeof(client_t));
 
-    if (!client) {
+    if (client == NULL) {
         perror("malloc");
         return NULL;
     }
@@ -110,6 +137,10 @@ client_t *client_constructor(int socket, struct sockaddr_in *addr)
     client->team_name = NULL;
     client->addr = addr;
     client->current_request_to_handle = NULL;
+    client->busy = false;
+    client->requests_queue_to_send_size = 0;
+    client->requests_queue_to_handle_size = 0;
+    client->type = NONE;
     CIRCLEQ_INIT(&client->requests_queue_to_send);
     CIRCLEQ_INIT(&client->requests_queue_to_handle);
     return client;

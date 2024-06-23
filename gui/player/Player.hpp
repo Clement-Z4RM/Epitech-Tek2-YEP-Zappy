@@ -48,7 +48,7 @@ public:
 class Player {
 public:
     Player() = default;
-    explicit Player(std::stringstream &s);
+    Player(std::stringstream &s);
     ~Player() = default;
 
     void setLevel(int level) { _level = level; }
@@ -59,15 +59,19 @@ public:
     void setInventory(int food, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) { _inventory = Inventory(food, linemate, deraumere, sibur, mendiane, phiras, thystame); }
 
     int getLevel() { return _level; }
-    Orientation getOrientation() { return _orientation; }
+    std::string getOrientation();
     Coordinates getPosition() { return _position; }
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
-    std::shared_ptr<sf::Sprite> getPlayerSprite() { return _playerSprite; }
+    std::shared_ptr<sf::Sprite> getPlayerSprite(int width, int height, int mapWidth, int mapHeight);
+    std::shared_ptr<sf::CircleShape> getPlayerCircle(int width, int height, int mapWidth, int mapHeight);
+    std::string getTeam() { return _team; }
 
     void display(sf::RenderWindow &window);
+    void initPlayerCircle();
 
 private:
+    sf::Color stringToColor(const std::string& str);
     Coordinates _position{};
     Orientation _orientation;
     int _level;
@@ -75,5 +79,6 @@ private:
     std::string _team;
     Inventory _inventory{};
     std::shared_ptr<sf::Sprite> _playerSprite;
+    std::shared_ptr<sf::CircleShape> _playerCircle;
     sf::Vector2f position;
 };
