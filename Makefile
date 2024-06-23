@@ -12,10 +12,13 @@ BUILD_TYPE	=	Release
 SERVER_DIR	=	server
 SERVER_NAME	=	zappy_server
 
+AI_DIR	=	ai
+AI_NAME	=	zappy_ai
+
 GUI_DIR		=	gui
 GUI_NAME	=	zappy_gui
 
-all: $(SERVER_NAME) $(GUI_NAME)
+all:	$(SERVER_NAME) $(GUI_NAME) $(AI_NAME)
 
 server:	$(SERVER_NAME)
 $(SERVER_NAME):
@@ -34,6 +37,9 @@ $(GUI_NAME):
 	@cmake --build .
 	@cd ../..
 	@mv $(GUI_DIR)/$(GUI_NAME) .
+
+$(AI_NAME):
+	@$(MAKE) -C $(AI_DIR)/
 
 debug:
 	@$(MAKE) -s BUILD_TYPE=Debug
@@ -54,4 +60,4 @@ re:	fclean all
 robot: all
 	@lolcat ./robot.txt
 
-.PHONY:	all $(SERVER_NAME) $(GUI_NAME) debug clean fclean tests_run re robot
+.PHONY:	all $(SERVER_NAME) $(GUI_NAME) $(AI_NAME) debug clean fclean tests_run re robot
