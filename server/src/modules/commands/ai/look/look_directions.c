@@ -15,13 +15,10 @@ static void pass_trough_cells_north(cell_t *cell, int i, int *x_forward, char
 
     for (int j = 0; j != i * 2 + 1; j++) {
         if (cell) {
-            printf("buffer before: %s\n", *buffer);
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
-            if (cell_info[0] != '\0')
-                strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
+            strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
             cell = cell->left;
-            printf("buffer after: %s\n", *buffer);
             (*x_forward)++;
         }
         if (j != i * 2 + 1)
@@ -41,7 +38,6 @@ char *look_north(map_t *map, player_t *player)
         return NULL;
     }
     snprintf(buffer, 2, "[");
-    buffer[4095] = '\0';
     for (int i = 0; i < player->level + 1; i++) {
         if (i != 0)
             back_to_x_left(cell, i, x_forward);
@@ -62,12 +58,9 @@ static void pass_trough_cells_south(cell_t *cell, int i, int *x_forward, char
     for (int j = 0; j != i * 2 + 1; j++) {
         if (cell) {
             cell_info[0] = '\0';
-            printf("buffer before: %s\n", *buffer);
             fill_cell_info(cell, cell_info);
-            if (cell_info[0] != '\0')
-                strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
+            strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
             cell = cell->right;
-            printf("buffer after: %s\n", *buffer);
             (*x_forward)++;
         }
         if (j != i * 2 + 1)
@@ -87,7 +80,6 @@ char *look_south(map_t *map, player_t *player)
         return NULL;
     }
     snprintf(buffer, 2, "[");
-    buffer[4095] = '\0';
     for (int i = 0; i < player->level + 1; i++) {
         if (i != 0)
             back_to_x_right(cell, i, x_forward);
@@ -109,11 +101,8 @@ static void pass_trough_cells_west(cell_t *cell, int i, int *y_forward, char
         if (cell) {
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
-            printf("buffer before: %s\n", *buffer);
-            if (cell_info[0] != '\0')
-                strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
+            strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
             cell = cell->up;
-            printf("buffer after: %s\n", *buffer);
             (*y_forward)++;
         }
         if (j != i * 2 + 1)
@@ -133,7 +122,6 @@ char *look_west(map_t *map, player_t *player)
         return NULL;
     }
     snprintf(buffer, 2, "[");
-    buffer[4095] = '\0';
     for (int i = 0; i < player->level + 1; i++) {
         if (i != 0)
             back_to_y_down(cell, i, y_forward);
@@ -155,11 +143,8 @@ static void pass_trough_cells_east(cell_t *cell, int i, int *y_forward, char
         if (cell) {
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
-            printf("buffer before: %s\n", *buffer);
-            if (cell_info[0] != '\0')
-                strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
+            strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
             cell = cell->down;
-            printf("buffer after: %s\n", *buffer);
             (*y_forward)++;
         }
         if (j != i * 2 + 1)
@@ -179,7 +164,6 @@ char *look_east(map_t *map, player_t *player)
         return NULL;
     }
     snprintf(buffer, 2, "[");
-    buffer[4095] = '\0';
     for (int i = 0; i < player->level + 1; i++) {
         if (i != 0)
             back_to_y_up(cell, i, y_forward);
