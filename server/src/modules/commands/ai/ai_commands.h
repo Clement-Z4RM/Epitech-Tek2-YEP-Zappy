@@ -35,4 +35,6 @@ extern void take(ai_handler_data_t *data);
 
 extern void set(ai_handler_data_t *data);
 
+extern void incantation(ai_handler_data_t *data);
+
 #endif /* !ZAPPY_SERVER_AI_COMMANDS_H_ */
