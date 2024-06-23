@@ -10,7 +10,7 @@
 
 static void fill_response(char *response, ai_client_node_t *ai_client)
 {
-    uint64_t q0 = ai_client->player.resources[RN_FOOD];
+    uint64_t q0 = (uint64_t)ai_client->player.life_span / 126;
     uint64_t q1 = ai_client->player.resources[RN_LINEMATE];
     uint64_t q2 = ai_client->player.resources[RN_DERAUMERE];
     uint64_t q3 = ai_client->player.resources[RN_SIBUR];
