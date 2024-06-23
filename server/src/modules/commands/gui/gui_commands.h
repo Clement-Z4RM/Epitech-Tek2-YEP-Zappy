@@ -33,6 +33,7 @@ extern void plv(gui_handler_data_t *data);
 extern void sgt(gui_handler_data_t *data);
 extern void sst(gui_handler_data_t *data);
 extern void tna(gui_handler_data_t *data);
+extern void enw_handler(gui_handler_data_t *data);
 
 /** EVENTS **/
 extern void plv_event(

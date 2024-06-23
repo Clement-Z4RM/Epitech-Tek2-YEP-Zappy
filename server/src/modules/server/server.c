@@ -34,6 +34,7 @@ static void check_game_have_started(updater_t *updater)
     }
     clients_manager->is_game_started = true;
     updater->start = mstime(NULL);
+    LOG_SUCCESS("Game started\n");
 }
 
 /**

@@ -10,6 +10,7 @@
 #include "map/map.h"
 #include "responses.h"
 #include <stdio.h>
+#include "commands/gui/gui_commands.h"
 
 /**
  * @brief Get a random egg from a team.
@@ -48,7 +49,7 @@ static team_egg_t *get_random_team_egg(team_node_t *team)
  * @return true if the player has been initialized,
  * false otherwise (no egg for its team).
  */
-bool initialize_player(
+uint64_t initialize_player(
     ai_client_node_t *client,
     map_t *map,
     team_node_t *team,
@@ -57,9 +58,11 @@ bool initialize_player(
 {
     team_egg_t *team_egg = get_random_team_egg(team);
     cell_t *cell;
+    uint64_t egg_id = 0;
 
     if (!team_egg)
         return false;
+    egg_id = team_egg->egg->id;
     cell = &map->cells[team_egg->egg->y][team_egg->egg->x];
     client->player.life_span = 1260;
     SLIST_REMOVE(&cell->eggs, team_egg->egg, egg_s, next);
@@ -72,7 +75,7 @@ bool initialize_player(
     client->player.id = id;
     client->player.level = 1;
     SLIST_INSERT_HEAD(&cell->players, client, next);
-    return true;
+    return egg_id;
 }
 
 /**
