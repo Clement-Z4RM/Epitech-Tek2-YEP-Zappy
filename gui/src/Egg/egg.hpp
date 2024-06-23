@@ -44,6 +44,8 @@ public:
     void displayEggs(sf::RenderWindow &window, bool displayEggs);
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
 
+    std::vector<std::shared_ptr<Egg>> getEggs() { return _eggs; }
+
 private:
     std::vector<std::shared_ptr<Egg>> _eggs;
     static bool startsWith(const std::string& str, const std::string& prefix);

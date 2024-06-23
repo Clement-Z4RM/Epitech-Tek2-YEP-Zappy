@@ -180,6 +180,8 @@ namespace gui {
         this->parseDeath(death);
         this->parseTeam(teams);
         this->parseInventory(inventory);
+        if (tmpMap.empty())
+            _param._map = _saveMap;
     }
 
     void Client::clearData()
@@ -203,9 +205,10 @@ namespace gui {
     {
         if (!isReady())
             return;
+        _saveMap = _param._map;
         this->isMapFinished = false;
         _map.clear();
-        while (!this->isMapFinished) {
+        while (!this->isMapFinished && isReady()) {
             this->readSocket();
             this->clearData();
             this->getCases(tmp);
