@@ -10,6 +10,16 @@
 #include <string.h>
 #include "logs/logs.h"
 #include "player/player_methods.h"
+#include "commands/gui/gui_commands.h"
+
+static void send_player_connexion_to_gui(
+    ai_client_node_t *ai_client,
+    clients_manager_t *clients_manager,
+    uint64_t egg_id)
+{
+    pnw(ai_client, clients_manager);
+    ebo(egg_id, clients_manager);
+}
 
 void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
 {
@@ -35,7 +45,6 @@ void clients_manager_team_destructor(team_node_t *team)
     while (!SLIST_EMPTY(&team->ai_clients)) {
         current = SLIST_FIRST(&team->ai_clients);
         SLIST_REMOVE_HEAD(&team->ai_clients, next);
-        client_destructor(current->client);
         free(current);
     }
     free(team->name);
@@ -89,16 +98,18 @@ static bool add_to_existing_team(
 )
 {
     static u_int64_t id = 1;
+    uint64_t egg_id = 0;
 
     if (team->nb_clients >= manager->max_clients_per_team) {
         log_failure_team_full(team->name);
         return false;
     }
-    initialize_player(ai_client, map, team, id);
+    ai_client->client->type = AI;
+    egg_id = initialize_player(ai_client, map, team, id);
+    send_player_connexion_to_gui(ai_client, manager, egg_id);
     ++id;
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
-    manager->nb_ai_clients++;
     if (manager->is_game_started)
         send_init_player_infos(ai_client, map);
     return true;

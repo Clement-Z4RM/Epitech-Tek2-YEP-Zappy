@@ -49,6 +49,22 @@ static bool command_should_be_executed(
     return false;
 }
 
+static bool disconnected_client(
+    updater_t *updater,
+    command_updater_t *_updater
+)
+{
+    if (!clients_manager_get_ai_by_id(
+        updater->network->clients_manager,
+        _updater->data.id
+    )) {
+        CIRCLEQ_REMOVE(&updater->command_updaters, _updater, next);
+        free(_updater);
+        return true;
+    }
+    return false;
+}
+
 /**
  * @brief Execute all the commands which should be executed (time elapsed)
  * of the command updaters queue.
@@ -60,17 +76,19 @@ void updater_execute_commands(updater_t *updater)
     command_updater_t *_updater = CIRCLEQ_FIRST(&updater->command_updaters);
     command_updater_t *tmp;
 
-    for (; _updater != (const void *)&updater->command_updaters;
-        _updater = CIRCLEQ_NEXT(_updater, next))
+    for (; _updater && _updater != (void *)&updater->command_updaters;
+        _updater = tmp) {
+        tmp = CIRCLEQ_NEXT(_updater, next);
+        if (disconnected_client(updater, _updater))
+            continue;
         if (command_should_be_executed(&_updater->data, updater)) {
             _updater->updater(
                 _updater->data.client,
                 updater,
                 _updater->data.arg
             );
-            tmp = _updater;
-            _updater = CIRCLEQ_PREV(_updater, next);
-            CIRCLEQ_REMOVE(&updater->command_updaters, tmp, next);
-            free(tmp);
+            CIRCLEQ_REMOVE(&updater->command_updaters, _updater, next);
+            free(_updater);
         }
+    }
 }

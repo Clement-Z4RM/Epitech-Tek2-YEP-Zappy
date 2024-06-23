@@ -69,7 +69,6 @@ typedef struct clients_manager_s {
 
     team_list_t team_list; ///< the list of teams
     int nb_teams; ///< actual number of teams
-    int nb_ai_clients; ///< actual number of ai clients
 
     ulong max_clients_per_team; ///< the maximum number of clients per team
     bool is_game_started; ///< true if the game has started
