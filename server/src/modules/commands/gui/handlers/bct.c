@@ -40,4 +40,5 @@ void bct(gui_handler_data_t *data)
     cell = &data->updater->map->cells[y][x];
     fill_response(response, cell, x, y);
     client_add_request(data->gui_client->client, response, TO_SEND);
+    LOG_SUCCESS("bct sent successfully: %s", response);
 }

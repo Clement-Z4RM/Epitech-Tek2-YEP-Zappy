@@ -20,7 +20,7 @@ void plv_event(
         snprintf(
             response,
             MAX_RESPONSE_SIZE,
-            "plv #%lu %d\n", player->id,
+            "plv %lu %d\n", player->id,
             player->level
         );
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {

@@ -14,6 +14,25 @@
 #include "logs/logs.h"
 #include "network.h"
 
+static int get_client_socket(
+    network_t *network,
+    struct sockaddr_in *client_address
+)
+{
+    socklen_t client_address_size = sizeof(struct sockaddr_in);
+    int client_socket = accept(
+        network->endpoint.socket,
+        (struct sockaddr *)client_address,
+        &client_address_size
+    );
+
+    if (client_socket == -1) {
+        perror("accept");
+        return -1;
+    }
+    return client_socket;
+}
+
 /**
 * @brief accept a new client connection
 * @description
@@ -24,17 +43,18 @@
 **/
 static bool network_accept_connexion(network_t *network)
 {
-    struct sockaddr_in client_address = {0};
+    struct sockaddr_in *client_address = malloc(sizeof(struct sockaddr_in));
     client_t *client = NULL;
-    socklen_t client_address_size = sizeof(client_address);
-    int client_socket = accept(network->endpoint.socket,
-        (struct sockaddr *)&client_address, &client_address_size);
+    int client_socket;
 
-    if (client_socket == -1) {
-        perror("accept");
+    if (!client_address) {
+        perror("malloc");
         return false;
     }
-    client = client_constructor(client_socket, &client_address);
+    client_socket = get_client_socket(network, client_address);
+    if (client_socket == -1)
+        return false;
+    client = client_constructor(client_socket, client_address);
     if (client == NULL)
         return false;
     if (!clients_manager_add(network->clients_manager, client, NONE))
@@ -55,38 +75,43 @@ bool network_send_requests(network_t *network)
     return true;
 }
 
-static bool network_check_request(
-    ssize_t size, network_t *network,
-    client_node_t *current, char *buffer
+static void network_check_request(
+    ssize_t size,
+    network_t *network,
+    client_node_t **current,
+    char *buffer
 )
 {
-    if (size == -1) {
+    client_node_t *tmp;
+
+    if (size == -1)
         perror("recv");
-        return false;
-    }
-    if (size == 0)
-        clients_manager_remove(network->clients_manager,
-            current->client);
-    else if (current->client->requests_queue_to_handle_size < 10)
-        client_add_request(current->client, strdup(buffer), TO_HANDLE);
-    return true;
+    if (size <= 0) {
+        tmp = *current;
+        *current = SLIST_NEXT(*current, next);
+        clients_manager_remove(network->clients_manager, tmp->client);
+        return;
+    } else if ((*current)->client->requests_queue_to_handle_size < 10)
+        client_add_request((*current)->client, strdup(buffer), TO_HANDLE);
+    *current = SLIST_NEXT(*current, next);
 }
 
 bool network_receive_requests(network_t *network)
 {
-    struct client_node_s *current = NULL;
     char buffer[1024] = {0};
     ssize_t size;
 
     if (FD_ISSET(network->endpoint.socket, &network->read_fds))
         if (!network_accept_connexion(network))
             return false;
-    SLIST_FOREACH(current, &network->clients_manager->clients_list, next) {
+    for (client_node_t *current = SLIST_FIRST(
+        &network->clients_manager->clients_list
+    ); current;) {
         if (FD_ISSET(current->client->socket, &network->read_fds)) {
             size = recv(current->client->socket, buffer, 1024, 0);
-            if (!network_check_request(size, network, current, buffer))
-                return false;
-        }
+            network_check_request(size, network, &current, buffer);
+        } else
+            current = SLIST_NEXT(current, next);
     }
     return true;
 }

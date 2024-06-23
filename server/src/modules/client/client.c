@@ -105,6 +105,7 @@ void client_destructor(client_t *client)
         free(client->team_name);
     client_destroy_lists(client);
     close(client->socket);
+    free(client->addr);
     free(client);
 }
 
