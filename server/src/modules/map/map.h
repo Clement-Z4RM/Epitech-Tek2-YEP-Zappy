@@ -11,7 +11,7 @@
     #include <sys/types.h>
     #include <stdbool.h>
     #include "egg/egg.h"
-    #include "player/player.h"
+    #include "clients_manager/clients_manager.h"
     #include "resource/resource.h"
 
 /**
@@ -29,18 +29,12 @@ typedef struct cell_s {
     /** @brief The cell's left neighbor */
     struct cell_s *left;
 
-    // TODO: are x & y useful?
-    /** @brief The cell's x position */
-    uint x;
-    /** @brief The cell's y position */
-    uint y;
-
     /** @brief The eggs on the cell */
     eggs_t eggs;
     /** @brief The players on the cell */
-    players_t players;
+    ai_clients_list_t players;
     /** @brief The resources (foods and stones) on the cell */
-    resources_t resources;
+    u_int64_t resources[RESOURCES_COUNT];
 
     /** @brief The cell's right neighbor */
     struct cell_s *right;
@@ -59,17 +53,17 @@ typedef struct map_resources_s {
      * @brief Generate resources on the map.
      *
      * @param map The map where the resources are generated.
-     *
-     * @return true if the resources are generated successfully,
-     * false otherwise (allocation error).
      */
-    bool (*generate)(map_t *map);
+    void (*generate)(map_t *map);
 } map_resources_t;
 
 /**
  * @brief Map structure. It contains the map width and height, and its cells.
  */
 typedef struct map_s {
+    /** @brief The next egg id */
+    u_int64_t egg_id;
+
     /** @brief The map cells */
     cell_t **cells;
     /** @brief The map width */

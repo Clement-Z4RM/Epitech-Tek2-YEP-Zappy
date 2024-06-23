@@ -66,6 +66,8 @@ typedef struct options_s {
     /** @brief  The team names. It's a linked list because we don't know
      * the number of teams when options are parsed */
     team_names_t teams;
+    /** @brief The number of teams */
+    u_int64_t team_count;
     /** @brief The number of authorized clients per team */
     ulong clients;
     /** @brief The frequency,
@@ -129,7 +131,7 @@ static const option_parser_t OPTION_PARSERS[] = {
     ['y'] = {"world height", true, parse_world_height},
     ['n'] = {"team names", true, parse_teams},
     ['c'] = {"clients number", true, parse_clients},
-    ['f'] = {"frequency", true, parse_frequency}
+    ['f'] = {"frequency", false, parse_frequency}
 };
 //endregion
 

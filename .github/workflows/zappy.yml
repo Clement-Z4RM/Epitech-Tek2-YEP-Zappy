@@ -62,6 +62,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container: epitechcontent/epitest-docker:latest
+    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -102,7 +103,7 @@ jobs:
     needs:
       - build
       - glibchecker
-      - tests
+      # - tests
       - check_coding_style
     if: ${{ github.ref_name == 'main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest

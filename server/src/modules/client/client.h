@@ -11,6 +11,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+typedef enum client_type_e {
+    NONE = -1,
+    AI,
+    GUI
+} client_type_t;
+
 typedef enum client_queue_type_e {
     TO_SEND,
     TO_HANDLE
@@ -43,6 +49,8 @@ typedef struct client_s {
     int requests_queue_to_send_size; ///< size requests to send
     int requests_queue_to_handle_size; ///< size requests to handle
     char *current_request_to_handle; ///< the current request being handled
+    bool busy; ///< true if the client is busy, false otherwise
+    client_type_t type; ///< the type of the client
 } client_t;
 
 /**

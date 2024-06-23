@@ -1,3 +1,5 @@
+# Zappy
+
 # Zappy Server
 
 A server, created in C, that generates the inhabitants’ world.
