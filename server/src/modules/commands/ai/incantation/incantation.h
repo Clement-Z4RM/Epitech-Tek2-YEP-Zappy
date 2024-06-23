@@ -177,6 +177,16 @@ extern bool add_players_to_incantation(
 
 extern void drop_resources(incantation_t *incantation, map_t *map);
 
+extern bool cell_contains_required_resources(
+    incantation_t *incantation,
+    cell_t *cell
+);
+
+extern void remove_incantation_resources(
+    incantation_t *incantation,
+    cell_t *cell
+);
+
 extern incantation_t *start_incantation(ai_handler_data_t *data);
 
 #endif /* !ZAPPY_SERVER_INCANTATION_H_ */

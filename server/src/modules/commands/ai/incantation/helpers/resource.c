@@ -29,3 +29,36 @@ void drop_resources(incantation_t *incantation, map_t *map)
         }
     }
 }
+
+/**
+ * @brief Check if the cell always contains the required resources
+ * at the end of the incantation.
+ *
+ * @param incantation The incantation to check.
+ * @param cell The cell to check.
+ *
+ * @return true if the cell contains the required resources, false otherwise.
+ */
+bool cell_contains_required_resources(incantation_t *incantation, cell_t *cell)
+{
+    for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
+        if (cell->resources[resource] <
+            INCANTATIONS_REQUIREMENTS[incantation->level].resources[resource] *
+                incantation->nb_players)
+            return false;
+    return true;
+}
+
+/**
+ * @brief Remove the required resources from the cell after the incantation.
+ *
+ * @param incantation The incantation to remove the resources for.
+ * @param cell The cell where the resources will be removed.
+ */
+void remove_incantation_resources(incantation_t *incantation, cell_t *cell)
+{
+    for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
+        cell->resources[resource] -=
+            INCANTATIONS_REQUIREMENTS[incantation->level].resources[resource] *
+            incantation->nb_players;
+}
