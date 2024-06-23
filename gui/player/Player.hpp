@@ -7,6 +7,9 @@
 
 #pragma once
 #include <sstream>
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <iostream>
 
 enum Orientation {
     NORTH = 1,
@@ -45,27 +48,37 @@ public:
 class Player {
 public:
     Player() = default;
-    explicit Player(std::stringstream &s);
+    Player(std::stringstream &s);
     ~Player() = default;
 
     void setLevel(int level) { _level = level; }
     void setOrientation(Orientation orientation) { _orientation = orientation; }
-    void setPosition(int x, int y) { _position._x = x; _position._y = y; }
+    void setPosition(int x, int y);
 
     void setInventory(std::stringstream  &s);
     void setInventory(int food, int linemate, int deraumere, int sibur, int mendiane, int phiras, int thystame) { _inventory = Inventory(food, linemate, deraumere, sibur, mendiane, phiras, thystame); }
 
     int getLevel() { return _level; }
-    Orientation getOrientation() { return _orientation; }
+    std::string getOrientation();
     Coordinates getPosition() { return _position; }
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
+    std::shared_ptr<sf::Sprite> getPlayerSprite(int width, int height, int mapWidth, int mapHeight);
+    std::shared_ptr<sf::CircleShape> getPlayerCircle(int width, int height, int mapWidth, int mapHeight);
+    std::string getTeam() { return _team; }
+
+    void display(sf::RenderWindow &window);
+    void initPlayerCircle();
 
 private:
+    sf::Color stringToColor(const std::string& str);
     Coordinates _position{};
     Orientation _orientation;
     int _level;
     int _id;
     std::string _team;
     Inventory _inventory{};
+    std::shared_ptr<sf::Sprite> _playerSprite;
+    std::shared_ptr<sf::CircleShape> _playerCircle;
+    sf::Vector2f position;
 };

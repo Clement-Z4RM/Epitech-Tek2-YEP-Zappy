@@ -55,7 +55,7 @@ namespace gui {
         timeout.tv_usec = 0;
         ready = Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
         if (ready == -1) {
-            std::cout << "select" << std::endl;
+            throw std::runtime_error("Select error");
             return false;
         }
         return true;
@@ -106,7 +106,10 @@ namespace gui {
         for (int i = 0; i < msg.size(); i++) {
             if (msg[i] == '\n') {
                 if (_incompleteCase) {
-                    _map.back().append(msg.substr(0, i));
+                    if (_map.empty())
+                        _map.push_back(msg.substr(0, i));
+                    else
+                        _map.back().append(msg.substr(0, i));
                     _incompleteCase = false;
                     msg = msg.substr(i + 1);
                     i = 0;
@@ -146,6 +149,9 @@ namespace gui {
         std::deque<std::string> otherParam;
         std::deque<std::string> players;
         std::deque<std::string> inventory;
+        std::deque<std::string> shift;
+        std::deque<std::string> death;
+        std::deque<std::string> teams;
 
         _param._map.clear();
         for (auto &i : _map) {
@@ -155,40 +161,23 @@ namespace gui {
                 players.push_back(i);
             else if (i.find("pin") != std::string::npos)
                 inventory.push_back(i);
+            else if (i.find("ppo") != std::string::npos)
+                shift.push_back(i);
+            else if (i.find("pdi") != std::string::npos)
+                death.push_back(i);
+            else if (i.find("tna") != std::string::npos)
+                teams.push_back(i);
+            else if (_param._eggs.checkMsg(i))
+                continue;
             else
                 otherParam.push_back(i);
         }
-        for (auto &coo : tmpMap) {
-            std::stringstream s(coo);
-            std::shared_ptr<Case> new_case = std::make_shared<Case>();
-            new_case->createCase(s);
-            _param._map.push_back(new_case);
-        }
-        for (auto &player : players) {
-            std::stringstream s(player);
-            std::shared_ptr<Player> new_player = std::make_shared<Player>(s);
-            _param._players.push_back(new_player);
-        }
-        for (auto &inv : inventory) {
-            std::stringstream s(inv);
-            std::string tmpData;
-            s >> tmpData;
-            s >> tmpData;
-            int identifier = std::stoi(tmpData);
-            s >> tmpData;
-            int x = std::stoi(tmpData);
-            s >> tmpData;
-            int y = std::stoi(tmpData);
-            for (auto &player : _param._players) {
-                if (player->getId() == identifier && player->getPosition()._x == x && player->getPosition()._y == y) {
-                    player->setInventory(s);
-                    break;
-                }
-            }
-        }
-        for (auto &param : otherParam) {
-            std::cout << param << std::endl;
-        }
+        this->parseMap(tmpMap);
+        this->parsePlayer(players);
+        this->parseShift(shift);
+        this->parseDeath(death);
+        this->parseTeam(teams);
+        this->parseInventory(inventory);
     }
 
     void Client::clearData()
@@ -220,4 +209,97 @@ namespace gui {
         }
         this->parseParameters();
     }
+
+    void Client::parseMap(std::deque<std::string> &map)
+    {
+        for (auto &coo : map) {
+            std::stringstream s(coo);
+            std::shared_ptr<Case> new_case = std::make_shared<Case>();
+            new_case->createCase(s);
+            _param._map.push_back(new_case);
+        }
+    }
+
+    void Client::parsePlayer(std::deque<std::string> &players)
+    {
+        for (auto &player : players) {
+            std::stringstream s(player);
+            std::shared_ptr<Player> new_player = std::make_shared<Player>(s);
+            _param._players.push_back(new_player);
+        }
+    }
+
+    void Client::parseShift(std::deque<std::string> &shift)
+    {
+        for (auto &move : shift) {
+            std::stringstream s(move);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            s >> tmpData;
+            int x = std::stoi(tmpData);
+            s >> tmpData;
+            int y = std::stoi(tmpData);
+            s >> tmpData;
+            int orientation = std::stoi(tmpData);
+            for (auto &player : _param._players) {
+                if (player->getId() == identifier) {
+                    player->setPosition(x, y);
+                    player->setOrientation(static_cast<Orientation>(orientation));
+                    break;
+                }
+            }
+        }
+    }
+
+    void Client::parseDeath(std::deque<std::string> &death)
+    {
+        for (auto &dead : death) {
+            std::stringstream s(dead);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            for (auto &player : _param._players) {
+                if (player->getId() == identifier) {
+                    _param._players.erase(std::remove(_param._players.begin(), _param._players.end(), player), _param._players.end());
+                    break;
+                }
+            }
+        }
+    }
+
+    void Client::parseTeam(std::deque<std::string> &teams)
+    {
+        for (auto &team : teams) {
+            std::stringstream s(team);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            _param._teams.push_back(tmpData);
+        }
+    }
+
+    void Client::parseInventory(std::deque<std::string> &inventory)
+    {
+        for (auto &inv : inventory) {
+            std::stringstream s(inv);
+            std::string tmpData;
+            s >> tmpData;
+            s >> tmpData;
+            int identifier = std::stoi(tmpData);
+            s >> tmpData;
+            int x = std::stoi(tmpData);
+            s >> tmpData;
+            int y = std::stoi(tmpData);
+            for (auto &player : _param._players) {
+                if (player->getId() == identifier && player->getPosition()._x == x && player->getPosition()._y == y) {
+                    player->setInventory(s);
+                    break;
+                }
+            }
+        }
+    }
+
 } // gui
