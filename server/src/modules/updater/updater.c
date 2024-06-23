@@ -55,7 +55,6 @@ static void update_team_clients_life(
     SLIST_FOREACH(client, &team->ai_clients, next) {
         client->player.life_span -= life_to_remove;
         if (client->player.life_span <= 0) {
-            pdi(client->player.id, clients_manager);
             player_dead(client, team, map, clients_manager);
         }
     }
