@@ -14,11 +14,6 @@ static void destroy_cell_elements(cell_t *cell)
 {
     void *tmp;
 
-    while (!SLIST_EMPTY(&cell->players)) {
-        tmp = SLIST_FIRST(&cell->players);
-        SLIST_REMOVE_HEAD(&cell->players, next);
-        free(tmp);
-    }
     while (!SLIST_EMPTY(&cell->eggs)) {
         tmp = SLIST_FIRST(&cell->eggs);
         SLIST_REMOVE_HEAD(&cell->eggs, next);
