@@ -359,7 +359,6 @@ void Window::changePlayer(Parameters &params, int dir)
                 _selectedPlayer--;
         }
     }
-    std::cout << "Selected player: " << _selectedPlayer << std::endl;
 }
 
 void Window::rendMap(Parameters &params)
