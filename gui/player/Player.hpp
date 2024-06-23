@@ -64,11 +64,14 @@ public:
     Inventory getInventory() { return _inventory; }
     int getId() { return _id; }
     std::shared_ptr<sf::Sprite> getPlayerSprite(int width, int height, int mapWidth, int mapHeight);
+    std::shared_ptr<sf::CircleShape> getPlayerCircle(int width, int height, int mapWidth, int mapHeight);
     std::string getTeam() { return _team; }
 
     void display(sf::RenderWindow &window);
+    void initPlayerCircle();
 
 private:
+    sf::Color stringToColor(const std::string& str);
     Coordinates _position{};
     Orientation _orientation;
     int _level;
@@ -76,5 +79,6 @@ private:
     std::string _team;
     Inventory _inventory{};
     std::shared_ptr<sf::Sprite> _playerSprite;
+    std::shared_ptr<sf::CircleShape> _playerCircle;
     sf::Vector2f position;
 };
