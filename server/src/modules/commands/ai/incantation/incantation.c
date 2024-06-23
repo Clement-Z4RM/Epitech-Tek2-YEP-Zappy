@@ -39,7 +39,7 @@ static void incantation_updater(
 {
     incantation_t *incantation = (incantation_t *)arg;
     cell_t *cell = &updater->map->cells[incantation->y][incantation->x];
-    char response[18];
+    char response[20];
 
     client->client->busy = false;
     if (!cell_contains_required_resources(incantation, cell))
@@ -47,7 +47,7 @@ static void incantation_updater(
     else {
         remove_incantation_resources(incantation, cell);
         elevate_players(incantation);
-        snprintf(response, 18, "Current level: %d\n", incantation->level + 1);
+        snprintf(response, 20, "Current level: %d\n", incantation->level + 1);
         add_request_to_all_players(incantation, response);
     }
     incantation->updater.command_updater = NULL;
