@@ -350,7 +350,7 @@ function ZappyAI:DefinePriorities()
     local priorities = {}
 
     -- Priority 1: Collect food if food is less than 5
-    if self.inventory:GetItemCount("food") < 5 then
+    if self.inventory:Count("food") < 15 then
         table.insert(priorities, "collect_food")
     else
         -- Priority 2: If level >= 4, prioritize elevation and sabotage
@@ -383,6 +383,19 @@ function ZappyAI:ExecuteActions(priorities)
     end
 end
 
+--- Find food in the environment from the Look command response
+--- @return number|nil
+function ZappyAI:FindFoodInEnvironment()
+    local tiles = self:LookupEnvironment()
+    for index, tile in ipairs(tiles) do
+        if tile:Contains("food") then
+            return index
+        end
+    end
+    return nil
+end
+
+
 --- Find and collect food
 function ZappyAI:FindAndCollectFood()
     local foodTileIndex = self:FindFoodInEnvironment()
@@ -412,10 +425,15 @@ function ZappyAI:MoveToTile(tile)
     end
 end
 
-
 --- Explore the environment
 function ZappyAI:Explore()
     self:MoveForward()
+end
+
+--- Get the current level of the AI
+--- @return number
+function ZappyAI:GetLevel()
+    return self.level
 end
 
 --- Check if the AI can perform an incantation
@@ -438,13 +456,16 @@ function ZappyAI:CanPerformIncantation()
         return false
     end
     for item, count in pairs(currentRequirements) do
-        if self.inventory:Count(item) < count then
+        if inventory:Count(item) < count then
             return false
         end
     end
     return true
 end
 
+function ZappyAI:SabotageEnemies()
+    return;
+end
 
 --- Main decision maker function
 function ZappyAI:Decide()
