@@ -1,3 +1,4 @@
 return {
-    CONNECTED = "WELCOME"
+    CONNECTED = "WELCOME",
+    EXECUTED = "ok"
 }
