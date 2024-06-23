@@ -18,4 +18,5 @@ void pgt(uint64_t id, resource_name_t resource,
     SLIST_FOREACH(node, &client_manager->gui_clients_list, next)
         client_add_request(node->client, strdup(response), TO_SEND);
     log_success_take(id, resource);
+    pin_event(id, client_manager);
 }
