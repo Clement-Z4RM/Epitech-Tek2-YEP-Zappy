@@ -74,3 +74,4 @@ extern void pie(
     clients_manager_t *clients_manager
 );
 extern void mct_event(gui_client_node_t *client, updater_t *updater);
+extern void edi(uint64_t egg_id, clients_manager_t *clients_manager);
