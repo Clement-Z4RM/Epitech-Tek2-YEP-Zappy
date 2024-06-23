@@ -37,15 +37,16 @@ char *look_north(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
-    buffer[4095] = '\0';
-    buffer[0] = '\0';
-    for (int i = 1; i < player->level + 1; i++) {
-        back_to_x_left(cell, i, x_forward);
+    snprintf(buffer, 2, "[");
+    for (int i = 0; i < player->level + 1; i++) {
+        if (i != 0)
+            back_to_x_left(cell, i, x_forward);
         x_forward = 0;
-        if (cell && cell->up)
+        if (cell && cell->up && i != 0)
             cell = cell->up;
         pass_trough_cells_north(cell, i, &x_forward, &buffer);
     }
+    snprintf(buffer + strlen(buffer) - 1, 2, "]");
     return buffer;
 }
 
@@ -78,15 +79,16 @@ char *look_south(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
-    buffer[4095] = '\0';
-    buffer[0] = '\0';
-    for (int i = 1; i < player->level + 1; i++) {
-        back_to_x_right(cell, i, x_forward);
+    snprintf(buffer, 2, "[");
+    for (int i = 0; i < player->level + 1; i++) {
+        if (i != 0)
+            back_to_x_right(cell, i, x_forward);
         x_forward = 0;
-        if (cell && cell->down)
+        if (cell && cell->down && i != 0)
             cell = cell->down;
         pass_trough_cells_south(cell, i, &x_forward, &buffer);
     }
+    snprintf(buffer + strlen(buffer) - 1, 2, "]");
     return buffer;
 }
 
@@ -119,15 +121,16 @@ char *look_west(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
-    buffer[4095] = '\0';
-    buffer[0] = '\0';
-    for (int i = 1; i < player->level + 1; i++) {
-        back_to_y_down(cell, i, y_forward);
+    snprintf(buffer, 2, "[");
+    for (int i = 0; i < player->level + 1; i++) {
+        if (i != 0)
+            back_to_y_down(cell, i, y_forward);
         y_forward = 0;
-        if (cell && cell->right)
+        if (cell && cell->right && i != 0)
             cell = cell->right;
         pass_trough_cells_west(cell, i, &y_forward, &buffer);
     }
+    snprintf(buffer + strlen(buffer) - 1, 2, "]");
     return buffer;
 }
 
@@ -161,12 +164,12 @@ char *look_east(map_t *map, player_t *player)
         return NULL;
     }
     snprintf(buffer, 2, "[");
-    buffer[4095] = '\0';
-    for (int i = 1; i < player->level + 1; i++) {
-        back_to_y_up(cell, i, y_forward);
-        y_forward = 0;
-        if (cell && cell->left)
+    for (int i = 0; i < player->level + 1; i++) {
+        if (i != 0)
+            back_to_y_up(cell, i, y_forward);
+        if (cell && cell->left && i != 0)
             cell = cell->left;
+        y_forward = 0;
         pass_trough_cells_east(cell, i, &y_forward, &buffer);
     }
     snprintf(buffer + strlen(buffer) - 1, 2, "]");

@@ -54,6 +54,8 @@ static char *player_look_updater(map_t *map, player_t *player)
             buffer = look_west(map, player);
             break;
     }
+    if (buffer)
+        snprintf(buffer + strlen(buffer), 2, "\n");
     return buffer;
 }
 

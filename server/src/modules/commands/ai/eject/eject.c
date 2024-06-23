@@ -9,6 +9,7 @@
 #include "requests_manager/requests_manager.h"
 #include "commands/ai/incantation/incantation.h"
 #include "eject.h"
+#include "commands/gui/gui_commands.h"
 
 static team_egg_t *get_egg_in_team(egg_t *egg, team_node_t *team)
 {
@@ -48,6 +49,7 @@ static void destroy_egg(egg_t *egg, updater_t *updater)
     if (team_egg)
         SLIST_REMOVE(&team->eggs, team_egg, team_egg_s, next);
     SLIST_REMOVE(&updater->map->cells[egg->y][egg->x].eggs, egg, egg_s, next);
+    edi(egg->id, updater->network->clients_manager);
     free(team_egg);
     free(egg);
 }
@@ -115,6 +117,7 @@ static void eject_updater(
         destroy_egg(egg, updater);
     SLIST_FOREACH(player, &cell->players, next)
         eject_player(client, player, updater->map);
+    pex(client->player.id, updater->network->clients_manager);
 }
 
 /**
