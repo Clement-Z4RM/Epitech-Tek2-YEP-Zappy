@@ -135,7 +135,7 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/plv.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
-        src/modules/commands/gui/events/plv.c
+        src/modules/commands/gui/events/plv_event.c
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
         src/modules/commands/gui/events/pdr.c
