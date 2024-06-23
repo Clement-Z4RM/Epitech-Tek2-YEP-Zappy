@@ -11,6 +11,17 @@
 #include "logs/logs.h"
 #include "player/player_methods.h"
 
+void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
+{
+    char client_id_response[13];
+    char map_response[23];
+
+    snprintf(client_id_response, 13, "#%lu\n", ai_client->player.id);
+    snprintf(map_response, 23, "%lu %lu\n", map->x, map->y);
+    client_add_request(ai_client->client, strdup(client_id_response), TO_SEND);
+    client_add_request(ai_client->client, strdup(map_response), TO_SEND);
+}
+
 void clients_manager_team_destructor(team_node_t *team)
 {
     team_egg_t *egg_current = NULL;
@@ -88,6 +99,8 @@ static bool add_to_existing_team(
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
     manager->nb_ai_clients++;
+    if (manager->is_game_started)
+        send_init_player_infos(ai_client, map);
     return true;
 }
 
