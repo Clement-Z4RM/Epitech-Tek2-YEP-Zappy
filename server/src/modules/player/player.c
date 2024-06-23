@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "map/map.h"
+#include "responses.h"
+#include <stdio.h>
 
 /**
  * @brief Get a random egg from a team.
@@ -32,6 +34,19 @@ static team_egg_t *get_random_team_egg(team_node_t *team)
     SLIST_REMOVE(&team->eggs, team_egg, team_egg_s, next);
     --team->nb_eggs;
     return team_egg;
+}
+
+static void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
+{
+    char *map_response = NULL;
+    char *client_num_response = NULL;
+
+    snprintf(client_num_response,
+        MAX_RESPONSE_SIZE, "#%lu\n", ai_client->player.id);
+    snprintf(map_response,
+        MAX_RESPONSE_SIZE, "%lu %lu\n", map->x,
+        map->y);
+    client_add_request(ai_client->client, strdup(map_response), TO_SEND);
 }
 
 /**
@@ -70,6 +85,7 @@ bool initialize_player(
     client->player.id = id;
     client->player.level = 1;
     SLIST_INSERT_HEAD(&cell->players, client, next);
+    send_init_player_infos(client, map);
     return true;
 }
 

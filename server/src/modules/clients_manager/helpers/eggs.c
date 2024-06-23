@@ -10,6 +10,23 @@
 #include "eggs.h"
 #include "../clients_manager.h"
 #include "map/map.h"
+#include <stdio.h>
+
+void send_default_eggs(team_node_t *team, client_t *client)
+{
+    team_egg_t *egg_current = NULL;
+    char *enw_request = NULL;
+
+    SLIST_FOREACH(egg_current, &team->eggs, next) {
+        snprintf(
+            enw_request, 1024, "enw #%ld #-1 %ld %ld\n",
+            egg_current->egg->id,
+            egg_current->egg->x,
+            egg_current->egg->y
+        );
+        client_add_request(client, enw_request, TO_SEND);
+    }
+}
 
 /**
  * @brief Spawn egg on the map and assign it to a team at a given position

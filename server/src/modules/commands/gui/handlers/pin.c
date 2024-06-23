@@ -20,7 +20,7 @@ static void fill_response(char *response, ai_client_node_t *ai_client)
     uint64_t q6 = ai_client->player.resources[RN_THYSTAME];
 
     snprintf(response, MAX_RESPONSE_SIZE,
-        "pin %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n",
+        "pin #%lu %lu %lu %lu %lu %lu %lu %lu %lu %lu\n",
         ai_client->player.id,
         ai_client->player.x,
         ai_client->player.y,

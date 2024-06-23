@@ -9,6 +9,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include "clients_manager.h"
+#include <stdio.h>
+
+static void send_gui_default_events(client_t *client, clients_manager_t
+    *manager)
+{
+    team_node_t *team_current = NULL;
+    ai_client_node_t *ai_current = NULL;
+    char *ppo_request = NULL;
+
+    client_add_request(client, strdup("msz\n"), TO_HANDLE);
+    client_add_request(client, strdup("sgt\n"), TO_HANDLE);
+    client_add_request(client, strdup("mct\n"), TO_HANDLE);
+    client_add_request(client, strdup("tna\n"), TO_HANDLE);
+    SLIST_FOREACH(team_current, &manager->team_list, next) {
+        SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
+            snprintf(ppo_request, 1024, "ppo %ld\n", ai_current->player.id);
+            client_add_request(client, ppo_request, TO_HANDLE);
+            send_default_eggs(team_current, client);
+        }
+    }
+}
 
 static bool add_gui(clients_manager_t *manager, client_t *client)
 {
@@ -19,10 +40,10 @@ static bool add_gui(clients_manager_t *manager, client_t *client)
     new_node->client = client;
     SLIST_INSERT_HEAD(&manager->gui_clients_list, new_node, next);
     manager->nb_gui_clients++;
+    send_gui_default_events(client, manager);
     return true;
 }
 
-//TODO: exit here or return to main routine exiting if malloc failed ?
 bool clients_manager_add(
     clients_manager_t *manager,
     client_t *client,
@@ -46,7 +67,59 @@ bool clients_manager_add(
     return state;
 }
 
-//TODO: remove from every list
+static void clients_manager_remove_gui(clients_manager_t *manager, client_t
+    *client)
+{
+    gui_client_node_t *current = NULL;
+    gui_client_node_t *tmp = NULL;
+
+    for (current = SLIST_FIRST(&manager->gui_clients_list); current; current
+    = SLIST_NEXT(current, next)) {
+        if (current->client == client) {
+            tmp = current;
+            break;
+        }
+    }
+    if (tmp) {
+        SLIST_REMOVE(&manager->gui_clients_list, tmp, gui_client_node_s, next);
+        client_destructor(tmp->client);
+        free(tmp);
+        manager->nb_gui_clients--;
+    }
+}
+
+static bool check_ai(client_t *client, team_node_t *team_current)
+{
+    ai_client_node_t *ai_current = NULL;
+
+    SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
+        if (ai_current->client == client) {
+            SLIST_REMOVE(
+                &team_current->ai_clients, ai_current,
+                ai_client_node_s, next
+            );
+            free(ai_current);
+            return true;
+        }
+    }
+    return false;
+}
+
+void clients_manager_remove_ai(clients_manager_t *manager, client_t
+    *client)
+{
+    team_node_t *team_current = NULL;
+
+    for (team_current = SLIST_FIRST(&manager->team_list); team_current;
+        team_current = SLIST_NEXT(team_current, next)) {
+        if (check_ai(client, team_current)) {
+            team_current->nb_clients--;
+            manager->nb_ai_clients--;
+            break;
+        }
+    }
+}
+
 void clients_manager_remove(clients_manager_t *manager, client_t *client)
 {
     client_node_t *current = NULL;
@@ -65,6 +138,10 @@ void clients_manager_remove(clients_manager_t *manager, client_t *client)
         free(tmp);
         manager->nb_clients--;
     }
+    if (client->type == GUI)
+        clients_manager_remove_gui(manager, client);
+    else if (client->type == AI)
+        clients_manager_remove_ai(manager, client);
 }
 
 static void clients_manager_teams_destructor(clients_manager_t *manager)
