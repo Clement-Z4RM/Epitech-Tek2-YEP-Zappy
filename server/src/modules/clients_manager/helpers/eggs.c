@@ -18,10 +18,10 @@
 void send_default_eggs(team_node_t *team, client_t *client)
 {
     team_egg_t *egg_current = NULL;
-    char request[53];
+    char request[49];
 
     SLIST_FOREACH(egg_current, &team->eggs, next) {
-        snprintf(request, 53, "enw %lu %d %lu %lu\n",
+        snprintf(request, 49, "enw %lu %d %lu %lu\n",
             egg_current->egg->id, -1,
             egg_current->egg->x, egg_current->egg->y);
         client_add_request(client, strdup(request), TO_HANDLE);
