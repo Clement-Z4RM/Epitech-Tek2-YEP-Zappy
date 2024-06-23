@@ -19,12 +19,16 @@ void sst(gui_handler_data_t *data)
         client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
         return;
     }
-    if (endptr == data->args[1]) {
+    if (endptr == data->args[1] || t <= 0) {
         sbp(data->gui_client->client);
         log_sst_failure(data->gui_client->client);
+        free(response);
         return;
     }
-    data->updater->generation_interval = t * 20;
+    data->updater->network->options->freq = t;
+    data->updater->generation_interval = (time_t)(20000 / t);
+    if (0 == data->updater->generation_interval)
+        data->updater->generation_interval = 1;
     data->updater->next_generation = data->updater->previous_time +
         data->updater->generation_interval;
     snprintf(response, MAX_RESPONSE_SIZE, "sst %lu\n", t);
