@@ -203,3 +203,5 @@ extern bool client_manager_init_eggs(
     options_t *options,
     map_t *map
 );
+
+extern void send_default_eggs(team_node_t *team, client_t *client);

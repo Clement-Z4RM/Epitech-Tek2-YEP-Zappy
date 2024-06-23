@@ -26,7 +26,7 @@ static bool fill_response(gui_handler_data_t *data, char *response)
         sbp(data->gui_client->client);
         return false;
     }
-    snprintf(response, MAX_RESPONSE_SIZE, "ppo %ld %lu %lu %d\n",
+    snprintf(response, MAX_RESPONSE_SIZE, "ppo #%ld %lu %lu %d\n",
         ai_client->player.id, ai_client->player.x, ai_client->player.y,
         ai_client->player.direction);
     log_success_ppo(ai_client->client, &ai_client->player);

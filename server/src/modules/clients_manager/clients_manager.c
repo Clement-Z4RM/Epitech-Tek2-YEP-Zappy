@@ -26,6 +26,7 @@ static void send_gui_default_events(client_t *client, clients_manager_t
         SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
             snprintf(ppo_request, 1024, "ppo %ld\n", ai_current->player.id);
             client_add_request(client, ppo_request, TO_HANDLE);
+            send_default_eggs(team_current, client);
         }
     }
 }
