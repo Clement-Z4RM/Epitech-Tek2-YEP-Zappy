@@ -98,7 +98,6 @@ static bool add_to_existing_team(
     ++id;
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
-    manager->nb_ai_clients++;
     if (manager->is_game_started)
         send_init_player_infos(ai_client, map);
     return true;

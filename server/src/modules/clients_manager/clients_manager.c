@@ -114,7 +114,6 @@ void clients_manager_remove_ai(clients_manager_t *manager, client_t
         team_current = SLIST_NEXT(team_current, next)) {
         if (check_ai(client, team_current)) {
             team_current->nb_clients--;
-            manager->nb_ai_clients--;
             break;
         }
     }
@@ -187,7 +186,6 @@ clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
     manager->nb_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
-    manager->nb_ai_clients = 0;
     manager->max_clients_per_team = options->clients;
     manager->is_game_started = false;
     clients_manager_init_teams(manager, &options->teams);
