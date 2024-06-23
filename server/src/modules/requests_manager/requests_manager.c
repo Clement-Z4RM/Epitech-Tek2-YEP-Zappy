@@ -104,6 +104,7 @@ static bool client_has_team(
 {
     if (client->team_name == NULL) {
         if (add_to_team(client, manager, map) == false) {
+            client_add_request(client, strdup("ko\n"), TO_SEND);
             log_failure_add_to_team(client, client->team_name);
             free(client->team_name);
             client->team_name = NULL;

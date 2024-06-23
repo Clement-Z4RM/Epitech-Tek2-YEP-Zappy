@@ -19,7 +19,5 @@ void pie(
 
     snprintf(response, 50, "pie %lu %lu %d\n", x, y, result);
     SLIST_FOREACH(gui_client, &clients_manager->gui_clients_list, next)
-    {
         client_add_request(gui_client->client, strdup(response), TO_SEND);
-    }
 }

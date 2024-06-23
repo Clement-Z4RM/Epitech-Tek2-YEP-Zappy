@@ -41,17 +41,12 @@ static bool fill_response(char *response, uint8_t level, uint64_t *ids)
 //TODO: error log on len < 0 or len >= MAX_RESPONSE_SIZE
 void pic(uint8_t level, va_list *ap, const clients_manager_t *clients_manager)
 {
-    char *response = malloc(MAX_RESPONSE_SIZE);
+    char response[MAX_RESPONSE_SIZE];
     gui_client_node_t *node = NULL;
     uint64_t *ids = va_arg(*ap, uint64_t *);
 
-    if (response)
-        if (!fill_response(response, level, ids))
-            return;
-    SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
-        if (response)
-            client_add_request(node->client, response, TO_SEND);
-        else
-            client_add_request(node->client, strdup("ko\n"), TO_SEND);
-    }
+    if (!fill_response(response, level, ids))
+        return;
+    SLIST_FOREACH(node, &clients_manager->gui_clients_list, next)
+        client_add_request(node->client, strdup(response), TO_SEND);
 }

@@ -102,6 +102,8 @@ static bool add_to_existing_team(
 
     if (!team->nb_eggs) {
         log_failure_team_full(team->name);
+        printf("team full\n");
+        free(ai_client);
         return false;
     }
     ai_client->client->type = AI;
