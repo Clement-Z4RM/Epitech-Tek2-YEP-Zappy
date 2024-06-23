@@ -58,6 +58,7 @@ namespace gui {
         Parameters _param;
         std::deque<std::string> _map;
         bool _incompleteCase = false;
+        std::deque<std::shared_ptr<Case>> _saveMap;
     };
 
 } // gui
