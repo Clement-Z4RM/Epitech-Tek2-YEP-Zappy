@@ -21,12 +21,14 @@ static void incantation_destructor(incantation_t *incantation)
         SLIST_REMOVE_HEAD(&incantation->players, next);
         free(tmp);
     }
-    CIRCLEQ_REMOVE(
-        incantation->updater.command_updaters,
-        incantation->updater.command_updater,
-        next
-    );
-    free(incantation->updater.command_updater);
+    if (incantation->updater.command_updater) {
+        CIRCLEQ_REMOVE(
+            incantation->updater.command_updaters,
+            incantation->updater.command_updater,
+            next
+        );
+        free(incantation->updater.command_updater);
+    }
     free(incantation);
 }
 
