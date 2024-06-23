@@ -85,8 +85,10 @@ void client_add_request(client_t *client, char *request,
 {
     client_request_node_t *new_node = malloc(sizeof(client_request_node_t));
 
-    if (new_node == NULL)
+    if (new_node == NULL) {
+        free(request);
         return;
+    }
     new_node->request = request;
     if (type == TO_HANDLE) {
         CIRCLEQ_INSERT_HEAD(&client->requests_queue_to_handle, new_node, next);
@@ -101,10 +103,25 @@ void client_add_request(client_t *client, char *request,
 
 void client_destructor(client_t *client)
 {
+    client_request_node_t *request;
+
+    while (!CIRCLEQ_EMPTY(&client->requests_queue_to_handle)) {
+        request = CIRCLEQ_FIRST(&client->requests_queue_to_handle);
+        CIRCLEQ_REMOVE(&client->requests_queue_to_handle, request, next);
+        free(request->request);
+        free(request);
+    }
+    while (!CIRCLEQ_EMPTY(&client->requests_queue_to_send)) {
+        request = CIRCLEQ_FIRST(&client->requests_queue_to_send);
+        CIRCLEQ_REMOVE(&client->requests_queue_to_send, request, next);
+        free(request->request);
+        free(request);
+    }
     if (client->team_name)
         free(client->team_name);
     client_destroy_lists(client);
     close(client->socket);
+    free(client->addr);
     free(client);
 }
 

@@ -18,7 +18,7 @@ void pnw(const ai_client_node_t *ai_client, const clients_manager_t
         snprintf(
             response,
             MAX_RESPONSE_SIZE,
-            "pnw #%lu %zu %zu %d %d %s\n",
+            "pnw %lu %zu %zu %d %d %s\n",
             ai_client->player.id,
             ai_client->player.x,
             ai_client->player.y,

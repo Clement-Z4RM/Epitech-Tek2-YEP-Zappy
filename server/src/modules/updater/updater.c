@@ -72,11 +72,16 @@ static void update(updater_t *updater)
 {
     double life_to_remove = get_life_to_remove(updater);
     team_node_t *team;
+    gui_client_node_t *gui_client;
 
     if (updater->elapsed >= updater->next_generation) {
         updater->map->resources.generate(updater->map);
         updater->next_generation = updater->elapsed +
             updater->generation_interval;
+        SLIST_FOREACH(gui_client,
+            &updater->network->clients_manager->gui_clients_list, next) {
+            mct_event(gui_client, updater);
+        }
     }
     updater_execute_commands(updater);
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
@@ -102,6 +107,13 @@ static void updater_destructor(updater_t *updater)
         free(tmp);
     }
     free(updater);
+}
+
+void init_updater(updater_t *updater)
+{
+    updater->end_of_game = false;
+    updater->update = update;
+    updater->destroy = updater_destructor;
 }
 
 /**
@@ -131,7 +143,6 @@ updater_t *create_updater(network_t *network, map_t *map)
     CIRCLEQ_INIT(&updater->command_updaters);
     updater->network = network;
     updater->map = map;
-    updater->update = update;
-    updater->destroy = updater_destructor;
+    init_updater(updater);
     return updater;
 }

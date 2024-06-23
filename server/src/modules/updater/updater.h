@@ -41,10 +41,16 @@ typedef struct command_updater_data_s {
      * For example, a command that takes 7 ticks (7/f)
      * to execute will have a time of 7 */
     time_t time;
+
     /** @brief The client that requested the command */
     ai_client_node_t *client;
+    /** @brief The id of the client.
+     * Used to check if client is still connected */
+    u_int64_t id;
+
     /** @brief The optional argument of the command updater function.
-     * It should be allocated to avoid memory issues and free if necessary */
+     * It should be allocated to avoid memory issues and free if necessary.
+     * It will be freed if client is disconnected */
     void *arg;
 } command_updater_data_t;
 
@@ -93,6 +99,8 @@ typedef struct updater_s {
     network_t *network;
     /** @brief A pointer to the map structure */
     map_t *map;
+
+    bool end_of_game;
 
     /** @brief The update function */
     void (*update)(struct updater_s *updater);

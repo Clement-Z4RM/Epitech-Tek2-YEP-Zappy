@@ -75,7 +75,6 @@ typedef struct clients_manager_s {
 
     team_list_t team_list; ///< the list of teams
     int nb_teams; ///< actual number of teams
-    int nb_ai_clients; ///< actual number of ai clients
 
     incantations_t incantations; ///< the list of incantations
 
@@ -212,7 +211,10 @@ extern bool client_manager_init_eggs(
     map_t *map
 );
 
-extern void send_default_eggs(team_node_t *team, client_t *client);
+extern void send_default_eggs(
+    team_node_t *team,
+    client_t *client
+);
 
 
 extern void send_init_player_infos(ai_client_node_t *ai_client, map_t *map);

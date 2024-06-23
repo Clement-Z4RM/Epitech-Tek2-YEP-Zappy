@@ -10,6 +10,7 @@
 #include <string.h>
 #include "clients_manager.h"
 #include <stdio.h>
+#include "logs/logs.h"
 
 static void send_gui_default_events(client_t *client, clients_manager_t
     *manager)
@@ -26,8 +27,8 @@ static void send_gui_default_events(client_t *client, clients_manager_t
         SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
             snprintf(ppo_request, 16, "ppo %ld\n", ai_current->player.id);
             client_add_request(client, strdup(ppo_request), TO_HANDLE);
-            send_default_eggs(team_current, client);
         }
+        send_default_eggs(team_current, client);
     }
 }
 
@@ -82,7 +83,6 @@ static void clients_manager_remove_gui(clients_manager_t *manager, client_t
     }
     if (tmp) {
         SLIST_REMOVE(&manager->gui_clients_list, tmp, gui_client_node_s, next);
-        client_destructor(tmp->client);
         free(tmp);
         manager->nb_gui_clients--;
     }
@@ -114,7 +114,6 @@ void clients_manager_remove_ai(clients_manager_t *manager, client_t
         team_current = SLIST_NEXT(team_current, next)) {
         if (check_ai(client, team_current)) {
             team_current->nb_clients--;
-            manager->nb_ai_clients--;
             break;
         }
     }
@@ -122,26 +121,26 @@ void clients_manager_remove_ai(clients_manager_t *manager, client_t
 
 void clients_manager_remove(clients_manager_t *manager, client_t *client)
 {
-    client_node_t *current = NULL;
     client_node_t *tmp = NULL;
 
-    for (current = SLIST_FIRST(&manager->clients_list); current;
+    for (client_node_t *current = SLIST_FIRST(&manager->clients_list); current;
         current = SLIST_NEXT(current, next)) {
-        if (current->client == client) {
+        if (current->client->socket == client->socket) {
             tmp = current;
             break;
         }
     }
     if (tmp) {
+        if (client->type == GUI)
+            clients_manager_remove_gui(manager, client);
+        if (client->type == AI)
+            clients_manager_remove_ai(manager, client);
         SLIST_REMOVE(&manager->clients_list, tmp, client_node_s, next);
         client_destructor(tmp->client);
         free(tmp);
         manager->nb_clients--;
+        LOG_SUCCESS("Client disconnected\n");
     }
-    if (client->type == GUI)
-        clients_manager_remove_gui(manager, client);
-    else if (client->type == AI)
-        clients_manager_remove_ai(manager, client);
 }
 
 static void clients_manager_teams_destructor(clients_manager_t *manager)
@@ -169,7 +168,6 @@ void clients_manager_destructor(clients_manager_t *manager)
     while (!SLIST_EMPTY(&manager->gui_clients_list)) {
         gui_current = SLIST_FIRST(&manager->gui_clients_list);
         SLIST_REMOVE_HEAD(&manager->gui_clients_list, next);
-        client_destructor(gui_current->client);
         free(gui_current);
     }
     clients_manager_teams_destructor(manager);
@@ -189,7 +187,6 @@ clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
     manager->nb_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
-    manager->nb_ai_clients = 0;
     manager->is_game_started = false;
     clients_manager_init_teams(manager, &options->teams);
     if (!client_manager_init_eggs(manager, options, map)) {

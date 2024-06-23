@@ -16,7 +16,7 @@ static void fill_response_with_ai_ids(char *response, uint64_t *ids, int *len)
 
     for (int i = 0; ids[i] != 0; i++) {
         id = ids[i];
-        ret = snprintf(response + *len, MAX_RESPONSE_SIZE - *len, " #%lu", id);
+        ret = snprintf(response + *len, MAX_RESPONSE_SIZE - *len, " %lu", id);
         if (ret < 0 || ret >= MAX_RESPONSE_SIZE - *len)
             return;
         *len += ret;

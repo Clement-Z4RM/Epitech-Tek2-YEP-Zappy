@@ -14,7 +14,7 @@ void pbc(uint64_t id, char *msg, const clients_manager_t *clients_manager)
     gui_client_node_t *node = NULL;
 
     if (response)
-        snprintf(response, MAX_RESPONSE_SIZE, "pbc #%lu %s\n", id, msg);
+        snprintf(response, MAX_RESPONSE_SIZE, "pbc %lu %s\n", id, msg);
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
         if (response)
             client_add_request(node->client, response, TO_SEND);
