@@ -205,7 +205,10 @@ extern bool client_manager_init_eggs(
     map_t *map
 );
 
-extern void send_default_eggs(team_node_t *team, client_t *client);
+extern void send_default_eggs(
+    team_node_t *team,
+    client_t *client
+);
 
 
 extern void send_init_player_infos(ai_client_node_t *ai_client, map_t *map);
