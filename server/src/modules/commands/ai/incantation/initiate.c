@@ -63,6 +63,7 @@ incantation_t *initiate_incantation(ai_handler_data_t *data)
     );
     if (!incantation)
         return NULL;
+    drop_resources(incantation, data->updater->map);
     incantation->destroy = incantation_destructor;
     return incantation;
 }
