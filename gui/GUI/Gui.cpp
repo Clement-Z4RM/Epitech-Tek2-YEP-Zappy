@@ -1,6 +1,9 @@
-//
-// Created by mzucchero on 6/3/24.
-//
+/*
+** EPITECH PROJECT, 2024
+** zappy_gui
+** File description:
+** Gui.cpp
+*/
 
 #include "Gui.hpp"
 
@@ -14,7 +17,7 @@ namespace gui {
                 throw std::runtime_error("Connection failed");
             std::string id = "GRAPHIC\n";
             _client.sendMsg(id);
-            while (_client.isReady() && _client.isParamGet) {
+            while (_client.isParamGet) {
                 _client.readSocket();
                 _client.parseMsg(_client.tmp);
             }
