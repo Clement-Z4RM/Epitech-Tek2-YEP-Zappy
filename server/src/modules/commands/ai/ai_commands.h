@@ -31,6 +31,8 @@ extern void connect_nbr(ai_handler_data_t *data);
 
 extern void fork_command(ai_handler_data_t *data);
 
+extern void eject(ai_handler_data_t *data);
+
 extern void take(ai_handler_data_t *data);
 
 extern void set(ai_handler_data_t *data);
