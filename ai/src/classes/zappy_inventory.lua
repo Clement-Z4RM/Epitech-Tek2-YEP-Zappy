@@ -1,7 +1,9 @@
 --- @class ZappyInventory
+--- @field protected parent ZappyAI
 --- @field public items table<string, number>
 local ZappyInventory = {}
 
+local TerminalColor <const> = require("ai/src/constants/terminal_color")
 local Json <const> = require("ai/src/vendors/json")
 
 --- @param inventory ZappyInventory
@@ -10,9 +12,10 @@ local function classToString(inventory)
 end
 
 --- @return ZappyInventory
-function ZappyInventory.New()
+function ZappyInventory.New(parent)
     local self = setmetatable({}, {__index = ZappyInventory, __tostring = classToString})
 
+    self.parent = parent
     self.items = {}
     return self
 end
@@ -38,7 +41,11 @@ end
 --- @param itemName string
 --- @param quantity number | nil
 function ZappyInventory:Add(itemName, quantity)
+    if quantity == 0 then
+        return
+    end
     quantity = quantity or 1
+    self.parent.logger:Debug(("[%sI%s] Added %sx%s %s%s to the inventory"):format(TerminalColor.LIGHT_BLUE, TerminalColor.RESET, TerminalColor.LIGHT_BLUE, quantity, itemName, TerminalColor.RESET))
     local currentCount <const> = self:Count(itemName)
     if currentCount == 0 then
         self.items[itemName] = quantity

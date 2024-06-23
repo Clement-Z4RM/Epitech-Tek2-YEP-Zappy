@@ -62,6 +62,10 @@ function ZappyCommandsQueue:HandleCommandCallback(dataStr)
         return
     end
     self.parent.logger:Debug(("[%s≪%s] Callback %s%s %scommand (%s#%s%s)"):format(TerminalColor.GREEN, TerminalColor.RESET, TerminalColor.PINK, command.commandStr, TerminalColor.RESET, TerminalColor.PINK, commandId, TerminalColor.RESET))
+    self.commandsHandler[commandId].status = ZappyAICommandStatus.RECEIVED
+    if not command.cb then
+        return
+    end
     command.cb(dataStr)
 end
 
