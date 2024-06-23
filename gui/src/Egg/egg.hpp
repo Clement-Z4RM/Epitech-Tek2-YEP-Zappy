@@ -37,7 +37,7 @@ public:
     void addEgg(int id,int team, int x, int y);
     void deleteEgg(int id);
     bool checkMsg(std::string &s);
-    void renderEggs();
+    void renderEggs(int width, int height, int mapWidth, int mapHeight);
     void layingEgg(std::string &msg);
     void newConnection(std::string &msg);
     void eggHatching(std::string &msg);

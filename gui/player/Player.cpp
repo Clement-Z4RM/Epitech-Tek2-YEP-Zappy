@@ -31,12 +31,12 @@ Player::Player(std::stringstream &s)
     _playerSprite->setTexture(*texture);
     _playerSprite->setScale(0.15, 0.15);
     setPosition(x, y);
+    initPlayerCircle();
 }
 
 void Player::setInventory(std::stringstream &s)
 {
     std::string str;
-    s >> str;
     s >> str;
     _inventory._food = std::stoi(str);
     s >> str;
@@ -82,4 +82,66 @@ std::string Player::getOrientation()
         return "WEST";
     }
     return "azimuth error";
+}
+
+std::shared_ptr<sf::Sprite> Player::getPlayerSprite(int width, int height, int mapWidth, int mapHeight)
+{
+    float squareSize = (width * 0.9 / mapWidth) < (height * 0.9 / mapHeight) ? (width * 0.9 / mapWidth) : (height * 0.9 / mapHeight);
+    float scale = squareSize / 208;
+    _playerSprite->setScale(scale, scale);
+    int posX = _position._x * squareSize + width * 0.5 / 2;
+    int posY = _position._y * squareSize + height * 0.1 / 2;
+    _playerSprite->setPosition(posX, posY);
+    switch (_orientation) {
+    case NORTH:
+        _playerSprite->setOrigin(0, 0);
+        _playerSprite->setRotation(0);
+        break;
+    case EAST:
+        _playerSprite->setOrigin(0, 208);
+        _playerSprite->setRotation(90);
+        break;
+    case SOUTH:
+        _playerSprite->setOrigin(208, 208);
+        _playerSprite->setRotation(180);
+        break;
+    case WEST:
+        _playerSprite->setOrigin(208, 0);
+        _playerSprite->setRotation(270);
+        break;
+    }
+    return _playerSprite;
+}
+
+std::shared_ptr<sf::CircleShape> Player::getPlayerCircle(int width, int height, int mapWidth, int mapHeight)
+{
+    float squareSize = (width * 0.9 / mapWidth) < (height * 0.9 / mapHeight) ? (width * 0.9 / mapWidth) : (height * 0.9 / mapHeight);
+    float scale = squareSize / 100;
+    _playerCircle->setScale(scale, scale);
+    int posX = _position._x * squareSize + width * 0.5 / 2;
+    int posY = _position._y * squareSize + height * 0.1 / 2;
+    _playerCircle->setPosition(posX, posY);
+    return _playerCircle;
+}
+
+sf::Color Player::stringToColor(const std::string &str)
+{
+    std::hash<std::string> hasher;
+    size_t hash = hasher(str);
+    sf::Uint8 r = (hash & 0xFF0000) >> 16;
+    sf::Uint8 g = (hash & 0x00FF00) >> 8;
+    sf::Uint8 b = (hash & 0x0000FF);
+    return sf::Color(r, g, b);
+}
+
+void Player::initPlayerCircle()
+{
+    _playerCircle = std::make_shared<sf::CircleShape>();
+    int posX = _position._x * 32 + 32;
+    int posY = _position._y * 32 + 32;
+    _playerCircle->setOutlineThickness(5);
+    _playerCircle->setOutlineColor(stringToColor(_team));
+    _playerCircle->setPosition(posX, posY);
+    _playerCircle->setRadius(50);
+    _playerCircle->setFillColor(sf::Color::Transparent);
 }

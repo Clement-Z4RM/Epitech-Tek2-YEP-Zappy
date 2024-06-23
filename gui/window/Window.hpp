@@ -38,6 +38,9 @@ public:
     void addPlayerInformation(const std::shared_ptr<Player> &player, std::shared_ptr<Modal> &modal);
     void changePlayer(Parameters &params, int dir);
 
+    unsigned int getWindowWidth() { return _window.getSize().x; }
+    unsigned int getWindowHeight() { return _window.getSize().y; }
+
 private:
     std::shared_ptr<sf::Font> _globalFont;
     sf::RenderWindow _window;
