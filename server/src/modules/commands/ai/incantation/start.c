@@ -64,14 +64,14 @@ static incantation_t *create_incantation(
 }
 
 /**
- * @brief Initiate the incantation.
+ * @brief Start (initiate) an incantation.
  *
  * @param data The structure containing all needed informations.
  *
  * @return The incantation if it was successfully created,
  * NULL otherwise (cf. create_incantation for possible errors).
  */
-incantation_t *initiate_incantation(ai_handler_data_t *data)
+incantation_t *start_incantation(ai_handler_data_t *data)
 {
     u_int8_t level = data->client->player.level;
     incantation_t *incantation;

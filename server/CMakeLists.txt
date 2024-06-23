@@ -163,7 +163,7 @@ add_executable(zappy_server
         src/modules/commands/ai/set.c
         src/modules/commands/ai/incantation/incantation.h
         src/modules/commands/ai/incantation/incantation.c
-        src/modules/commands/ai/incantation/initiate.c
+        src/modules/commands/ai/incantation/start.c
         src/modules/commands/ai/incantation/helpers/player.c
         src/modules/commands/ai/incantation/helpers/resource.c
         #endregion
