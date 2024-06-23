@@ -105,6 +105,7 @@ static bool client_has_team(
     if (client->team_name == NULL) {
         if (add_to_team(client, manager, map) == false) {
             log_failure_add_to_team(client, client->team_name);
+            free(client->team_name);
             client->team_name = NULL;
             return false;
         }
