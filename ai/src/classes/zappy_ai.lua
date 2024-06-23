@@ -7,19 +7,25 @@
 --- @field public status number
 --- @field public worldDimensions {x: number, y: number}
 --- @field protected numTicks number
+--- @field protected isBusy boolean
 local ZappyAI <const> = {}
 
 local Posix <const> = require("posix")
 local Socket <const> = require("socket")
 local Json <const> = require("ai/src/vendors/json")
+local Config <const> = require("ai/src/config")
 
 local ZappyCommandsQueue <const> = require("ai/src/classes/zappy_commands_queue")
 local ZappyAction <const> = require("ai/src/constants/network_zappy_action")
 local ZappyParamsContainer <const> = require("ai/src/classes/zappy_params")
+local ZappyAnswer <const> = require("ai/src/constants/network_zappy_answer")
 local ZappyInventory <const> = require("ai/src/classes/zappy_inventory")
+local TerminalColor <const> = require("ai/src/constants/terminal_color")
 local ZappyAIStatus <const> = require("ai/src/enums/zappy_ai_status")
 local ZappyServer <const> = require("ai/src/classes/zappy_server")
 local ZappyLogger <const> = require("ai/src/classes/zappy_logger")
+local ZappyEnvironment <const> = require("ai/src/classes/zappy_environment")
+local ZappyTask <const> = require("ai/src/enums/zappy_ai_task")
 local Utils <const> = require("ai/src/utils")
 local LookParser <const> = require("ai/src/look_parser")
 
@@ -31,12 +37,13 @@ function ZappyAI.New(args)
     self.logger = ZappyLogger.New()
     self.params = ZappyParamsContainer.New(args)
     self.server = ZappyServer.New(self.params:Get("h"), self.params:Get("p"))
-    self.inventory = ZappyInventory.New()
+    self.inventory = ZappyInventory.New(self)
     self.commandsQueue = ZappyCommandsQueue.New(self)
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
+    self.isBusy = false
     self.numTicks = 0
-    self.level = 0
+    self.level = 1
 
     Posix.signal(Posix.SIGINT, function()
         self.logger:Warn("CTRL + C Pressed in the console, exiting...")
@@ -48,9 +55,28 @@ end
 --[[
     Getters
 --]]
+--- Return true if the ai is playing 
 --- @return boolean
 function ZappyAI:GetIsPlaying()
     return self.status == ZappyAIStatus.PLAYING
+end
+
+--- Get the current level of the AI
+--- @return number
+function ZappyAI:GetLevel()
+    return self.level
+end
+
+--- Return true if the AI is busy (doing an action)
+--- @return boolean
+function ZappyAI:GetIsBusy()
+    return self.isBusy
+end
+
+--- @param targetTask number
+--- @return boolean
+function ZappyAI:HasTo(targetTask)
+    return self.task == targetTask
 end
 
 --[[
@@ -61,6 +87,26 @@ function ZappyAI:SetStatus(status)
     self.status = status
 end
 
+--- @param isBusy boolean
+--- @return void
+function ZappyAI:SetBusy(isBusy)
+    self.isBusy = isBusy
+    self.logger:Debug(("[%sS%s] State updated to: %s%s"):format(TerminalColor.RED, TerminalColor.RESET, isBusy and ("%sbusy"):format(TerminalColor.RED) or ("%savailable"):format(TerminalColor.GREEN), TerminalColor.RESET))
+end
+
+--- @param task number
+--- @return void
+function ZappyAI:SetTask(task)
+    if self.task == task then
+        return
+    end
+    self.task = task
+    self.logger:Debug(("[%sT%s] New task: %s%s%s"):format(TerminalColor.YELLOW, TerminalColor.RESET, TerminalColor.YELLOW, task, TerminalColor.RESET))
+end
+
+--[[
+    Errors
+-]]
 --- @param message string
 --- @return void
 function ZappyAI:Error(message)
@@ -121,15 +167,16 @@ function ZappyAI:SetupInventory()
     for item, quantity in pairs(items) do
         self.inventory:Add(item, quantity)
     end
-    self.logger:Info(("Base inventory: %s"):format(self.inventory))
 end
 
-function ZappyAI:LookupEnvironment()
+--- @param callback fun(environment: ZappyEnvironment) | nil
+function ZappyAI:LookupEnvironment(callback)
     self.commandsQueue:Enqueue(ZappyAction.LOOKUP_ENVIRONMENT, function(answer)
-        local parsedResult <const> = LookParser.Parse(answer)
-        for i, tile in ipairs(parsedResult) do
-            self.logger:Info(("Tile %d: %s"):format(i, table.concat(tile, ", ")))
+        if not callback then
+            return
         end
+        local parsedResult <const> = LookParser.Parse(answer)
+        callback(ZappyEnvironment.New(parsedResult))
     end)
 end
 
@@ -242,39 +289,6 @@ function ZappyAI:StartIncantation()
     end)
 end
 
---- @param command string
---- @return void
-function ZappyAI:HandleCommand(command)
-    local cmd, param = command:match("^(%S+)%s*(.*)$")
-    if cmd == "look" then
-        self:LookupEnvironment()
-    elseif cmd == "inventory" then
-        self:SetupInventory()
-    elseif cmd == "forward" then
-        self:MoveForward()
-    elseif cmd == "right" then
-        self:TurnRight()
-    elseif cmd == "left" then
-        self:TurnLeft()
-    elseif cmd == "broadcast" then
-        self:Broadcast(param)
-    elseif cmd == "connect_nbr" then
-        self:ConnectNbr()
-    elseif cmd == "fork" then
-        self:ForkPlayer()
-    elseif cmd == "eject" then
-        self:Eject()
-    elseif cmd == "take" then
-        self:TakeObject(param)
-    elseif cmd == "set" then
-        self:SetObject(param)
-    elseif cmd == "incantation" then
-        self:StartIncantation()
-    else
-        self.logger:Warn(("Unknown command: %s"):format(command))
-    end
-end
-
 --[[
     AI Core
 --]]
@@ -316,18 +330,18 @@ end
 --- @return void
 function ZappyAI:SetupThreads()
     self:SetupInventory()
-    self:LookupEnvironment()
     
     local tcpListenRoutine <const> = coroutine.create(function() listen(self) end)
     while self:GetIsPlaying() do
         if coroutine.status(tcpListenRoutine) ~= "dead" then
             coroutine.resume(tcpListenRoutine)
         end
-        if not self.commandsQueue:GetIsBusy() then
-            self:IncreaseTickIndex()
-            self:Decide()
+        if not self:GetIsBusy() then
+            self:UpdateTask()
+            self:ExecuteTask()
         end
         self.commandsQueue:Dequeue()
+        self:IncreaseTickIndex()
         Socket.sleep(0.1)
     end
 end
@@ -336,145 +350,122 @@ end
     Main decision maker
 --]]
 
--- Analyze the current state of the AI
-function ZappyAI:AnalyzeState(callback)
-    self:SetupInventory(function()
-        self:LookupEnvironment(function()
-            callback()
-        end)
-    end)
-end
-
 -- Define priorities based on the current state
-function ZappyAI:DefinePriorities()
-    local priorities = {}
+function ZappyAI:UpdateTask()
+    if self.inventory:Count("food") < 13 then
+        self:SetTask(ZappyTask.FIND_FOOD)
+        return
+    end
+    if self:CanElevate() then
+        self:SetTask(ZappyTask.ELEVATE)
+        return
+    end
+    self:SetTask(ZappyTask.FIND_MATERIALS)
+end
 
-    -- Priority 1: Collect food if food is less than 5
-    if self.inventory:Count("food") < 15 then
-        table.insert(priorities, "collect_food")
-    else
-        -- Priority 2: If level >= 4, prioritize elevation and sabotage
-        if self:GetLevel() >= 4 then
-            table.insert(priorities, "sabotage")
-            if self:CanPerformIncantation() then
-                table.insert(priorities, "perform_incantation")
+-- Execute task
+function ZappyAI:ExecuteTask()
+    -- Food task
+    if self:HasTo(ZappyTask.FIND_FOOD) then
+        self:SetBusy(true)
+        self.logger:Debug(("[%sT%s] I need some food !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        self:MoveRandom()
+        
+        self:LookupEnvironment(function(environment)
+            local tileWithFood <const> = environment:GetTileWith("food")
+            if not tileWithFood then
+                self:SetBusy(false)
+                return
             end
-        else
-            -- Priority 3: Elevate if possible
-            if self:CanPerformIncantation() then
-                table.insert(priorities, "perform_incantation")
+            if tileWithFood:GetPosition() == 0 then
+                self:Take("food", function()
+                    self:SetBusy(false)
+                end)
+                return
             end
-        end
+            self:WalkToTile(tileWithFood:GetPosition(), function()
+                self:Take("food", function()
+                    self:SetBusy(false)
+                end)
+                return
+            end)
+        end)
+        return
     end
 
-    return priorities
-end
-
--- Execute actions based on the defined priorities
-function ZappyAI:ExecuteActions(priorities)
-    for _, priority in ipairs(priorities) do
-        if priority == "collect_food" then
-            self:FindAndCollectFood()
-        elseif priority == "perform_incantation" then
-            self:StartIncantation()
-        elseif priority == "sabotage" then
-            self:SabotageEnemies()
-        end
+    -- Elevation task
+    if self:HasTo(ZappyTask.ELEVATE) then
+        self.logger:Debug(("[%sT%s] I to elevate !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        return
     end
-end
 
---- Find food in the environment from the Look command response
---- @return number|nil
-function ZappyAI:FindFoodInEnvironment()
-    local tiles = self:LookupEnvironment()
-    for index, tile in ipairs(tiles) do
-        if tile:Contains("food") then
-            return index
-        end
-    end
-    return nil
-end
-
-
---- Find and collect food
-function ZappyAI:FindAndCollectFood()
-    local foodTileIndex = self:FindFoodInEnvironment()
-    if foodTileIndex then
-        self:MoveToTile(foodTileIndex)
-        self:TakeObject("food")
-    else
-        self:Explore()
+    -- Finding materials task
+    if self:HasTo(ZappyTask.FIND_MATERIALS) then
+        self.logger:Debug(("[%sT%s] I need to find some materials to elevate !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        return
     end
 end
 
---- Move to a specific tile
---- @param tile number
-function ZappyAI:MoveToTile(tile)
-    local currentTile = 1
-
-    while currentTile ~= tile do
-        if currentTile < tile then
-            self:MoveForward()
-            currentTile = currentTile + 1
-        elseif currentTile > tile then
-            self:TurnLeft()
-            self:MoveForward()
-            self:TurnRight()
-            currentTile = currentTile - 1
-        end
-    end
-end
-
---- Explore the environment
-function ZappyAI:Explore()
-    self:MoveForward()
-end
-
---- Get the current level of the AI
---- @return number
-function ZappyAI:GetLevel()
-    return self.level
-end
-
---- Check if the AI can perform an incantation
+--- Return true if the AI has enough items to elevate to the next level
 --- @return boolean
-function ZappyAI:CanPerformIncantation()
-    local level = self.level
-    local inventory = self.inventory
-    local requirements = {
-        [1] = { linemate = 1 },
-        [2] = { linemate = 1, deraumere = 1, sibur = 1 },
-        [3] = { linemate = 2, sibur = 1, phiras = 2 },
-        [4] = { linemate = 1, deraumere = 1, sibur = 2, phiras = 1 },
-        [5] = { linemate = 1, deraumere = 2, sibur = 1, mendiane = 3 },
-        [6] = { linemate = 1, deraumere = 2, sibur = 3, phiras = 1 },
-        [7] = { linemate = 2, deraumere = 2, sibur = 2, mendiane = 2, phiras = 2, thystame = 1 }
-    }
-    local currentRequirements = requirements[level]
+function ZappyAI:CanElevate()
+    local currentLevel <const> = self:GetLevel()
 
-    if not currentRequirements then
+    if currentLevel == Config.MaxLevel then
         return false
     end
-    for item, count in pairs(currentRequirements) do
-        if inventory:Count(item) < count then
+    local nextElevationCfg <const> = Config.ElevationRequirements[currentLevel]
+    if not nextElevationCfg then
+        return false
+    end
+    for itemName, requiredQuantity in pairs(nextElevationCfg.items) do
+        if not self.inventory:Has(itemName, requiredQuantity) then
             return false
         end
     end
     return true
 end
 
-function ZappyAI:SabotageEnemies()
-    return;
+--[[
+    AI Actions
+--]]
+--- @param tileIndex number
+--- @param callback fun()
+function ZappyAI:WalkToTile(tileIndex, callback)
+    local actions <const> = Utils.GetActionsToTile(tileIndex)
+
+    if not actions then
+        return error("Tile index is invalid")
+    end
+    for actionIndex, action in ipairs(actions) do
+        if actionIndex == #actions then
+            self.commandsQueue:Enqueue(action, callback)
+        else
+            self.commandsQueue:Enqueue(action)
+        end
+    end
 end
 
---- Main decision maker function
-function ZappyAI:Decide()
-    -- Analyze the current state
-    self:AnalyzeState()
-     -- Define priorities
-     local priorities = self:DefinePriorities()
-     -- Execute actions based on priorities
-     self:ExecuteActions(priorities)
+--- @param itemName string
+--- @param callback fun(isSuccess: boolean)
+function ZappyAI:Take(itemName, callback)
+    self.commandsQueue:Enqueue(ZappyAction.TAKE_OBJECT, function(answer)
+        if answer ~= ZappyAnswer.EXECUTED then
+            return callback(false)
+        end
+        self.inventory:Add(itemName)
+        return callback(true)
+    end, {itemName})
+end
+
+function ZappyAI:MoveRandom()
+    local possibilities <const> = {ZappyAction.MOVE_FORWARD, ZappyAction.MOVE_RIGHT, ZappyAction.MOVE_LEFT}
+    local action <const> = possibilities[math.random(#possibilities)]
+    self.commandsQueue:Enqueue(action, function(answer)
+        if answer ~= ZappyAnswer.EXECUTED then
+            self.logger:Warn(("Action %sMoveRandom%s failed !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        end
+    end)
 end
 
 -- Export
