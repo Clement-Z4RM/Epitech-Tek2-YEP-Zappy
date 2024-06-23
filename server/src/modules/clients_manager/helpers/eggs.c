@@ -26,7 +26,8 @@ void send_default_eggs(team_node_t *team, client_t *client)
             egg_current->egg->x, egg_current->egg->y);
         client_add_request(client, strdup(request), TO_HANDLE);
         LOG_SUCCESS("enw sended successfully: %ld %d %ld %ld\n",
-            egg_current->egg->id, -1, egg_current->egg->x, egg_current->egg->y);
+            egg_current->egg->id, -1,
+            egg_current->egg->x, egg_current->egg->y);
     }
 }
 
