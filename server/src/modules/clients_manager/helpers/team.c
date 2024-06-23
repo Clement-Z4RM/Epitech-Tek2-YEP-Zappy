@@ -35,7 +35,6 @@ void clients_manager_team_destructor(team_node_t *team)
     while (!SLIST_EMPTY(&team->ai_clients)) {
         current = SLIST_FIRST(&team->ai_clients);
         SLIST_REMOVE_HEAD(&team->ai_clients, next);
-        client_destructor(current->client);
         free(current);
     }
     free(team->name);
@@ -94,6 +93,7 @@ static bool add_to_existing_team(
         log_failure_team_full(team->name);
         return false;
     }
+    ai_client->client->type = AI;
     initialize_player(ai_client, map, team, id);
     ++id;
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
