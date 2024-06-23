@@ -36,6 +36,7 @@ function ZappyAI.New(args)
     self.status = ZappyAIStatus.CONNECTING
     self.worldDimensions = {}
     self.numTicks = 0
+    self.level = 0
 
     Posix.signal(Posix.SIGINT, function()
         self.logger:Warn("CTRL + C Pressed in the console, exiting...")
@@ -334,9 +335,146 @@ end
 --[[
     Main decision maker
 --]]
+
+-- Analyze the current state of the AI
+function ZappyAI:AnalyzeState(callback)
+    self:SetupInventory(function()
+        self:LookupEnvironment(function()
+            callback()
+        end)
+    end)
+end
+
+-- Define priorities based on the current state
+function ZappyAI:DefinePriorities()
+    local priorities = {}
+
+    -- Priority 1: Collect food if food is less than 5
+    if self.inventory:Count("food") < 15 then
+        table.insert(priorities, "collect_food")
+    else
+        -- Priority 2: If level >= 4, prioritize elevation and sabotage
+        if self:GetLevel() >= 4 then
+            table.insert(priorities, "sabotage")
+            if self:CanPerformIncantation() then
+                table.insert(priorities, "perform_incantation")
+            end
+        else
+            -- Priority 3: Elevate if possible
+            if self:CanPerformIncantation() then
+                table.insert(priorities, "perform_incantation")
+            end
+        end
+    end
+
+    return priorities
+end
+
+-- Execute actions based on the defined priorities
+function ZappyAI:ExecuteActions(priorities)
+    for _, priority in ipairs(priorities) do
+        if priority == "collect_food" then
+            self:FindAndCollectFood()
+        elseif priority == "perform_incantation" then
+            self:StartIncantation()
+        elseif priority == "sabotage" then
+            self:SabotageEnemies()
+        end
+    end
+end
+
+--- Find food in the environment from the Look command response
+--- @return number|nil
+function ZappyAI:FindFoodInEnvironment()
+    local tiles = self:LookupEnvironment()
+    for index, tile in ipairs(tiles) do
+        if tile:Contains("food") then
+            return index
+        end
+    end
+    return nil
+end
+
+
+--- Find and collect food
+function ZappyAI:FindAndCollectFood()
+    local foodTileIndex = self:FindFoodInEnvironment()
+    if foodTileIndex then
+        self:MoveToTile(foodTileIndex)
+        self:TakeObject("food")
+    else
+        self:Explore()
+    end
+end
+
+--- Move to a specific tile
+--- @param tile number
+function ZappyAI:MoveToTile(tile)
+    local currentTile = 1
+
+    while currentTile ~= tile do
+        if currentTile < tile then
+            self:MoveForward()
+            currentTile = currentTile + 1
+        elseif currentTile > tile then
+            self:TurnLeft()
+            self:MoveForward()
+            self:TurnRight()
+            currentTile = currentTile - 1
+        end
+    end
+end
+
+--- Explore the environment
+function ZappyAI:Explore()
+    self:MoveForward()
+end
+
+--- Get the current level of the AI
+--- @return number
+function ZappyAI:GetLevel()
+    return self.level
+end
+
+--- Check if the AI can perform an incantation
+--- @return boolean
+function ZappyAI:CanPerformIncantation()
+    local level = self.level
+    local inventory = self.inventory
+    local requirements = {
+        [1] = { linemate = 1 },
+        [2] = { linemate = 1, deraumere = 1, sibur = 1 },
+        [3] = { linemate = 2, sibur = 1, phiras = 2 },
+        [4] = { linemate = 1, deraumere = 1, sibur = 2, phiras = 1 },
+        [5] = { linemate = 1, deraumere = 2, sibur = 1, mendiane = 3 },
+        [6] = { linemate = 1, deraumere = 2, sibur = 3, phiras = 1 },
+        [7] = { linemate = 2, deraumere = 2, sibur = 2, mendiane = 2, phiras = 2, thystame = 1 }
+    }
+    local currentRequirements = requirements[level]
+
+    if not currentRequirements then
+        return false
+    end
+    for item, count in pairs(currentRequirements) do
+        if inventory:Count(item) < count then
+            return false
+        end
+    end
+    return true
+end
+
+function ZappyAI:SabotageEnemies()
+    return;
+end
+
 --- Main decision maker function
---- TODO: Implement
 function ZappyAI:Decide()
+    -- Analyze the current state
+    self:AnalyzeState()
+     -- Define priorities
+     local priorities = self:DefinePriorities()
+     -- Execute actions based on priorities
+     self:ExecuteActions(priorities)
 end
 
 -- Export
