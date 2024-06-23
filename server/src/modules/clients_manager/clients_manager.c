@@ -10,6 +10,7 @@
 #include <string.h>
 #include "clients_manager.h"
 #include <stdio.h>
+#include "logs/logs.h"
 
 static void send_gui_default_events(client_t *client, clients_manager_t
     *manager)
@@ -127,21 +128,22 @@ void clients_manager_remove(clients_manager_t *manager, client_t *client)
 
     for (current = SLIST_FIRST(&manager->clients_list); current;
         current = SLIST_NEXT(current, next)) {
-        if (current->client == client) {
+        if (current->client->socket == client->socket) {
             tmp = current;
             break;
         }
     }
     if (tmp) {
+        if (client->type == GUI)
+            clients_manager_remove_gui(manager, client);
+        else if (client->type == AI)
+            clients_manager_remove_ai(manager, client);
         SLIST_REMOVE(&manager->clients_list, tmp, client_node_s, next);
         client_destructor(tmp->client);
         free(tmp);
         manager->nb_clients--;
+        LOG_SUCCESS("Client disconnected");
     }
-    if (client->type == GUI)
-        clients_manager_remove_gui(manager, client);
-    else if (client->type == AI)
-        clients_manager_remove_ai(manager, client);
 }
 
 static void clients_manager_teams_destructor(clients_manager_t *manager)
