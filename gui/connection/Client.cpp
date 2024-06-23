@@ -157,7 +157,6 @@ namespace gui {
         if (_map.empty())
             return;
         for (auto &i : _map) {
-            std::cout << i << std::endl;
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
             else if (i.find("pnw") != std::string::npos)
