@@ -132,6 +132,7 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/tna.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
+        src/modules/commands/gui/handlers/plv.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
         src/modules/commands/gui/events/plv.c
@@ -147,6 +148,15 @@ add_executable(zappy_server
         src/modules/commands/gui/events/sbp.c
         src/modules/commands/gui/events/edi.c
         src/modules/commands/gui/events/ebo.c
+        src/modules/commands/gui/events/ppo_event.c
+        src/modules/logs/successes/events/pdi_success.c
+        src/modules/logs/successes/events/forward_success.c
+        src/modules/logs/successes/events/broadcast_success.c
+        src/modules/logs/successes/events/look_success.c
+        src/modules/logs/successes/events/turn_success.c
+        src/modules/logs/successes/events/set_success.c
+        src/modules/logs/successes/events/take_success.c
+        src/modules/logs/successes/events/fork_success.c
         src/modules/commands/ai/ai_commands.h
         src/modules/commands/ai/forward.c
         src/modules/commands/ai/turn.c

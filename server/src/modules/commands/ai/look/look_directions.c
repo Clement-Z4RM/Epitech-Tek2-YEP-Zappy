@@ -36,6 +36,7 @@ char *look_north(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
+    buffer[4095] = '\0';
     buffer[0] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_x_left(cell, i, x_forward);
@@ -75,6 +76,7 @@ char *look_south(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
+    buffer[4095] = '\0';
     buffer[0] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_x_right(cell, i, x_forward);
@@ -114,6 +116,7 @@ char *look_west(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
+    buffer[4095] = '\0';
     buffer[0] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_y_down(cell, i, y_forward);
@@ -153,6 +156,7 @@ char *look_east(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
+    buffer[4095] = '\0';
     buffer[0] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_y_up(cell, i, y_forward);

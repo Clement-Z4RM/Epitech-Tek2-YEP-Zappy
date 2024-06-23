@@ -18,6 +18,7 @@ static void right_updater(
     client->client->busy = false;
     player_turn(client, PR_RIGHT);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
+    ppo_event(client, updater->network->clients_manager);
 }
 
 /**
@@ -39,6 +40,7 @@ void right(ai_handler_data_t *data)
 
     data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, right_updater);
+    log_success_turn(&data->client->player);
 }
 
 static void left_updater(
@@ -50,6 +52,8 @@ static void left_updater(
     client->client->busy = false;
     player_turn(client, PR_LEFT);
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
+    ppo_event(client, updater->network->clients_manager);
+    log_success_turn(&client->player);
 }
 
 /**

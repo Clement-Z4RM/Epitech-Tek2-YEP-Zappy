@@ -16,10 +16,10 @@ void pgt(uint64_t id, resource_name_t resource,
 
     if (response)
         snprintf(response, MAX_RESPONSE_SIZE, "pgt #%lu %d\n", id, resource);
+    else
+        return;
     SLIST_FOREACH(node, &client_manager->gui_clients_list, next) {
-        if (response)
-            client_add_request(node->client, response, TO_SEND);
-        else
-            client_add_request(node->client, strdup("ko\n"), TO_SEND);
+        client_add_request(node->client, response, TO_SEND);
     }
+    log_success_take(id, resource);
 }

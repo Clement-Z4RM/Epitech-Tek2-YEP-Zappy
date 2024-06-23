@@ -18,6 +18,7 @@ static void fork_updater(
         updater->network->clients_manager,
         client
     );
+    coords_t coords = {client->player.x, client->player.y};
 
     client->client->busy = false;
     if (!team) {
@@ -29,6 +30,9 @@ static void fork_updater(
         return;
     }
     client_add_request(client->client, strdup("ok\n"), TO_SEND);
+    enw(updater->map->egg_id - 1, client->player.id,
+        updater->network->clients_manager, &coords);
+    log_success_fork(client);
 }
 
 /**

@@ -66,6 +66,16 @@ static const ai_request_handler_t AI_HANDLERS[] = {
 #define AI_HANDLERS_COUNT sizeof(AI_HANDLERS) / sizeof(ai_request_handler_t)
 
 /** @brief the list of gui request handlers **/
-static const gui_request_handler_t GUI_HANDLERS[] = {0};
+static const gui_request_handler_t GUI_HANDLERS[] = {
+    {"msz", msz},
+    {"bct", bct},
+    {"mct", mct},
+    {"pin", pin},
+    {"ppo", ppo},
+    {"plv", plv},
+    {"sgt", sgt},
+    {"sst", sst},
+    {"tna", tna}
+};
 
 #define GUI_HANDLERS_COUNT sizeof(GUI_HANDLERS) / sizeof(gui_request_handler_t)

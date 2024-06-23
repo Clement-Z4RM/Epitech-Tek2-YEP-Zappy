@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "../gui_commands.h"
+#include "requests_manager/requests_manager.h"
 
 static void send_team(char *name, client_t *client)
 {
