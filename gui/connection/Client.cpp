@@ -106,7 +106,10 @@ namespace gui {
         for (int i = 0; i < msg.size(); i++) {
             if (msg[i] == '\n') {
                 if (_incompleteCase) {
-                    _map.back().append(msg.substr(0, i));
+                    if (_map.empty())
+                        _map.push_back(msg.substr(0, i));
+                    else
+                        _map.back().append(msg.substr(0, i));
                     _incompleteCase = false;
                     msg = msg.substr(i + 1);
                     i = 0;
