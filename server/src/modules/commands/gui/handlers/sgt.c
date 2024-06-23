@@ -19,7 +19,7 @@ void sgt(gui_handler_data_t *data)
         return;
     }
     snprintf(response, MAX_RESPONSE_SIZE, "sgt %lu\n",
-        1 / data->updater->network->options->freq
+        data->updater->network->options->freq
     );
     client_add_request(data->gui_client->client, response, TO_SEND);
     log_success_sgt(data->gui_client->client);

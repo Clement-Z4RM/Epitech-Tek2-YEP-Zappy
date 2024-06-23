@@ -42,10 +42,10 @@ static void incantation_updater(
     char response[20];
 
     client->client->busy = false;
-    if (!cell_contains_required_resources(incantation, cell))
+    if (!cell_contains_required_resources(incantation->level, cell))
         add_request_to_all_players(incantation, "ko\n");
     else {
-        remove_incantation_resources(incantation, cell);
+        remove_incantation_resources(incantation->level, cell);
         elevate_players(incantation);
         snprintf(response, 20, "Current level: %d\n", incantation->level + 1);
         add_request_to_all_players(incantation, response);

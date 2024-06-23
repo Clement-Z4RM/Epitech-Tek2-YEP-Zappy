@@ -8,45 +8,18 @@
 #include "../incantation.h"
 
 /**
- * @brief Check if the player have the required resources
- * for the current level of incantation.
- *
- * @param player The player to check resources.
- * @param level The level of the incantation.
- *
- * @return true if the player have the required resources, false otherwise.
- */
-static bool player_have_required_resources(
-    player_t *player,
-    u_int8_t level
-)
-{
-    for (resource_name_t resource = 0; resource < RESOURCES_COUNT; ++resource)
-        if (player->resources[resource] <
-            INCANTATIONS_REQUIREMENTS[level].resources[resource])
-            return false;
-    return true;
-}
-
-/**
  * @brief Add a player to the incantation.
- * If the player haven't the required resources for the incantation,
- * it will not be added.
  *
  * @param incantation The incantation to add the player.
  * @param client The client to add to the incantation.
  *
- * @return
- *  - true if the player was added to the incantation,
- *  - true if the player haven't the required resources (not added),
- *  - false if an allocation error occurred.
+ * @return true if the player was added to the incantation,
+ * false otherwise (allocation error).
  */
 static bool add_player(incantation_t *incantation, ai_client_node_t *client)
 {
     incantation_player_t *player;
 
-    if (!player_have_required_resources(&client->player, incantation->level))
-        return true;
     player = malloc(sizeof(incantation_player_t));
     if (!player)
         return false;
@@ -57,7 +30,7 @@ static bool add_player(incantation_t *incantation, ai_client_node_t *client)
 }
 
 /**
- * @brief Add all the eligible players (with required level and resources)
+ * @brief Add all the eligible players (with required level)
  * of a team to the incantation.
  *
  * @param incantation The incantation to add the players.
@@ -85,7 +58,7 @@ static bool add_team_players(
 }
 
 /**
- * @brief Add all the eligible players (with required level and resources)
+ * @brief Add all the eligible players (with required level)
  * to the incantation.
  *
  * @param incantation The incantation to add the players.

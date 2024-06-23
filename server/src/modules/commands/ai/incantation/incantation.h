@@ -175,15 +175,13 @@ extern bool add_players_to_incantation(
     team_list_t *teams
 );
 
-extern void drop_resources(incantation_t *incantation, map_t *map);
-
 extern bool cell_contains_required_resources(
-    incantation_t *incantation,
+    u_int8_t level,
     cell_t *cell
 );
 
 extern void remove_incantation_resources(
-    incantation_t *incantation,
+    u_int8_t level,
     cell_t *cell
 );
 
