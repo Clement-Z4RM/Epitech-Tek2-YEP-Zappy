@@ -16,11 +16,12 @@
 #include "macros.h"
 #include "utilities.h"
 
-static void check_game_have_started(clients_manager_t *clients_manager, map_t
-    *map)
+static void check_game_have_started(updater_t *updater)
 {
     team_node_t *current_team = NULL;
     ai_client_node_t *current_client = NULL;
+    map_t *map = updater->map;
+    clients_manager_t *clients_manager = updater->network->clients_manager;
 
     SLIST_FOREACH(current_team, &clients_manager->team_list, next) {
         if (current_team->nb_clients == 0)
@@ -32,6 +33,7 @@ static void check_game_have_started(clients_manager_t *clients_manager, map_t
         }
     }
     clients_manager->is_game_started = true;
+    updater->start = mstime(NULL);
 }
 
 /**
