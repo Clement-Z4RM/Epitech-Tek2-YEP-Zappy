@@ -33,6 +33,13 @@ typedef struct incantation_players_s incantation_players_t;
 typedef struct incantation_s {
     u_int8_t level;
     incantation_players_t players;
+    u_int64_t x;
+    u_int64_t y;
+    struct {
+        command_updater_t *command_updater;
+        command_updaters_t *command_updaters;
+    } updater;
+    void (*destroy)(struct incantation_s *incantation);
     SLIST_ENTRY(incantation_s) next;
 } incantation_t;
 

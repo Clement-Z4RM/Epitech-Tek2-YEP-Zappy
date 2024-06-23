@@ -9,7 +9,7 @@
 
 // TODO: doc
 
-void incantation_destructor(incantation_t *incantation)
+static void incantation_destructor(incantation_t *incantation)
 {
     incantation_player_t *tmp;
 
@@ -18,6 +18,12 @@ void incantation_destructor(incantation_t *incantation)
         SLIST_REMOVE_HEAD(&incantation->players, next);
         free(tmp);
     }
+    CIRCLEQ_REMOVE(
+        incantation->updater.command_updaters,
+        incantation->updater.command_updater,
+        next
+    );
+    free(incantation->updater.command_updater);
     free(incantation);
 }
 
@@ -76,5 +82,6 @@ incantation_t *initiate_incantation(ai_handler_data_t *data)
     incantation = create_incantation(level, &data->clients_manager->team_list);
     if (!incantation)
         return NULL;
+    incantation->destroy = incantation_destructor;
     return incantation;
 }
