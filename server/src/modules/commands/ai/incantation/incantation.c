@@ -77,7 +77,11 @@ void incantation(ai_handler_data_t *data)
         return;
     }
     add_request_to_all_players(incantation, "Elevation underway\n");
+    SLIST_INSERT_HEAD(&data->updater->network->clients_manager->incantations,
+        incantation, next);
     updater_data.arg = (void *)incantation;
     data->client->client->busy = true;
-    updater_add_command(data->updater, &updater_data, incantation_updater);
+    incantation->updater.command_updaters = &data->updater->command_updaters;
+    incantation->updater.command_updater = updater_add_command(data->updater,
+        &updater_data, incantation_updater);
 }

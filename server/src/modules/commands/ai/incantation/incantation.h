@@ -63,12 +63,6 @@ typedef struct incantation_s {
 } incantation_t;
 
 /**
- * @brief Incantations list
- */
-SLIST_HEAD(incantations_s, incantation_s);
-typedef struct incantations_s incantations_t;
-
-/**
  * @brief Incantation's requirements entry.
  */
 typedef struct incantation_requirements_s {

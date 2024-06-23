@@ -185,6 +185,7 @@ clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
     SLIST_INIT(&manager->clients_list);
     SLIST_INIT(&manager->gui_clients_list);
     SLIST_INIT(&manager->team_list);
+    SLIST_INIT(&manager->incantations);
     manager->nb_clients = 0;
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
