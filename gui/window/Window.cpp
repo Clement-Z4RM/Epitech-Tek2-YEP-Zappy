@@ -20,7 +20,7 @@ Window::Window()
 
 Window::~Window() = default;
 
-void Window::run(Parameters &params)
+void Window::run(Parameters &params, const gui::Client& client)
 {
     if (_window.isOpen()) {
         getEvent(params);
@@ -32,6 +32,7 @@ void Window::run(Parameters &params)
         for (auto &p : params._eggs._eggsShapes) {
             _window.draw(*p);
         }
+        params._eggs.displayEggs(_window);
         unsigned int width = _window.getSize().x;
         unsigned int height = _window.getSize().y;
         int mapWidth = params._width;

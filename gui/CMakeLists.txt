@@ -3,7 +3,7 @@ project(zappy_gui)
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/..)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -26,8 +26,6 @@ add_executable(zappy_gui
         window/Modal.cpp
         src/Egg/egg.hpp
         src/Egg/egg.cpp
-        src/setting/SettingMenu.cpp
-        src/setting/SettingMenu.hpp
 )
 
 target_link_libraries(zappy_gui PRIVATE sfml-graphics sfml-window sfml-system)

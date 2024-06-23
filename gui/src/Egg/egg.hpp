@@ -14,6 +14,35 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+class Button {
+public:
+    enum ButtonState {
+        BUTTON,
+        BUTTON_OFF
+    };
+
+    Button(const std::string &text, sf::Vector2f position);
+
+    ~Button() = default;
+
+    void changeTexture();
+
+    std::string getTextureButtonPath() { return _textureButtonPath; }
+
+    std::string getTextureButtonOffPath() { return _textureButtonOffPath; }
+
+    sf::Sprite _sprite;
+    sf::Text _text;
+    ButtonState _state;
+private:
+    sf::Vector2f _position;
+    sf::Texture _texture;
+    std::string _textureButtonPath = "./gui/resources/Button.png";
+    std::string _textureButtonOffPath = "./gui/resources/ButtonOff.png";
+    sf::Font _font;
+    std::string _fontPath = "./gui/resources/font.ttf";
+};
+
 class Egg {
 public:
     Egg(int id, int team, int x, int y);
@@ -41,7 +70,11 @@ public:
     void layingEgg(std::string &msg);
     void newConnection(std::string &msg);
     void eggHatching(std::string &msg);
+    void checkClick(sf::RenderWindow &window);
+    void displayEggs(sf::RenderWindow &window);
+    sf::Sprite getEggButtonSprite() { return _eggButton->_sprite; }
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
+    std::shared_ptr<Button> _eggButton;
 
 private:
     std::vector<std::shared_ptr<Egg>> _eggs;
