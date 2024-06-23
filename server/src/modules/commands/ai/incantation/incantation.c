@@ -8,7 +8,7 @@
 #include <string.h>
 #include "incantation.h"
 
-static void add_request_to_all_players(
+void add_request_to_all_players(
     incantation_t *incantation,
     const char *request
 )

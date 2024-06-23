@@ -179,6 +179,11 @@ extern void remove_incantation_resources(
     cell_t *cell
 );
 
+extern void add_request_to_all_players(
+    incantation_t *incantation,
+    const char *request
+);
+
 extern incantation_t *start_incantation(ai_handler_data_t *data);
 
 extern void cancel_incantation(incantation_t *incantation);
