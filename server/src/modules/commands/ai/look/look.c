@@ -10,28 +10,28 @@
 
 void back_to_x_left(cell_t *cell, int stage, int x_forward)
 {
-    for (int i = 0; i < stage + x_forward; i++) {
+    for (int i = 1; i < stage + x_forward; i++) {
         cell = cell->left;
     }
 }
 
 void back_to_x_right(cell_t *cell, int stage, int x_forward)
 {
-    for (int i = 0; i < stage + x_forward; i++) {
+    for (int i = 1; i < stage + x_forward; i++) {
         cell = cell->right;
     }
 }
 
 void back_to_y_up(cell_t *cell, int stage, int y_forward)
 {
-    for (int i = 0; i < stage + y_forward; i++) {
+    for (int i = 1; i < stage + y_forward; i++) {
         cell = cell->up;
     }
 }
 
 void back_to_y_down(cell_t *cell, int stage, int y_forward)
 {
-    for (int i = 0; i < stage + y_forward; i++) {
+    for (int i = 1; i < stage + y_forward; i++) {
         cell = cell->down;
     }
 }

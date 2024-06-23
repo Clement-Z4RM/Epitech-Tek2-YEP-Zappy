@@ -13,7 +13,7 @@ void fill_resource(char **current_cell, int i)
     char tmp_buffer[256];
     char *tmp = NULL;
 
-    snprintf(tmp_buffer, sizeof(tmp_buffer), " %s", RESOURCE_NAMES[i]);
+    snprintf(tmp_buffer, sizeof(tmp_buffer), "%s", RESOURCE_NAMES[i]);
     if (*current_cell) {
         tmp = *current_cell;
         *current_cell = malloc(strlen(*current_cell) + strlen(tmp_buffer) + 1);
@@ -38,6 +38,8 @@ void fill_current_cell_resource(cell_t *cell, char **current_cell)
         if (cell->resources[i] > 0) {
             fill_resource(current_cell, i);
         }
+        if (i != 0 && i + 1 < RESOURCES_COUNT)
+            snprintf(*current_cell + strlen(*current_cell), 256, " ");
     }
 }
 
@@ -74,7 +76,7 @@ void fill_cell_info(cell_t *cell, char *buffer)
         fill_player(&current_cell);
     }
     fill_current_cell_resource(cell, &current_cell);
-    if (current_cell) {
+    if (current_cell && current_cell[0] != '\0') {
         strncpy(buffer, current_cell, 255);
         buffer[255] = '\0';
         free(current_cell);
