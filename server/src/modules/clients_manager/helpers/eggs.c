@@ -5,6 +5,7 @@
 ** eggs.c
 */
 
+#include <string.h>
 #include <math.h>
 #include <stdlib.h>
 #include "eggs.h"
@@ -15,16 +16,16 @@
 void send_default_eggs(team_node_t *team, client_t *client)
 {
     team_egg_t *egg_current = NULL;
-    char *enw_request = NULL;
+    char enw_request[43];
 
     SLIST_FOREACH(egg_current, &team->eggs, next) {
         snprintf(
-            enw_request, 1024, "enw #%ld #-1 %ld %ld\n",
+            enw_request, 43, "enw #%ld #-1 %ld %ld\n",
             egg_current->egg->id,
             egg_current->egg->x,
             egg_current->egg->y
         );
-        client_add_request(client, enw_request, TO_SEND);
+        client_add_request(client, strdup(enw_request), TO_SEND);
     }
 }
 

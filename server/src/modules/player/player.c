@@ -38,14 +38,12 @@ static team_egg_t *get_random_team_egg(team_node_t *team)
 
 static void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
 {
-    char *map_response = NULL;
-    char *client_num_response = NULL;
+    char client_id_response[13];
+    char map_response[23];
 
-    snprintf(client_num_response,
-        MAX_RESPONSE_SIZE, "#%lu\n", ai_client->player.id);
-    snprintf(map_response,
-        MAX_RESPONSE_SIZE, "%lu %lu\n", map->x,
-        map->y);
+    snprintf(client_id_response, 13, "#%lu\n", ai_client->player.id);
+    snprintf(map_response, 23, "%lu %lu\n", map->x, map->y);
+    client_add_request(ai_client->client, strdup(client_id_response), TO_SEND);
     client_add_request(ai_client->client, strdup(map_response), TO_SEND);
 }
 

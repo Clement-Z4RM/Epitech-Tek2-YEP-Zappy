@@ -16,7 +16,7 @@ static void send_gui_default_events(client_t *client, clients_manager_t
 {
     team_node_t *team_current = NULL;
     ai_client_node_t *ai_current = NULL;
-    char *ppo_request = NULL;
+    char ppo_request[16];
 
     client_add_request(client, strdup("msz\n"), TO_HANDLE);
     client_add_request(client, strdup("sgt\n"), TO_HANDLE);
@@ -24,8 +24,8 @@ static void send_gui_default_events(client_t *client, clients_manager_t
     client_add_request(client, strdup("tna\n"), TO_HANDLE);
     SLIST_FOREACH(team_current, &manager->team_list, next) {
         SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
-            snprintf(ppo_request, 1024, "ppo %ld\n", ai_current->player.id);
-            client_add_request(client, ppo_request, TO_HANDLE);
+            snprintf(ppo_request, 16, "ppo %ld\n", ai_current->player.id);
+            client_add_request(client, strdup(ppo_request), TO_HANDLE);
             send_default_eggs(team_current, client);
         }
     }
