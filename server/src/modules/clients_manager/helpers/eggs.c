@@ -18,12 +18,15 @@
 void send_default_eggs(team_node_t *team, client_t *client)
 {
     team_egg_t *egg_current = NULL;
-    coords_t coords = {0, 0};
+    char request[134];
 
     SLIST_FOREACH(egg_current, &team->eggs, next) {
-        coords.x = egg_current->egg->x;
-        coords.y = egg_current->egg->y;
-        enw_to_target(egg_current->egg->id, 0, client, &coords);
+        snprintf(request, 16, "enw %ld %d %ld %ld\n",
+            egg_current->egg->id, -1,
+            egg_current->egg->x, egg_current->egg->y);
+        client_add_request(client, strdup(request), TO_HANDLE);
+        LOG_SUCCESS("enw sended successfully: %ld %d %ld %ld\n",
+            egg_current->egg->id, -1, egg_current->egg->x, egg_current->egg->y);
     }
 }
 
