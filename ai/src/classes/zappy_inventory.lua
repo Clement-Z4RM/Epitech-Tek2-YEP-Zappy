@@ -38,6 +38,9 @@ end
 --- @param itemName string
 --- @param quantity number | nil
 function ZappyInventory:Add(itemName, quantity)
+    if quantity == 0 then
+        return
+    end
     quantity = quantity or 1
     local currentCount <const> = self:Count(itemName)
     if currentCount == 0 then
