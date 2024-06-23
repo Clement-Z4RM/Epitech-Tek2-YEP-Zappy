@@ -28,7 +28,7 @@ typedef struct updater_s updater_t;
 typedef void (*command_updater_func_t)(
     ai_client_node_t *client,
     updater_t *updater,
-    char *arg
+    void *arg
 );
 
 /**
@@ -45,7 +45,7 @@ typedef struct command_updater_data_s {
     ai_client_node_t *client;
     /** @brief The optional argument of the command updater function.
      * It should be allocated to avoid memory issues and free if necessary */
-    char *arg;
+    void *arg;
 } command_updater_data_t;
 
 /**

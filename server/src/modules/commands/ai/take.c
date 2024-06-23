@@ -12,19 +12,20 @@
 static void take_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    char *arg
+    void *arg
 )
 {
     resource_name_t resource = 0;
     bool success = false;
 
+    client->client->busy = false;
     if (!arg) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
     }
     for (; resource < RESOURCES_COUNT; ++resource)
         if (RESOURCE_NAMES[resource] &&
-            !strcmp(RESOURCE_NAMES[resource], arg)) {
+            !strcmp(RESOURCE_NAMES[resource], (char *)arg)) {
             success = player_take_resource(client, updater->map, resource);
             break;
         }
@@ -33,7 +34,7 @@ static void take_updater(
         pgt(client->player.id, resource, updater->network->clients_manager);
     } else
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
-    free(arg);
+    free((char *)arg);
 }
 
 /**
@@ -47,15 +48,17 @@ static void take_updater(
 void take(ai_handler_data_t *data)
 {
     command_updater_data_t updater_data = {
-        .executed_at = data->updater->elapsed,
-        .time = 7,
-        .client = data->client
+        data->updater->elapsed,
+        7,
+        data->client,
+        NULL
     };
 
     if (!data->args[1]) {
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
-    updater_data.arg = strdup(data->args[1]);
+    updater_data.arg = (void *)strdup(data->args[1]);
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, take_updater);
 }

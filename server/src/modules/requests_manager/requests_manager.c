@@ -136,7 +136,7 @@ static client_t *get_client(client_node_t *current)
     client_t *client = current->client;
     char *request = NULL;
 
-    if (client->current_request_to_handle == NULL) {
+    if (client->current_request_to_handle == NULL && !client->busy) {
         request = client_popback_request(client, TO_HANDLE);
         client->current_request_to_handle = request;
         return client;
