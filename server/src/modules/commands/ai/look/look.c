@@ -60,7 +60,7 @@ static char *player_look_updater(map_t *map, player_t *player)
 static void look_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     char *buffer = player_look_updater(updater->map, &client->player);

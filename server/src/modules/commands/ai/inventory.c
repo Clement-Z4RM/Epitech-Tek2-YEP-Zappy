@@ -38,12 +38,12 @@ static void fill_inventory(char *inventory, ai_client_node_t *client)
 static void inventory_updater(
     ai_client_node_t *client,
     UNUSED updater_t *updater,
-    char *arg
+    void *arg
 )
 {
     client->client->busy = false;
-    fill_inventory(arg, client);
-    client_add_request(client->client, arg, TO_SEND);
+    fill_inventory((char *)arg, client);
+    client_add_request(client->client, (char *)arg, TO_SEND);
 }
 
 /**
@@ -67,7 +67,7 @@ void inventory(ai_handler_data_t *data)
     updater_data.executed_at = data->updater->elapsed;
     updater_data.time = 1;
     updater_data.client = data->client;
-    updater_data.arg = inventory;
+    updater_data.arg = (void *)inventory;
     data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, inventory_updater);
 }

@@ -77,7 +77,7 @@ static bool broadcast_null_value(char *arg, char *response, client_t *client)
 static void broadcast_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    char *arg
+    void *arg
 )
 {
     team_node_t *current_team;
@@ -85,7 +85,7 @@ static void broadcast_updater(
     char *response = malloc(MAX_RESPONSE_SIZE);
 
     client->client->busy = false;
-    if (broadcast_null_value(arg, response, client->client))
+    if (broadcast_null_value((char *)arg, response, client->client))
         return;
     SLIST_FOREACH(current_team,
         &updater->network->clients_manager->team_list,
@@ -93,13 +93,13 @@ static void broadcast_updater(
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
             snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
                 get_direction_tile(&client->player, &current_ai->player,
-                    updater->map), arg
+                    updater->map), (char *)arg
             );
             client_add_request(current_ai->client, response, TO_SEND);
         }
     }
-    pbc(client->player.id, arg, updater->network->clients_manager);
-    free(arg);
+    pbc(client->player.id, (char *)arg, updater->network->clients_manager);
+    free((char *)arg);
 }
 
 /**
@@ -117,7 +117,7 @@ void broadcast(ai_handler_data_t *data)
         data->updater->elapsed,
         7,
         data->client,
-        strdup(data->args[1])
+        (void *)strdup(data->args[1])
     };
 
     data->client->client->busy = true;

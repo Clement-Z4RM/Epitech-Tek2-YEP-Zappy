@@ -12,7 +12,7 @@
 static void set_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    char *arg
+    void *arg
 )
 {
     resource_name_t resource = 0;
@@ -25,7 +25,7 @@ static void set_updater(
     }
     for (; resource < RESOURCES_COUNT; ++resource)
         if (RESOURCE_NAMES[resource] &&
-            !strcmp(RESOURCE_NAMES[resource], arg)) {
+            !strcmp(RESOURCE_NAMES[resource], (char *)arg)) {
             success = player_drop_resource(client, updater->map, resource);
             break;
         }
@@ -33,7 +33,7 @@ static void set_updater(
         client_add_request(client->client, strdup("ok\n"), TO_SEND);
     else
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
-    free(arg);
+    free((char *)arg);
 }
 
 /**
@@ -56,7 +56,7 @@ void set(ai_handler_data_t *data)
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
         return;
     }
-    updater_data.arg = strdup(data->args[1]);
+    updater_data.arg = (void *)strdup(data->args[1]);
     data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, set_updater);
 }

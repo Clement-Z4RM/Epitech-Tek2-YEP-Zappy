@@ -12,7 +12,7 @@
 static void right_updater(
     ai_client_node_t *client,
     UNUSED updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     client->client->busy = false;
@@ -44,7 +44,7 @@ void right(ai_handler_data_t *data)
 static void left_updater(
     ai_client_node_t *client,
     UNUSED updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     client->client->busy = false;

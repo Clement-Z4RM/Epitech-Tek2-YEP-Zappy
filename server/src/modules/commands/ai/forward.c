@@ -12,7 +12,7 @@
 static void forward_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     client->client->busy = false;

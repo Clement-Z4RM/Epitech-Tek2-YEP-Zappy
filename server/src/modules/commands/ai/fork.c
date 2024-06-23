@@ -11,7 +11,7 @@
 static void fork_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     team_node_t *team = clients_manager_get_team_by_client(
