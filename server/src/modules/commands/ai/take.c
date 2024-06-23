@@ -51,6 +51,7 @@ void take(ai_handler_data_t *data)
         data->updater->elapsed,
         7,
         data->client,
+        data->client->player.id,
         NULL
     };
 
