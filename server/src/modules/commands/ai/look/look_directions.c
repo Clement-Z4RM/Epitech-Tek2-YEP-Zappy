@@ -21,7 +21,8 @@ static void pass_trough_cells_north(cell_t *cell, int i, int *x_forward, char
             cell = cell->left;
             (*x_forward)++;
         }
-        strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
+        if (j != i * 2 + 1)
+            strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
     }
 }
 
@@ -61,7 +62,8 @@ static void pass_trough_cells_south(cell_t *cell, int i, int *x_forward, char
             cell = cell->right;
             (*x_forward)++;
         }
-        strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
+        if (j != i * 2 + 1)
+            strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
     }
 }
 
@@ -101,7 +103,8 @@ static void pass_trough_cells_west(cell_t *cell, int i, int *y_forward, char
             cell = cell->up;
             (*y_forward)++;
         }
-        strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
+        if (j != i * 2 + 1)
+            strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
     }
 }
 
@@ -141,7 +144,8 @@ static void pass_trough_cells_east(cell_t *cell, int i, int *y_forward, char
             cell = cell->down;
             (*y_forward)++;
         }
-        strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
+        if (j != i * 2 + 1)
+            strncat(*buffer, ",", 4096 - strlen(*buffer) - 1);
     }
 }
 
@@ -156,8 +160,8 @@ char *look_east(map_t *map, player_t *player)
         fprintf(stderr, "look_north: error malloc\n");
         return NULL;
     }
+    snprintf(buffer, 2, "[");
     buffer[4095] = '\0';
-    buffer[0] = '\0';
     for (int i = 1; i < player->level + 1; i++) {
         back_to_y_up(cell, i, y_forward);
         y_forward = 0;
@@ -165,5 +169,6 @@ char *look_east(map_t *map, player_t *player)
             cell = cell->left;
         pass_trough_cells_east(cell, i, &y_forward, &buffer);
     }
+    snprintf(buffer + strlen(buffer) - 1, 2, "]");
     return buffer;
 }
