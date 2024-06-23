@@ -78,10 +78,10 @@ static void update(updater_t *updater)
         updater->map->resources.generate(updater->map);
         updater->next_generation = updater->elapsed +
             updater->generation_interval;
-    }
-    SLIST_FOREACH(gui_client,
-        &updater->network->clients_manager->gui_clients_list, next) {
-        mct_event(gui_client, updater);
+        SLIST_FOREACH(gui_client,
+            &updater->network->clients_manager->gui_clients_list, next) {
+            mct_event(gui_client, updater);
+        }
     }
     updater_execute_commands(updater);
     SLIST_FOREACH(team, &updater->network->clients_manager->team_list, next)
