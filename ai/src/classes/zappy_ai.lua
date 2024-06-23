@@ -334,9 +334,99 @@ end
 --[[
     Main decision maker
 --]]
+
+-- Analyze the current state of the AI
+function ZappyAI:AnalyzeState(callback)
+    self:SetupInventory(function()
+        self:LookupEnvironment(function()
+            callback()
+        end)
+    end)
+end
+
+-- Define priorities based on the current state
+function ZappyAI:DefinePriorities()
+    local priorities = {}
+
+    -- Priority 1: Collect food if food is less than 5
+    if self.inventory:GetItemCount("food") < 5 then
+        table.insert(priorities, "collect_food")
+    else
+        -- Priority 2: If level >= 4, prioritize elevation and sabotage
+        if self:GetLevel() >= 4 then
+            table.insert(priorities, "sabotage")
+            if self:CanPerformIncantation() then
+                table.insert(priorities, "perform_incantation")
+            end
+        else
+            -- Priority 3: Elevate if possible
+            if self:CanPerformIncantation() then
+                table.insert(priorities, "perform_incantation")
+            end
+        end
+    end
+
+    return priorities
+end
+
+-- Execute actions based on the defined priorities
+function ZappyAI:ExecuteActions(priorities)
+    for _, priority in ipairs(priorities) do
+        if priority == "collect_food" then
+            self:CollectFood()
+        elseif priority == "perform_incantation" then
+            self:PerformIncantation()
+        elseif priority == "sabotage" then
+            self:SabotageEnemies()
+        end
+    end
+end
+
+function ZappyAI:CollectFood()
+    local foodTile = self:FindFoodInEnvironment()
+    if foodTile then
+        self:MoveToFood(foodTile)
+    end
+end
+
+-- Find food in the environment from the Look command response
+--- @return number|nil
+function ZappyAI:FindFoodInEnvironment()
+    local tiles = self.environment
+    for index, tile in ipairs(tiles) do
+        if tile:Contains("food") then
+            return index
+        end
+    end
+    return nil
+end
+
+-- Move to a specific tile containing food
+--- @param tile number
+function ZappyAI:MoveToFood(tile)
+    if tile == 1 then
+        self:TakeObject("food")
+    elseif tile == 2 then
+        self:MoveForward()
+    elseif tile == 3 then
+        self:TurnRight()
+        self:MoveForward()
+        self:TurnLeft()
+    elseif tile == 4 then
+        self:TurnLeft()
+        self:MoveForward()
+        self:TurnRight()
+    end
+end
+
 --- Main decision maker function
---- TODO: Implement
 function ZappyAI:Decide()
+    -- Analyze the current state
+    self:AnalyzeState()
+     -- Define priorities
+     local priorities = self:DefinePriorities()
+     -- Execute actions based on priorities
+     self:ExecuteActions(priorities)
 end
 
 -- Export
