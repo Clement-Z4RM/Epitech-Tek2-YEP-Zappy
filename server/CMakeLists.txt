@@ -164,6 +164,7 @@ add_executable(zappy_server
         src/modules/commands/ai/incantation/incantation.h
         src/modules/commands/ai/incantation/incantation.c
         src/modules/commands/ai/incantation/initiate.c
+        src/modules/commands/ai/incantation/helpers/player.c
         #endregion
 
         #region Updater module

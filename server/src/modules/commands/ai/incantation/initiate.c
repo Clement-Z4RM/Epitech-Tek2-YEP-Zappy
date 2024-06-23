@@ -27,43 +27,23 @@ static void incantation_destructor(incantation_t *incantation)
     free(incantation);
 }
 
-static bool add_team_players_to_incantation(
-    incantation_t *incantation,
-    team_node_t *team,
-    u_int8_t *players
+static incantation_t *create_incantation(
+    ai_client_node_t *client,
+    team_list_t *teams
 )
-{
-    ai_client_node_t *client;
-    incantation_player_t *player;
-
-    SLIST_FOREACH(client, &team->ai_clients, next)
-        if (client->player.level == incantation->level) {
-            player = malloc(sizeof(incantation_player_t));
-            if (!player)
-                return false;
-            player->player = client;
-            SLIST_INSERT_HEAD(&incantation->players, player, next);
-            ++*players;
-        }
-    return true;
-}
-
-static incantation_t *create_incantation(u_int8_t level, team_list_t *teams)
 {
     incantation_t *incantation = malloc(sizeof(incantation_t));
     u_int8_t players = 0;
-    team_node_t *team;
 
     if (!incantation)
         return NULL;
-    incantation->level = level;
+    incantation->level = client->player.level;
     SLIST_INIT(&incantation->players);
-    SLIST_FOREACH(team, teams, next)
-        if (!add_team_players_to_incantation(incantation, team, &players)) {
-            incantation_destructor(incantation);
-            return NULL;
-        }
-    if (players < INCANTATIONS_REQUIREMENTS[level].players) {
+    if (!add_players_to_incantation(incantation, client, teams, &players)) {
+        incantation_destructor(incantation);
+        return NULL;
+    }
+    if (players < INCANTATIONS_REQUIREMENTS[client->player.level].players) {
         incantation_destructor(incantation);
         return NULL;
     }
@@ -73,13 +53,14 @@ static incantation_t *create_incantation(u_int8_t level, team_list_t *teams)
 incantation_t *initiate_incantation(ai_handler_data_t *data)
 {
     u_int8_t level = data->client->player.level;
-    const incantation_requirements_t *requirements;
     incantation_t *incantation;
 
     if (level == 0 || level > 7)
         return NULL;
-    requirements = &INCANTATIONS_REQUIREMENTS[level];
-    incantation = create_incantation(level, &data->clients_manager->team_list);
+    incantation = create_incantation(
+        data->client,
+        &data->clients_manager->team_list
+    );
     if (!incantation)
         return NULL;
     incantation->destroy = incantation_destructor;
