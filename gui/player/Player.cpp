@@ -92,6 +92,24 @@ std::shared_ptr<sf::Sprite> Player::getPlayerSprite(int width, int height, int m
     int posX = _position._x * squareSize + width * 0.5 / 2;
     int posY = _position._y * squareSize + height * 0.1 / 2;
     _playerSprite->setPosition(posX, posY);
+    switch (_orientation) {
+    case NORTH:
+        _playerSprite->setOrigin(0, 0);
+        _playerSprite->setRotation(0);
+        break;
+    case EAST:
+        _playerSprite->setOrigin(0, 208);
+        _playerSprite->setRotation(90);
+        break;
+    case SOUTH:
+        _playerSprite->setOrigin(208, 208);
+        _playerSprite->setRotation(180);
+        break;
+    case WEST:
+        _playerSprite->setOrigin(208, 0);
+        _playerSprite->setRotation(270);
+        break;
+    }
     return _playerSprite;
 }
 
