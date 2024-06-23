@@ -100,8 +100,10 @@ static bool add_to_existing_team(
     static u_int64_t id = 1;
     uint64_t egg_id = 0;
 
-    if (team->nb_clients >= manager->max_clients_per_team) {
+    if (!team->nb_eggs) {
         log_failure_team_full(team->name);
+        printf("team full\n");
+        free(ai_client);
         return false;
     }
     ai_client->client->type = AI;

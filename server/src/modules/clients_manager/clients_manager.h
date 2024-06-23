@@ -18,6 +18,12 @@
  */
 typedef struct map_s map_t;
 
+/**
+ * @brief Incantations list
+ */
+SLIST_HEAD(incantations_s, incantation_s);
+typedef struct incantations_s incantations_t;
+
 /** @brief represent a node of the ai clients list **/
 typedef struct ai_client_node_s {
     client_t *client;
@@ -70,7 +76,8 @@ typedef struct clients_manager_s {
     team_list_t team_list; ///< the list of teams
     int nb_teams; ///< actual number of teams
 
-    ulong max_clients_per_team; ///< the maximum number of clients per team
+    incantations_t incantations; ///< the list of incantations
+
     bool is_game_started; ///< true if the game has started
 } clients_manager_t;
 

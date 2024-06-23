@@ -58,6 +58,7 @@ static const ai_request_handler_t AI_HANDLERS[] = {
     {"Broadcast", broadcast},
     {"Connect_nbr", connect_nbr},
     {"Fork", fork_command},
+    {"Eject", eject},
     {"Take", take},
     {"Set", set},
     {"Incantation", incantation}

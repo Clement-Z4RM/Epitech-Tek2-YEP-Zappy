@@ -38,7 +38,7 @@ static void check_for_win(updater_t *updater)
     }
 }
 
-static void add_request_to_all_players(
+void add_request_to_all_players(
     incantation_t *incantation,
     const char *request
 )
@@ -100,10 +100,8 @@ static void incantation_updater(
 void incantation(ai_handler_data_t *data)
 {
     command_updater_data_t updater_data = {
-        data->updater->elapsed,
-        300,
-        data->client,
-        data->client->player.id,
+        data->updater->elapsed, 300,
+        data->client, data->client->player.id,
         NULL
     };
     incantation_t *incantation = start_incantation(data);
@@ -113,7 +111,11 @@ void incantation(ai_handler_data_t *data)
         return;
     }
     add_request_to_all_players(incantation, "Elevation underway\n");
+    SLIST_INSERT_HEAD(&data->updater->network->clients_manager->incantations,
+        incantation, next);
     updater_data.arg = (void *)incantation;
     data->client->client->busy = true;
-    updater_add_command(data->updater, &updater_data, incantation_updater);
+    incantation->updater.command_updaters = &data->updater->command_updaters;
+    incantation->updater.command_updater = updater_add_command(data->updater,
+        &updater_data, incantation_updater);
 }

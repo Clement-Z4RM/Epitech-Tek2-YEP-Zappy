@@ -15,8 +15,11 @@
  * @param updater The updater where the command will be added.
  * @param data The data needed to execute the command.
  * @param command_updater_func The function that will be executed.
+ *
+ * @return The command updater if it was successfully created,
+ * NULL otherwise (allocation error).
  */
-void updater_add_command(
+command_updater_t *updater_add_command(
     updater_t *updater,
     command_updater_data_t *data,
     command_updater_func_t command_updater_func
@@ -27,11 +30,12 @@ void updater_add_command(
     if (!command_updater) {
         perror("malloc");
         client_add_request(data->client->client, strdup("ko\n"), TO_SEND);
-        return;
+        return NULL;
     }
     memcpy(&command_updater->data, data, sizeof(command_updater_data_t));
     command_updater->updater = command_updater_func;
     CIRCLEQ_INSERT_TAIL(&updater->command_updaters, command_updater, next);
+    return command_updater;
 }
 
 static bool command_should_be_executed(

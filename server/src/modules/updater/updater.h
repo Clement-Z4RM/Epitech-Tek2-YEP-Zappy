@@ -111,7 +111,7 @@ typedef struct updater_s {
 
 extern updater_t *create_updater(network_t *network, map_t *map);
 
-extern void updater_add_command(
+extern command_updater_t *updater_add_command(
     updater_t *updater,
     command_updater_data_t *data,
     command_updater_func_t command_updater_func

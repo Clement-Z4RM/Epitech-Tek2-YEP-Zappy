@@ -54,6 +54,8 @@ static incantation_t *create_incantation(
     incantation->level = client->player.level;
     SLIST_INIT(&incantation->players);
     incantation->nb_players = 0;
+    incantation->x = client->player.x;
+    incantation->y = client->player.y;
     if (!add_players_to_incantation(incantation, client, teams)) {
         incantation_destructor(incantation);
         return NULL;
