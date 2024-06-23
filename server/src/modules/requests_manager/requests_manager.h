@@ -75,7 +75,8 @@ static const gui_request_handler_t GUI_HANDLERS[] = {
     {"plv", plv},
     {"sgt", sgt},
     {"sst", sst},
-    {"tna", tna}
+    {"tna", tna},
+    {"enw", enw_handler}
 };
 
 #define GUI_HANDLERS_COUNT sizeof(GUI_HANDLERS) / sizeof(gui_request_handler_t)

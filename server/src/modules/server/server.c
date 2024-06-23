@@ -34,6 +34,7 @@ static void check_game_have_started(updater_t *updater)
     }
     clients_manager->is_game_started = true;
     updater->start = mstime(NULL);
+    LOG_SUCCESS("Game started\n");
 }
 
 /**
@@ -106,7 +107,8 @@ static bool server_loop(network_t *network, updater_t *updater)
         if (!network_send_requests(network))
             return false;
         requests_manager_handle_requests(network->clients_manager, updater);
-        if (!updater->network->clients_manager->is_game_started)
+        if (!updater->network->clients_manager->is_game_started &&
+            !updater->end_of_game)
             check_game_have_started(updater);
     }
     return true;
