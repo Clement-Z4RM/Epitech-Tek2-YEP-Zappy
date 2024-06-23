@@ -81,13 +81,19 @@ incantation_t *start_incantation(ai_handler_data_t *data)
 
     if (level == 0 || level > 7)
         return NULL;
+    if (!cell_contains_required_resources(
+        level,
+        &data->updater->map->cells
+            [data->client->player.y][data->client->player.x]
+    )) {
+        return NULL;
+    }
     incantation = create_incantation(
         data->client,
         &data->clients_manager->team_list
     );
     if (!incantation)
         return NULL;
-    drop_resources(incantation, data->updater->map);
     incantation->destroy = incantation_destructor;
     return incantation;
 }
