@@ -48,6 +48,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [1] = {
         1,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 1,
             [RN_DERAUMERE] = 0,
             [RN_SIBUR] = 0,
@@ -59,6 +60,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [2] = {
         2,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 1,
             [RN_DERAUMERE] = 1,
             [RN_SIBUR] = 1,
@@ -70,6 +72,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [3] = {
         2,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 2,
             [RN_DERAUMERE] = 0,
             [RN_SIBUR] = 1,
@@ -81,6 +84,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [4] = {
         4,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 1,
             [RN_DERAUMERE] = 1,
             [RN_SIBUR] = 2,
@@ -92,6 +96,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [5] = {
         4,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 1,
             [RN_DERAUMERE] = 2,
             [RN_SIBUR] = 1,
@@ -103,6 +108,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [6] = {
         6,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 1,
             [RN_DERAUMERE] = 2,
             [RN_SIBUR] = 3,
@@ -114,6 +120,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
     [7] = {
         6,
         {
+            [RN_FOOD] = 0,
             [RN_LINEMATE] = 2,
             [RN_DERAUMERE] = 2,
             [RN_SIBUR] = 2,
