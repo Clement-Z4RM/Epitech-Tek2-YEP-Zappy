@@ -15,7 +15,7 @@ static void send_client_response(
     gui_handler_data_t *data
 )
 {
-    snprintf(response, MAX_RESPONSE_SIZE, "plv #%lu %d\n",
+    snprintf(response, MAX_RESPONSE_SIZE, "plv %lu %d\n",
         ai_client->player.id, ai_client->player.level);
     client_add_request(data->gui_client->client, response, TO_SEND);
 }

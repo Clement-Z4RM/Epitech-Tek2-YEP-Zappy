@@ -14,7 +14,7 @@ void ebo(const uint64_t egg_id, const clients_manager_t *clients_manager)
     gui_client_node_t *node = NULL;
 
     if (response)
-        snprintf(response, MAX_RESPONSE_SIZE, "ebo #%ld\n", egg_id);
+        snprintf(response, MAX_RESPONSE_SIZE, "ebo %ld\n", egg_id);
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next) {
         if (response)
             client_add_request(node->client, response, TO_SEND);

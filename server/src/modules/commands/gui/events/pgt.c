@@ -15,7 +15,7 @@ void pgt(uint64_t id, resource_name_t resource,
     gui_client_node_t *node = NULL;
 
     if (response)
-        snprintf(response, MAX_RESPONSE_SIZE, "pgt #%lu %d\n", id, resource);
+        snprintf(response, MAX_RESPONSE_SIZE, "pgt %lu %d\n", id, resource);
     else
         return;
     SLIST_FOREACH(node, &client_manager->gui_clients_list, next) {

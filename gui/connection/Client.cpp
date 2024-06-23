@@ -33,8 +33,10 @@ namespace gui {
     {
         char buff[4096];
 
-        if (!isReady())
+        if (!isReady()) {
+            tmp = "";
             return;
+        }
         std::memset(buff, 0, 4096);
         ssize_t bytes_received;
         bytes_received = Socket::read_socket(_sfd, buff, 4095);
@@ -47,15 +49,13 @@ namespace gui {
     {
         fd_set readfds;
         struct timeval timeout{};
-        int ready;
 
         FD_ZERO(&readfds);
         FD_SET(_sfd, &readfds);
         timeout.tv_sec = static_cast<time_t>(0.1);
         timeout.tv_usec = 0;
-        ready = Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
-        if (ready == -1) {
-            throw std::runtime_error("Select error");
+        Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
+        if (FD_ISSET(_sfd, &readfds) == 0) {
             return false;
         }
         return true;
@@ -154,6 +154,8 @@ namespace gui {
         std::deque<std::string> teams;
 
         _param._map.clear();
+        if (_map.empty())
+            return;
         for (auto &i : _map) {
             if (i.find("bct") != std::string::npos)
                 tmpMap.push_back(i);
@@ -199,7 +201,8 @@ namespace gui {
 
     void Client::refreshMap()
     {
-        Sleep::sleepInMicroSecond(_param._freq);
+        if (!isReady())
+            return;
         this->isMapFinished = false;
         _map.clear();
         while (!this->isMapFinished) {
