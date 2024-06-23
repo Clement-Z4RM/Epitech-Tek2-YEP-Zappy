@@ -55,25 +55,39 @@ bool network_send_requests(network_t *network)
     return true;
 }
 
+static bool network_check_request(
+    size_t size, network_t *network,
+    client_node_t *current, char *buffer
+)
+{
+    if (size == (size_t)-1) {
+        perror("recv");
+        return false;
+    }
+    if (size == 0)
+        clients_manager_remove(network->clients_manager,
+            current->client);
+    else if (current->client->requests_queue_to_handle_size < 10)
+        client_add_request(current->client, strdup(buffer), TO_HANDLE);
+    return true;
+}
+
 bool network_receive_requests(network_t *network)
 {
     struct client_node_s *current = NULL;
     char buffer[1024] = {0};
+    size_t size = 0;
 
-    if (FD_ISSET(network->endpoint.socket, &network->read_fds)) {
+    if (FD_ISSET(network->endpoint.socket, &network->read_fds))
         if (!network_accept_connexion(network))
             return false;
-    }
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
     {
         if (FD_ISSET(current->client->socket, &network->read_fds) &&
             current->client->requests_queue_to_handle_size < 10) {
-            if (recv(current->client->socket, buffer, 1024, 0) == -1) {
-                perror("recv");
+            size = recv(current->client->socket, buffer, 1024, 0);
+            if (!network_check_request(size, network, current, buffer))
                 return false;
-            }
-            if (current->client->requests_queue_to_handle_size < 10)
-                client_add_request(current->client, strdup(buffer), TO_HANDLE);
         }
     }
     return true;
