@@ -181,4 +181,6 @@ extern void remove_incantation_resources(
 
 extern incantation_t *start_incantation(ai_handler_data_t *data);
 
+extern void cancel_incantation(incantation_t *incantation);
+
 #endif /* !ZAPPY_SERVER_INCANTATION_H_ */
