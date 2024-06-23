@@ -13,21 +13,21 @@
 #include "map/map.h"
 #include <stdio.h>
 #include "logs/logs.h"
+#include "commands/gui/gui_commands.h"
 
 void send_default_eggs(team_node_t *team, client_t *client)
 {
     team_egg_t *egg_current = NULL;
-    char enw_request[43];
+    char request[49];
 
     SLIST_FOREACH(egg_current, &team->eggs, next) {
-        snprintf(
-            enw_request, 43, "enw %ld -1 %ld %ld\n",
-            egg_current->egg->id,
-            egg_current->egg->x,
-            egg_current->egg->y
-        );
-        client_add_request(client, strdup(enw_request), TO_SEND);
-        LOG_SUCCESS("egg sent successfully: %s", enw_request);
+        snprintf(request, 49, "enw %lu %d %lu %lu\n",
+            egg_current->egg->id, -1,
+            egg_current->egg->x, egg_current->egg->y);
+        client_add_request(client, strdup(request), TO_HANDLE);
+        LOG_SUCCESS("enw sended successfully: %ld %d %ld %ld\n",
+            egg_current->egg->id, -1,
+            egg_current->egg->x, egg_current->egg->y);
     }
 }
 
