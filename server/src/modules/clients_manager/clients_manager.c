@@ -189,7 +189,6 @@ clients_manager_t *clients_manager_constructor(options_t *options, map_t *map)
     manager->nb_gui_clients = 0;
     manager->nb_teams = 0;
     manager->nb_ai_clients = 0;
-    manager->max_clients_per_team = options->clients;
     manager->is_game_started = false;
     clients_manager_init_teams(manager, &options->teams);
     if (!client_manager_init_eggs(manager, options, map)) {

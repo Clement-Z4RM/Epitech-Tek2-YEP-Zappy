@@ -90,7 +90,7 @@ static bool add_to_existing_team(
 {
     static u_int64_t id = 1;
 
-    if (team->nb_clients >= manager->max_clients_per_team) {
+    if (!team->nb_eggs) {
         log_failure_team_full(team->name);
         return false;
     }
