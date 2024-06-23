@@ -6,6 +6,7 @@
 --- @field public commandsQueue ZappyCommandsQueue
 --- @field public status number
 --- @field public worldDimensions {x: number, y: number}
+--- @field protected level number
 --- @field protected numTicks number
 --- @field protected isBusy boolean
 local ZappyAI <const> = {}
@@ -102,6 +103,11 @@ function ZappyAI:SetTask(task)
     end
     self.task = task
     self.logger:Debug(("[%sT%s] New task: %s%s%s"):format(TerminalColor.YELLOW, TerminalColor.RESET, TerminalColor.YELLOW, task, TerminalColor.RESET))
+end
+
+--- @return void
+function ZappyAI:LevelUp()
+    self.level = self.level + 1
 end
 
 --[[
@@ -278,17 +284,6 @@ function ZappyAI:SetObject(object)
     end, {object})
 end
 
--- Start an incantation
-function ZappyAI:StartIncantation()
-    self.commandsQueue:Enqueue(ZappyAction.INCANTATION, function(answer)
-        if answer:find("ko") then
-            -- Fail
-            return
-        end
-        -- Success
-    end)
-end
-
 --[[
     AI Core
 --]]
@@ -350,6 +345,23 @@ end
     Main decision maker
 --]]
 
+function ZappyAI:GetNextItemToFindToElevate()
+    local currentLevel <const> = self:GetLevel()
+
+    if currentLevel == Config.MaxLevel then
+        return
+    end
+    local nextElevationCfg <const> = Config.ElevationRequirements[currentLevel]
+    if not nextElevationCfg then
+        return false
+    end
+    for itemName, requiredQuantity in pairs(nextElevationCfg.items) do
+        if not self.inventory:Has(itemName, requiredQuantity) then
+            return itemName
+        end
+    end
+end
+
 -- Define priorities based on the current state
 function ZappyAI:UpdateTask()
     if self.inventory:Count("food") < 13 then
@@ -367,8 +379,8 @@ end
 function ZappyAI:ExecuteTask()
     -- Food task
     if self:HasTo(ZappyTask.FIND_FOOD) then
-        self:SetBusy(true)
         self.logger:Debug(("[%sT%s] I need some food !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        self:SetBusy(true)
         self:MoveRandom()
         
         self:LookupEnvironment(function(environment)
@@ -396,12 +408,40 @@ function ZappyAI:ExecuteTask()
     -- Elevation task
     if self:HasTo(ZappyTask.ELEVATE) then
         self.logger:Debug(("[%sT%s] I to elevate !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        self:SetBusy(true)
+        self.commandsQueue:Enqueue(ZappyAction.INCANTATION, function(answer)
+            self:LevelUp()
+            self:SetBusy(false)
+        end)
         return
     end
 
     -- Finding materials task
     if self:HasTo(ZappyTask.FIND_MATERIALS) then
         self.logger:Debug(("[%sT%s] I need to find some materials to elevate !"):format(TerminalColor.YELLOW, TerminalColor.RESET))
+        self:SetBusy(true)
+        self:MoveRandom()
+
+        local targetItemName <const> = self:GetNextItemToFindToElevate()
+        self:LookupEnvironment(function(environment)
+            local tileWithItem <const> = environment:GetTileWith(targetItemName)
+            if not tileWithItem then
+                self:SetBusy(false)
+                return
+            end
+            if tileWithItem:GetPosition() == 0 then
+                self:Take(targetItemName, function()
+                    self:SetBusy(false)
+                end)
+                return
+            end
+            self:WalkToTile(tileWithItem:GetPosition(), function()
+                self:Take(targetItemName, function()
+                    self:SetBusy(false)
+                end)
+                return
+            end)
+        end)
         return
     end
 end
