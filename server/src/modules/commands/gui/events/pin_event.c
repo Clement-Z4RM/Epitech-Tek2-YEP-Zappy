@@ -6,7 +6,7 @@
 */
 
 #include "../gui_commands.h"
-
+#include <string.h>
 
 static void fill_response(char *response, ai_client_node_t *ai_client)
 {
@@ -29,18 +29,15 @@ static void fill_response(char *response, ai_client_node_t *ai_client)
 
 void pin_event(uint64_t id, clients_manager_t *clients_manager)
 {
-    char *response = malloc(MAX_RESPONSE_SIZE);
+    char response[MAX_RESPONSE_SIZE];
     gui_client_node_t *gui_client = NULL;
     ai_client_node_t *ai_client = clients_manager_get_ai_by_id(
         clients_manager,
         id
     );
 
-    if (!response) {
-        return;
-    }
     fill_response(response, ai_client);
     SLIST_FOREACH(gui_client, &clients_manager->gui_clients_list, next) {
-        client_add_request(gui_client->client, response, TO_SEND);
+        client_add_request(gui_client->client, strdup(response), TO_SEND);
     }
 }
