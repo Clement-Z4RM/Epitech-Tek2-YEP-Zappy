@@ -20,4 +20,5 @@ void pdr(uint64_t id,
     SLIST_FOREACH(node, &clients_manager->gui_clients_list, next)
         client_add_request(node->client, strdup(response), TO_SEND);
     log_success_set(id, resource);
+    pin_event(id, clients_manager);
 }

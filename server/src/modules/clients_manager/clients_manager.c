@@ -18,6 +18,7 @@ static void send_gui_default_events(client_t *client, clients_manager_t
     team_node_t *team_current = NULL;
     ai_client_node_t *ai_current = NULL;
     char ppo_request[16];
+    char pin_request[16];
 
     client_add_request(client, strdup("msz\n"), TO_HANDLE);
     client_add_request(client, strdup("sgt\n"), TO_HANDLE);
@@ -27,6 +28,7 @@ static void send_gui_default_events(client_t *client, clients_manager_t
         SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
             snprintf(ppo_request, 16, "ppo %ld\n", ai_current->player.id);
             client_add_request(client, strdup(ppo_request), TO_HANDLE);
+            snprintf(pin_request, 16, "pin %ld\n", ai_current->player.id);
         }
         send_default_eggs(team_current, client);
     }

@@ -21,7 +21,9 @@ static void send_player_connexion_to_gui(
     ebo(egg_id, clients_manager);
 }
 
-void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
+void send_init_player_infos(
+    ai_client_node_t *ai_client, map_t *map,
+    clients_manager_t *clients_manager)
 {
     char client_id_response[13];
     char map_response[23];
@@ -30,6 +32,7 @@ void send_init_player_infos(ai_client_node_t *ai_client, map_t *map)
     snprintf(map_response, 23, "%lu %lu\n", map->x, map->y);
     client_add_request(ai_client->client, strdup(client_id_response), TO_SEND);
     client_add_request(ai_client->client, strdup(map_response), TO_SEND);
+    pin_event(ai_client->player.id, clients_manager);
 }
 
 void clients_manager_team_destructor(team_node_t *team)
@@ -113,7 +116,7 @@ static bool add_to_existing_team(
     SLIST_INSERT_HEAD(&team->ai_clients, ai_client, next);
     team->nb_clients++;
     if (manager->is_game_started)
-        send_init_player_infos(ai_client, map);
+        send_init_player_infos(ai_client, map, manager);
     return true;
 }
 

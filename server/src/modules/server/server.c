@@ -29,7 +29,8 @@ static void check_game_have_started(updater_t *updater)
     }
     SLIST_FOREACH(current_team, &clients_manager->team_list, next) {
         SLIST_FOREACH(current_client, &current_team->ai_clients, next) {
-            send_init_player_infos(current_client, map);
+            send_init_player_infos(current_client, map,
+                updater->network->clients_manager);
         }
     }
     clients_manager->is_game_started = true;
