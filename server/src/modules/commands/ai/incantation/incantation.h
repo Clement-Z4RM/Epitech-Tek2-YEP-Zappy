@@ -39,6 +39,8 @@ typedef struct incantation_s {
     u_int8_t level;
     /** @brief The players involved in the incantation */
     incantation_players_t players;
+    /** @brief The number of players involved in the incantation */
+    ulong nb_players;
 
     /** @brief The incantation's x position on the map */
     u_int64_t x;
@@ -170,8 +172,7 @@ static const incantation_requirements_t INCANTATIONS_REQUIREMENTS[] = {
 extern bool add_players_to_incantation(
     incantation_t *incantation,
     ai_client_node_t *client,
-    team_list_t *teams,
-    u_int8_t *players
+    team_list_t *teams
 );
 
 extern void drop_resources(incantation_t *incantation, map_t *map);

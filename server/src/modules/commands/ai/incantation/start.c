@@ -48,17 +48,18 @@ static incantation_t *create_incantation(
 )
 {
     incantation_t *incantation = malloc(sizeof(incantation_t));
-    u_int8_t players = 0;
 
     if (!incantation)
         return NULL;
     incantation->level = client->player.level;
     SLIST_INIT(&incantation->players);
-    if (!add_players_to_incantation(incantation, client, teams, &players)) {
+    incantation->nb_players = 0;
+    if (!add_players_to_incantation(incantation, client, teams)) {
         incantation_destructor(incantation);
         return NULL;
     }
-    if (players < INCANTATIONS_REQUIREMENTS[client->player.level].players) {
+    if (incantation->nb_players <
+        INCANTATIONS_REQUIREMENTS[client->player.level].players) {
         incantation_destructor(incantation);
         return NULL;
     }
