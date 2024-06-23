@@ -133,8 +133,10 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
         src/modules/commands/gui/handlers/plv.c
+        src/modules/commands/gui/handlers/enw_handler.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
+        src/modules/commands/gui/events/mct_event.c
         src/modules/commands/gui/events/plv_event.c
         src/modules/commands/gui/events/pnw.c
         src/modules/commands/gui/events/pfk.c
@@ -148,6 +150,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/sbp.c
         src/modules/commands/gui/events/edi.c
         src/modules/commands/gui/events/ebo.c
+        src/modules/commands/gui/events/pie.c
         src/modules/commands/gui/events/ppo_event.c
         src/modules/logs/successes/events/pdi_success.c
         src/modules/logs/successes/events/forward_success.c
@@ -169,7 +172,8 @@ add_executable(zappy_server
         src/modules/commands/ai/broadcast.c
         src/modules/commands/ai/connect_nbr.c
         src/modules/commands/ai/fork.c
-        src/modules/commands/ai/eject.c
+        src/modules/commands/ai/eject/eject.h
+        src/modules/commands/ai/eject/eject.c
         src/modules/commands/ai/take.c
         src/modules/commands/ai/set.c
         src/modules/commands/ai/incantation/incantation.h
@@ -184,11 +188,8 @@ add_executable(zappy_server
         src/modules/updater/updater.h
         src/modules/updater/updater.c
         src/modules/updater/command_updater.c
-        src/modules/commands/gui/handlers/enw_handler.c
-        src/modules/commands/gui/events/pie.c
         #endregion
         #endregion
-        src/modules/commands/gui/events/mct_event.c
 )
 
 target_link_libraries(zappy_server PRIVATE m)

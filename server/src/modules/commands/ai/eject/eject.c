@@ -7,7 +7,8 @@
 
 #include <string.h>
 #include "requests_manager/requests_manager.h"
-#include "incantation/incantation.h"
+#include "commands/ai/incantation/incantation.h"
+#include "eject.h"
 
 static team_egg_t *get_egg_in_team(egg_t *egg, team_node_t *team)
 {
@@ -51,6 +52,46 @@ static void destroy_egg(egg_t *egg, updater_t *updater)
     free(egg);
 }
 
+static void send_eject(ai_client_node_t *client, ai_client_node_t *player)
+{
+    char response[17];
+
+    for (u_int8_t d = 0; *EJECTION_DIRECTION[d]; ++d)
+        if (EJECTION_DIRECTION[d][0] == client->player.direction
+            && EJECTION_DIRECTION[d][1] == player->player.direction) {
+            snprintf(response, 17, "eject: %d\n", EJECTION_DIRECTION[d][2]);
+            client_add_request(player->client, strdup(response), TO_SEND);
+        }
+}
+
+static void eject_player(
+    ai_client_node_t *client,
+    ai_client_node_t *player,
+    map_t *map
+)
+{
+    u_int64_t x = player->player.x;
+    u_int64_t y = player->player.y;
+
+    switch (client->player.direction) {
+        case PD_UP:
+            player->player.y = (client->player.y - 1) % map->height;
+            break;
+        case PD_RIGHT:
+            player->player.x = (client->player.x + 1) % map->width;
+            break;
+        case PD_DOWN:
+            player->player.y = (client->player.y + 1) % map->height;
+            break;
+        case PD_LEFT:
+            player->player.x = (client->player.x - 1) % map->width;
+    }
+    SLIST_REMOVE(&map->cells[y][x].players, player, ai_client_node_s, next);
+    SLIST_INSERT_HEAD(&map->cells[player->player.y][player->player.x].players,
+        player, next);
+    send_eject(client, player);
+}
+
 static void eject_updater(
     ai_client_node_t *client,
     updater_t *updater,
@@ -72,9 +113,8 @@ static void eject_updater(
         }
     SLIST_FOREACH(egg, &cell->eggs, next)
         destroy_egg(egg, updater);
-    SLIST_FOREACH(player, &cell->players, next) {
-        // TODO: eject player
-    }
+    SLIST_FOREACH(player, &cell->players, next)
+        eject_player(client, player, updater->map);
 }
 
 /**
