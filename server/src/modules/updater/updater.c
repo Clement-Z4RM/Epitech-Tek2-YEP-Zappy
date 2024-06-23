@@ -30,7 +30,8 @@ static double get_life_to_remove(updater_t *updater)
 static void player_dead(
     ai_client_node_t *client,
     team_node_t *team,
-    map_t *map
+    map_t *map,
+    clients_manager_t *clients_manager
 )
 {
     cell_t *cell = &map->cells[client->player.y][client->player.x];
@@ -39,8 +40,7 @@ static void player_dead(
         perror("send");
     SLIST_REMOVE(&cell->players, client, ai_client_node_s, next);
     SLIST_REMOVE(&team->ai_clients, client, ai_client_node_s, next);
-    client_destructor(client->client);
-    free(client);
+    clients_manager_remove(clients_manager, client->client);
 }
 
 static void update_team_clients_life(
@@ -56,7 +56,7 @@ static void update_team_clients_life(
         client->player.life_span -= life_to_remove;
         if (client->player.life_span <= 0) {
             pdi(client->player.id, clients_manager);
-            player_dead(client, team, map);
+            player_dead(client, team, map, clients_manager);
         }
     }
 }

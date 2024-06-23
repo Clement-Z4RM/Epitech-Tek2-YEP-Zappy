@@ -13,7 +13,10 @@ void fill_resource(char **current_cell, int i)
     char tmp_buffer[256];
     char *tmp = NULL;
 
-    snprintf(tmp_buffer, sizeof(tmp_buffer), "%s", RESOURCE_NAMES[i]);
+    if (i == RN_FOOD)
+        snprintf(tmp_buffer, sizeof(tmp_buffer), "food");
+    else
+        snprintf(tmp_buffer, sizeof(tmp_buffer), "%s", RESOURCE_NAMES[i]);
     if (*current_cell) {
         tmp = *current_cell;
         *current_cell = malloc(strlen(*current_cell) + strlen(tmp_buffer) + 1);
@@ -34,12 +37,16 @@ void fill_resource(char **current_cell, int i)
 
 void fill_current_cell_resource(cell_t *cell, char **current_cell)
 {
+    if ((*current_cell) && (*current_cell)[strlen(*current_cell) - 1] != '\0')
+        snprintf(*current_cell + strlen(*current_cell), 255, " ");
     for (int i = 0; i < RESOURCES_COUNT; i++) {
         if (cell->resources[i] > 0) {
             fill_resource(current_cell, i);
         }
-        if (i != 0 && i + 1 < RESOURCES_COUNT)
-            snprintf(*current_cell + strlen(*current_cell), 256, " ");
+        if (*current_cell && i + 1 < RESOURCES_COUNT &&
+            cell->resources[i + 1] > 0) {
+            snprintf(*current_cell + strlen(*current_cell), 255, " ");
+        }
     }
 }
 
@@ -73,6 +80,8 @@ void fill_cell_info(cell_t *cell, char *buffer)
     ai_client_node_t *player;
 
     SLIST_FOREACH(player, &cell->players, next) {
+        if (current_cell && current_cell[strlen(current_cell) - 1] != '\0')
+            snprintf(current_cell + strlen(current_cell), 255, " ");
         fill_player(&current_cell);
     }
     fill_current_cell_resource(cell, &current_cell);
