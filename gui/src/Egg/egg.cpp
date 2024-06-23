@@ -135,3 +135,12 @@ void Eggs::eggHatching(std::string &msg)
         }
     }
 }
+
+void Eggs::displayEggs(sf::RenderWindow &window, bool displayEggs)
+{
+    if (!displayEggs)
+        return;
+    for (auto &egg : _eggsShapes) {
+        window.draw(*egg);
+    }
+}

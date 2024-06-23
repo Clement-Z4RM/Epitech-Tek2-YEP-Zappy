@@ -41,6 +41,7 @@ public:
     void layingEgg(std::string &msg);
     void newConnection(std::string &msg);
     void eggHatching(std::string &msg);
+    void displayEggs(sf::RenderWindow &window, bool displayEggs);
     std::deque<std::shared_ptr<sf::Sprite>> _eggsShapes;
 
 private:

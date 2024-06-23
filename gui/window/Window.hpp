@@ -15,13 +15,48 @@
 #include <unordered_map>
 #include "../Parameters.hpp"
 #include "Modal.hpp"
+#include "../connection/Client.hpp"
+
+class Button {
+public:
+    enum ButtonState {
+        BUTTON,
+        BUTTON_OFF
+    };
+
+    Button() = default;
+    Button(const std::string &text, const std::string &textOff, sf::Vector2f position, std::shared_ptr<sf::Font> &globalFont);
+
+    ~Button() = default;
+
+    void changeTexture();
+    void draw(sf::RenderWindow &window);
+
+    std::string getTextureButtonPath() { return _textureButtonPath; }
+
+    std::string getTextureButtonOffPath() { return _textureButtonOffPath; }
+
+    sf::Sprite _sprite;
+    sf::Text _text;
+    sf::Text _textOn;
+    sf::Text _textOff;
+    ButtonState _state;
+private:
+    sf::Vector2f _position;
+    sf::Texture _texture;
+    std::string _textureButtonPath = "./gui/resources/Button.png";
+    std::string _textureButtonOffPath = "./gui/resources/ButtonOff.png";
+    sf::Font _font;
+    std::string _fontPath = "./gui/resources/font.ttf";
+};
+
 
 class Window {
 public:
     Window();
     ~Window();
 
-    void run(Parameters &params);
+    void run(Parameters &params, const gui::Client& client);
 
     void getEvent(Parameters &params);
 
@@ -46,4 +81,5 @@ private:
     std::deque<std::shared_ptr<sf::RectangleShape>> _map;
     std::unordered_map<std::string, std::shared_ptr<Modal>> _modals;
     int _selectedPlayer = -1;
+    std::shared_ptr<Button> _hideEggsButton{};
 };

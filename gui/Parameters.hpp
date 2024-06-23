@@ -11,8 +11,8 @@
 #include <memory>
 #include <sstream>
 #include <deque>
-#include "src/Egg/egg.hpp"
 #include "player/Player.hpp"
+#include "src/Egg/egg.hpp"
 
 class Case {
     public:
@@ -84,4 +84,5 @@ class Parameters {
         std::deque<std::shared_ptr<Player>> _players;
         std::deque<std::shared_ptr<Case>> _map;
         Eggs _eggs;
+        bool _displayEggs{true};
 };

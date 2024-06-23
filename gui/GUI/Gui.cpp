@@ -31,7 +31,7 @@ namespace gui {
             while (_window.isOpen()) {
                 _client.refreshMap();
                 _window.rendMap(_client.getParam());
-                _window.run(_client.getParam());
+                _window.run(_client.getParam(), getClient());
             }
         }
 } // gui
