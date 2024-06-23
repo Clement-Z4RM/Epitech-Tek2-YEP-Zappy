@@ -63,3 +63,5 @@ extern void pgt(
     resource_name_t resource,
     clients_manager_t *client_manager
 );
+extern void enw(const uint64_t egg_id, const uint64_t player_id,
+    const clients_manager_t *clients_manager, const coords_t *coords);

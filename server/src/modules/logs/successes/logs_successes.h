@@ -40,3 +40,4 @@ extern void log_success_look(const player_t *player);
 extern void log_success_turn(const player_t *player);
 extern void log_success_set(const uint64_t id, resource_name_t resource);
 extern void log_success_take(const uint64_t id, resource_name_t resource);
+extern void log_success_fork(const ai_client_node_t *ai_client);

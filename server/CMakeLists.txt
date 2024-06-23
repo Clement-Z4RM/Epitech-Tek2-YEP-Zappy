@@ -175,6 +175,7 @@ add_executable(zappy_server
         src/modules/logs/successes/events/turn_success.c
         src/modules/logs/successes/events/set_success.c
         src/modules/logs/successes/events/take_success.c
+        src/modules/logs/successes/events/fork_success.c
         #endregion
         #endregion
 )

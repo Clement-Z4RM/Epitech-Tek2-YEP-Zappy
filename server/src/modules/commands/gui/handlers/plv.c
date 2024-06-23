@@ -9,6 +9,17 @@
 #include "requests_manager/requests_manager.h"
 #include <string.h>
 
+static void send_client_response(
+    char *response,
+    ai_client_node_t *ai_client,
+    gui_handler_data_t *data
+)
+{
+    snprintf(response, MAX_RESPONSE_SIZE, "plv %lu %d\n",
+        ai_client->player.id, ai_client->player.level);
+    client_add_request(data->gui_client->client, response, TO_SEND);
+}
+
 void plv(gui_handler_data_t *data)
 {
     char *response = malloc(MAX_RESPONSE_SIZE);
@@ -30,7 +41,5 @@ void plv(gui_handler_data_t *data)
         sbp(data->gui_client->client);
         return;
     }
-    snprintf(response, MAX_RESPONSE_SIZE, "plv %lu %d\n",
-        ai_client->player.id, ai_client->player.level);
-    client_add_request(data->gui_client->client, response, TO_SEND);
+    send_client_response(response, ai_client, data);
 }
