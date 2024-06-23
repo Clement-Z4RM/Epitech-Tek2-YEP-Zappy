@@ -39,7 +39,7 @@ $(GUI_NAME):
 	@mv $(GUI_DIR)/$(GUI_NAME) .
 
 $(AI_NAME):
-	@$(MAKE) -C $(AI_DIR)/
+	@$(MAKE) -sC $(AI_DIR)/
 
 debug:
 	@$(MAKE) -s BUILD_TYPE=Debug
@@ -51,6 +51,7 @@ clean:
 fclean:	clean
 	@rm -f $(SERVER_NAME)
 	@rm -f $(GUI_NAME)
+	@$(MAKE) -sC $(AI_DIR)/ fclean
 
 tests_run:
 	@echo "There is actually no tests to run for this project"
