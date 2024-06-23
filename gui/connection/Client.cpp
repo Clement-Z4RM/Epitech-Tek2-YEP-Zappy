@@ -55,7 +55,7 @@ namespace gui {
         timeout.tv_usec = 0;
         ready = Socket::select_socket(_sfd + 1, &readfds, nullptr, nullptr, &timeout);
         if (ready == -1) {
-            std::cout << "select" << std::endl;
+            throw std::runtime_error("Select error");
             return false;
         }
         return true;
@@ -175,9 +175,6 @@ namespace gui {
         this->parseDeath(death);
         this->parseTeam(teams);
         this->parseInventory(inventory);
-        for (auto &p : otherParam) {
-            std::cout << p << std::endl;
-        }
     }
 
     void Client::clearData()
