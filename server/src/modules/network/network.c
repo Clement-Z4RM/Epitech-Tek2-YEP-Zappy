@@ -56,11 +56,11 @@ bool network_send_requests(network_t *network)
 }
 
 static bool network_check_request(
-    size_t size, network_t *network,
+    ssize_t size, network_t *network,
     client_node_t *current, char *buffer
 )
 {
-    if (size == (size_t)-1) {
+    if (size == -1) {
         perror("recv");
         return false;
     }
@@ -76,7 +76,7 @@ bool network_receive_requests(network_t *network)
 {
     struct client_node_s *current = NULL;
     char buffer[1024] = {0};
-    size_t size = 0;
+    ssize_t size = 0;
 
     if (FD_ISSET(network->endpoint.socket, &network->read_fds))
         if (!network_accept_connexion(network))

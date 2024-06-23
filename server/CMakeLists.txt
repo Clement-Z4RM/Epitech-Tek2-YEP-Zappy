@@ -132,6 +132,7 @@ add_executable(zappy_server
         src/modules/commands/gui/handlers/tna.c
         src/modules/commands/gui/handlers/bct.c
         src/modules/commands/gui/handlers/mct.c
+        src/modules/commands/gui/handlers/plv.c
         src/modules/commands/gui/events/pex.c
         src/modules/commands/gui/events/pbc.c
         src/modules/commands/gui/events/plv_event.c
@@ -147,27 +148,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/sbp.c
         src/modules/commands/gui/events/edi.c
         src/modules/commands/gui/events/ebo.c
-        src/modules/commands/ai/ai_commands.h
-        src/modules/commands/ai/forward.c
-        src/modules/commands/ai/turn.c
-        src/modules/commands/ai/inventory.h
-        src/modules/commands/ai/inventory.c
-        src/modules/commands/ai/broadcast.c
-        src/modules/commands/ai/connect_nbr.c
-        src/modules/commands/ai/fork.c
-        src/modules/commands/ai/take.c
-        src/modules/commands/ai/set.c
-        #endregion
-
-        #region Updater module
-        src/modules/updater/updater.h
-        src/modules/updater/updater.c
-        src/modules/updater/command_updater.c
-        src/modules/commands/ai/look.c
-        src/modules/commands/ai/look_fill_buffer.c
-        src/modules/commands/ai/look_directions.c
         src/modules/commands/gui/events/ppo_event.c
-        src/modules/commands/gui/handlers/plv.c
         src/modules/logs/successes/events/pdi_success.c
         src/modules/logs/successes/events/forward_success.c
         src/modules/logs/successes/events/broadcast_success.c
@@ -176,6 +157,31 @@ add_executable(zappy_server
         src/modules/logs/successes/events/set_success.c
         src/modules/logs/successes/events/take_success.c
         src/modules/logs/successes/events/fork_success.c
+        src/modules/commands/ai/ai_commands.h
+        src/modules/commands/ai/forward.c
+        src/modules/commands/ai/turn.c
+        src/modules/commands/ai/look/look.h
+        src/modules/commands/ai/look/look.c
+        src/modules/commands/ai/look/look_fill_buffer.c
+        src/modules/commands/ai/look/look_directions.c
+        src/modules/commands/ai/inventory.h
+        src/modules/commands/ai/inventory.c
+        src/modules/commands/ai/broadcast.c
+        src/modules/commands/ai/connect_nbr.c
+        src/modules/commands/ai/fork.c
+        src/modules/commands/ai/take.c
+        src/modules/commands/ai/set.c
+        src/modules/commands/ai/incantation/incantation.h
+        src/modules/commands/ai/incantation/incantation.c
+        src/modules/commands/ai/incantation/start.c
+        src/modules/commands/ai/incantation/helpers/player.c
+        src/modules/commands/ai/incantation/helpers/resource.c
+        #endregion
+
+        #region Updater module
+        src/modules/updater/updater.h
+        src/modules/updater/updater.c
+        src/modules/updater/command_updater.c
         #endregion
         #endregion
 )

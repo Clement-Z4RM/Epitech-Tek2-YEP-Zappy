@@ -59,12 +59,13 @@ static char *player_look_updater(map_t *map, player_t *player)
 
 static void look_updater(
     ai_client_node_t *client,
-    UNUSED updater_t *updater,
-    UNUSED char *arg
+    updater_t *updater,
+    UNUSED void *arg
 )
 {
     char *buffer = player_look_updater(updater->map, &client->player);
 
+    client->client->busy = false;
     if (!buffer) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
@@ -84,5 +85,6 @@ void look(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, look_updater);
 }

@@ -16,8 +16,6 @@
  */
 typedef struct ai_handler_data_s ai_handler_data_t;
 
-// TODO: time (and send response at end)
-
 extern void forward(ai_handler_data_t *data);
 
 extern void right(ai_handler_data_t *data);
@@ -36,5 +34,7 @@ extern void fork_command(ai_handler_data_t *data);
 extern void take(ai_handler_data_t *data);
 
 extern void set(ai_handler_data_t *data);
+
+extern void incantation(ai_handler_data_t *data);
 
 #endif /* !ZAPPY_SERVER_AI_COMMANDS_H_ */

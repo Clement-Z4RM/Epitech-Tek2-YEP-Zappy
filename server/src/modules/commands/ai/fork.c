@@ -11,7 +11,7 @@
 static void fork_updater(
     ai_client_node_t *client,
     updater_t *updater,
-    UNUSED char *arg
+    UNUSED void *arg
 )
 {
     team_node_t *team = clients_manager_get_team_by_client(
@@ -20,6 +20,7 @@ static void fork_updater(
     );
     coords_t coords = {client->player.x, client->player.y};
 
+    client->client->busy = false;
     if (!team) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
         return;
@@ -53,5 +54,6 @@ void fork_command(ai_handler_data_t *data)
         NULL
     };
 
+    data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, fork_updater);
 }
