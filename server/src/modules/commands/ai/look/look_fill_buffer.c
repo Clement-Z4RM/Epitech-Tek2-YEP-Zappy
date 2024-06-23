@@ -74,7 +74,6 @@ void fill_cell_info(cell_t *cell, char *buffer)
         fill_player(&current_cell);
     }
     fill_current_cell_resource(cell, &current_cell);
-    strncpy(buffer, current_cell, 255);
     if (current_cell) {
         strncpy(buffer, current_cell, 255);
         buffer[255] = '\0';

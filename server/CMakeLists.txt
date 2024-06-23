@@ -186,6 +186,7 @@ add_executable(zappy_server
         src/modules/commands/gui/events/pie.c
         #endregion
         #endregion
+        src/modules/commands/gui/events/mct_event.c
 )
 
 target_link_libraries(zappy_server PRIVATE m)

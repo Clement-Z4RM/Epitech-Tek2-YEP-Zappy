@@ -22,6 +22,7 @@
  * with requests manager
  */
 typedef struct gui_handler_data_s gui_handler_data_t;
+typedef struct updater_s updater_t;
 
 /** HANDLERS **/
 extern void msz(gui_handler_data_t *data);
@@ -72,3 +73,4 @@ extern void pie(
     bool result,
     clients_manager_t *clients_manager
 );
+extern void mct_event(gui_client_node_t *client, updater_t *updater);
