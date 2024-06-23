@@ -7,6 +7,7 @@
 
 #include "../gui_commands.h"
 #include "requests_manager/requests_manager.h"
+#include <string.h>
 
 void plv(gui_handler_data_t *data)
 {
@@ -15,6 +16,10 @@ void plv(gui_handler_data_t *data)
     uint64_t player_id = strtol(data->args[1], &endptr, 10);
     ai_client_node_t *ai_client = NULL;
 
+    if (!response) {
+        client_add_request(data->gui_client->client, strdup("ko\n"), TO_SEND);
+        return;
+    }
     if (endptr == data->args[1]) {
         sbp(data->gui_client->client);
         return;
