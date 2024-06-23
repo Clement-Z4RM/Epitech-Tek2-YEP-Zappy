@@ -59,6 +59,7 @@ bool network_receive_requests(network_t *network)
 {
     struct client_node_s *current = NULL;
     char buffer[1024] = {0};
+    ssize_t nread;
 
     if (FD_ISSET(network->endpoint.socket, &network->read_fds)) {
         if (!network_accept_connexion(network))
@@ -66,14 +67,14 @@ bool network_receive_requests(network_t *network)
     }
     SLIST_FOREACH(current, &network->clients_manager->clients_list, next)
     {
-        if (FD_ISSET(current->client->socket, &network->read_fds) &&
-            current->client->requests_queue_to_handle_size < 10) {
-            if (recv(current->client->socket, buffer, 1024, 0) == -1) {
+        if (FD_ISSET(current->client->socket, &network->read_fds)) {
+            nread = recv(current->client->socket, buffer, 1024, 0);
+            if (nread == -1) {
                 perror("recv");
                 return false;
             }
             if (current->client->requests_queue_to_handle_size < 10)
-                client_add_request(current->client, strdup(buffer), TO_HANDLE);
+                client_add_request(current->client, strndup(buffer, nread), TO_HANDLE);
         }
     }
     return true;

@@ -96,7 +96,7 @@ static void handle_gui_request(
     log_failure_request_no_handler(client->client);
 }
 
-static bool client_have_team(
+static bool client_has_team(
     client_t *client,
     clients_manager_t *manager,
     map_t *map
@@ -166,7 +166,7 @@ static void handle_none_clients_requests(
         if (client->current_request_to_handle == NULL)
             continue;
         remove_newline(client->current_request_to_handle);
-        client_have_team(client, manager, map);
+        client_has_team(client, manager, map);
     }
 }
 
