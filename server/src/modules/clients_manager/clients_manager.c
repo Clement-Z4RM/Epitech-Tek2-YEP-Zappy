@@ -11,6 +11,7 @@
 #include "clients_manager.h"
 #include <stdio.h>
 #include "logs/logs.h"
+#include "commands/gui/gui_commands.h"
 
 static void send_gui_default_events(client_t *client, clients_manager_t
     *manager)
@@ -90,16 +91,18 @@ static void clients_manager_remove_gui(clients_manager_t *manager, client_t
     }
 }
 
-static bool check_ai(client_t *client, team_node_t *team_current)
+static bool check_ai(client_t *client, team_node_t *team_current,
+    clients_manager_t *clients_manager)
 {
     ai_client_node_t *ai_current = NULL;
 
     SLIST_FOREACH(ai_current, &team_current->ai_clients, next) {
-        if (ai_current->client == client) {
+        if (ai_current->client->socket == client->socket) {
             SLIST_REMOVE(
                 &team_current->ai_clients, ai_current,
                 ai_client_node_s, next
             );
+            pdi(ai_current->player.id, clients_manager);
             free(ai_current);
             return true;
         }
@@ -114,7 +117,7 @@ void clients_manager_remove_ai(clients_manager_t *manager, client_t
 
     for (team_current = SLIST_FIRST(&manager->team_list); team_current;
         team_current = SLIST_NEXT(team_current, next)) {
-        if (check_ai(client, team_current)) {
+        if (check_ai(client, team_current, manager)) {
             team_current->nb_clients--;
             break;
         }
