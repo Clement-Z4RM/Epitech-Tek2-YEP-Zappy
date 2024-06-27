@@ -18,7 +18,8 @@ static void pass_trough_cells_north(cell_t *cell, int i, int *x_forward, char
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
             strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
-            cell = cell->left;
+            if (i != 0)
+                cell = cell->right;
             (*x_forward)++;
         }
         if (j != i * 2 + 1)
@@ -60,7 +61,8 @@ static void pass_trough_cells_south(cell_t *cell, int i, int *x_forward, char
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
             strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
-            cell = cell->right;
+            if (i != 0)
+                cell = cell->left;
             (*x_forward)++;
         }
         if (j != i * 2 + 1)
@@ -102,7 +104,8 @@ static void pass_trough_cells_west(cell_t *cell, int i, int *y_forward, char
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
             strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
-            cell = cell->up;
+            if (i != 0)
+                cell = cell->up;
             (*y_forward)++;
         }
         if (j != i * 2 + 1)
@@ -144,7 +147,8 @@ static void pass_trough_cells_east(cell_t *cell, int i, int *y_forward, char
             cell_info[0] = '\0';
             fill_cell_info(cell, cell_info);
             strncat(*buffer, cell_info, 4096 - strlen(*buffer) - 1);
-            cell = cell->down;
+            if (i != 0)
+                cell = cell->down;
             (*y_forward)++;
         }
         if (j != i * 2 + 1)
