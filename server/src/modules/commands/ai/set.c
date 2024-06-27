@@ -20,8 +20,9 @@ static void set_updater(
     bool success = false;
 
     client->client->busy = false;
-    if (!arg) {
+    if (!arg || !strcmp("food", (char *)arg)) {
         client_add_request(client->client, strdup("ko\n"), TO_SEND);
+        free((char *)arg);
         return;
     }
     for (; resource < RESOURCES_COUNT; ++resource)
