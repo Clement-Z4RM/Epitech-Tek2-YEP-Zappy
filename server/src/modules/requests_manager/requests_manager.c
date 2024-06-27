@@ -53,7 +53,10 @@ static void free_request_memory(char **args, client_t *client)
             free(client->current_request_to_handle);
         client->current_request_to_handle = NULL;
     }
-    free_double_tab(args);
+    if (args) {
+        free_double_tab(args);
+    }
+    args = NULL;
 }
 
 static void handle_ai_request(
@@ -180,11 +183,12 @@ static void requests_manager_handle_team_requests(
 {
     ai_client_node_t *ai_current = NULL;
     client_t *client = NULL;
-    char **args = NULL;
+    char **args;
 
     for (ai_current = SLIST_FIRST(&team_current->ai_clients);
         ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
+        args = NULL;
         if (parse_args(client, &args))
             handle_ai_request(args, ai_current, manager, updater);
         free_request_memory(args, client);

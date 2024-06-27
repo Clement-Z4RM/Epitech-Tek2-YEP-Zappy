@@ -66,7 +66,7 @@ static const resource_t RESOURCES[RESOURCES_COUNT] = {
  * (I don't know why).
  */
 UNUSED static const char *RESOURCE_NAMES[RESOURCES_COUNT] = {
-    NULL,
+    "food",
     "linemate",
     "deraumere",
     "sibur",

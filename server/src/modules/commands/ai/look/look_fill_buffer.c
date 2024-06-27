@@ -28,10 +28,7 @@ void fill_resource(char **current_cell, int i)
 {
     char tmp_buffer[256];
 
-    if (i == RN_FOOD)
-        snprintf(tmp_buffer, sizeof(tmp_buffer), "food");
-    else
-        snprintf(tmp_buffer, sizeof(tmp_buffer), "%s", RESOURCE_NAMES[i]);
+    snprintf(tmp_buffer, sizeof(tmp_buffer), "%s", RESOURCE_NAMES[i]);
     if (*current_cell) {
         realloc_buffer(current_cell, tmp_buffer);
     } else {
