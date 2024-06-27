@@ -43,7 +43,7 @@ static void endpoint_init_address(endpoint_t *endpoint)
 {
     endpoint->addr.sin_family = AF_INET;
     endpoint->addr.sin_port = htons(endpoint->port);
-    endpoint->addr.sin_addr.s_addr = inet_addr(ENDPOINT_IP);
+    endpoint->addr.sin_addr.s_addr = inet_addr("10.17.71.104");
 }
 
 /**

@@ -48,7 +48,7 @@ void Button::draw(sf::RenderWindow &window)
 
 Window::Window()
 {
-    _window.create(sf::VideoMode(1920, 1080), "Zappy");
+    _window.create(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Fullscreen);
     sf::Image *icon = new sf::Image();
     if (icon->loadFromFile("./gui/resources/empire_nexus.jpeg"))
         _window.setIcon(1024, 1024, icon->getPixelsPtr());
