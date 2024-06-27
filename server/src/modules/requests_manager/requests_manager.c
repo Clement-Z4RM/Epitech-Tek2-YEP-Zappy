@@ -182,11 +182,12 @@ static void requests_manager_handle_team_requests(
 {
     ai_client_node_t *ai_current = NULL;
     client_t *client = NULL;
-    char **args = NULL;
+    char **args;
 
     for (ai_current = SLIST_FIRST(&team_current->ai_clients);
         ai_current; ai_current = SLIST_NEXT(ai_current, next)) {
         client = get_client((client_node_t *)ai_current);
+        args = NULL;
         if (parse_args(client, &args))
             handle_ai_request(args, ai_current, manager, updater);
         free_request_memory(args, client);
@@ -201,7 +202,7 @@ void requests_manager_handle_requests(
     gui_client_node_t *gui_current = NULL;
     team_node_t *team_current = NULL;
     client_t *client = NULL;
-    char **args = NULL;
+    char **args;
 
     handle_none_clients_requests(manager, updater->map);
     for (team_current = SLIST_FIRST(&manager->team_list); team_current;
@@ -210,6 +211,7 @@ void requests_manager_handle_requests(
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
+        args = NULL;
         if (parse_args(client, &args))
             handle_gui_request(args, gui_current, updater);
         free_request_memory(args, client);
