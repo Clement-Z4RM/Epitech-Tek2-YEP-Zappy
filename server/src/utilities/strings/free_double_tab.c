@@ -12,7 +12,9 @@ void free_double_tab(char **tab)
     if (tab == NULL)
         return;
     for (int i = 0; tab[i]; i++)
-        if (tab[i])
+        if (tab[i]) {
             free(tab[i]);
+            tab[i] = NULL;
+        }
     free(tab);
 }

@@ -42,7 +42,7 @@ static int get_direction_tile(
     map_t *map
 )
 {
-    int o = receiver->direction;
+    int o = emitter->direction;
     double x_diff = (double)receiver->x - (double)emitter->x;
     double y_diff = (double)receiver->y - (double)emitter->y;
     angle_direction_t directions[] = {
@@ -66,8 +66,6 @@ static int get_direction_tile(
 static bool broadcast_null_value(char *arg, char *response, client_t *client)
 {
     if (!arg || !response) {
-        free(arg);
-        free(response);
         client_add_request(client, strdup("ko\n"), TO_SEND);
         return true;
     }
@@ -82,7 +80,7 @@ static void broadcast_updater(
 {
     team_node_t *current_team;
     ai_client_node_t *current_ai;
-    char *response = malloc(MAX_RESPONSE_SIZE);
+    char response[MAX_RESPONSE_SIZE];
 
     client->client->busy = false;
     if (broadcast_null_value((char *)arg, response, client->client))
@@ -91,15 +89,19 @@ static void broadcast_updater(
         &updater->network->clients_manager->team_list,
         next) {
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
-            snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
-                get_direction_tile(&client->player, &current_ai->player,
-                    updater->map), (char *)arg
-            );
-            client_add_request(current_ai->client, response, TO_SEND);
+            if (current_ai->player.id != client->player.id) {
+                snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
+                    get_direction_tile(&client->player, &current_ai->player,
+                        updater->map), (char *)arg
+                );
+                client_add_request(current_ai->client, strdup(response), TO_SEND);
+            } else {
+                client_add_request(current_ai->client, strdup("ok\n"), TO_SEND);
+            }
         }
     }
     pbc(client->player.id, (char *)arg, updater->network->clients_manager);
-    free((char *)arg);
+    free(arg);
 }
 
 /**
@@ -118,9 +120,12 @@ void broadcast(ai_handler_data_t *data)
         7,
         data->client,
         data->client->player.id,
-        (void *)strdup(data->args[1])
+        NULL
     };
 
+    if (data->args[1] == NULL)
+        return;
+    updater_data.arg = (void *)strdup(data->args[1]);
     data->client->client->busy = true;
     updater_add_command(data->updater, &updater_data, broadcast_updater);
 }

@@ -53,7 +53,9 @@ static void free_request_memory(char **args, client_t *client)
             free(client->current_request_to_handle);
         client->current_request_to_handle = NULL;
     }
-    free_double_tab(args);
+    if (args) {
+        free_double_tab(args);
+    }
 }
 
 static void handle_ai_request(
