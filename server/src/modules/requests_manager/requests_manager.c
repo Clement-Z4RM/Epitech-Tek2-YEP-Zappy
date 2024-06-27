@@ -56,6 +56,7 @@ static void free_request_memory(char **args, client_t *client)
     if (args) {
         free_double_tab(args);
     }
+    args = NULL;
 }
 
 static void handle_ai_request(
@@ -211,7 +212,6 @@ void requests_manager_handle_requests(
     }
     SLIST_FOREACH(gui_current, &manager->gui_clients_list, next) {
         client = get_client((client_node_t *)gui_current);
-        args = NULL;
         if (parse_args(client, &args))
             handle_gui_request(args, gui_current, updater);
         free_request_memory(args, client);

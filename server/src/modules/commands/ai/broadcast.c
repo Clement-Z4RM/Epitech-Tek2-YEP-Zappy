@@ -63,13 +63,29 @@ static int get_direction_tile(
     return 0;
 }
 
-static bool broadcast_null_value(char *arg, char *response, client_t *client)
+static bool broadcast_null_value(char *arg, client_t *client)
 {
-    if (!arg || !response) {
+    if (!arg) {
         client_add_request(client, strdup("ko\n"), TO_SEND);
         return true;
     }
     return false;
+}
+
+static handle_current_client(ai_client_node_t *current_ai, ai_client_node_t
+    *client, updater_t *updater, char *arg)
+{
+    char response[MAX_RESPONSE_SIZE];
+
+    if (current_ai->player.id != client->player.id) {
+        snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
+            get_direction_tile(&client->player, &current_ai->player,
+                updater->map), arg
+        );
+        client_add_request(current_ai->client, strdup(response), TO_SEND);
+    } else {
+        client_add_request(current_ai->client, strdup("ok\n"), TO_SEND);
+    }
 }
 
 static void broadcast_updater(
@@ -80,24 +96,15 @@ static void broadcast_updater(
 {
     team_node_t *current_team;
     ai_client_node_t *current_ai;
-    char response[MAX_RESPONSE_SIZE];
 
     client->client->busy = false;
-    if (broadcast_null_value((char *)arg, response, client->client))
+    if (broadcast_null_value(arg, client->client))
         return;
     SLIST_FOREACH(current_team,
         &updater->network->clients_manager->team_list,
         next) {
         SLIST_FOREACH(current_ai, &current_team->ai_clients, next) {
-            if (current_ai->player.id != client->player.id) {
-                snprintf(response, MAX_RESPONSE_SIZE, "message %d,%s\n",
-                    get_direction_tile(&client->player, &current_ai->player,
-                        updater->map), (char *)arg
-                );
-                client_add_request(current_ai->client, strdup(response), TO_SEND);
-            } else {
-                client_add_request(current_ai->client, strdup("ok\n"), TO_SEND);
-            }
+            handle_current_client(current_ai, client, updater, arg);
         }
     }
     pbc(client->player.id, (char *)arg, updater->network->clients_manager);
