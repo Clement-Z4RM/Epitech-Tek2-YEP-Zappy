@@ -72,7 +72,7 @@ static bool broadcast_null_value(char *arg, client_t *client)
     return false;
 }
 
-static handle_current_client(ai_client_node_t *current_ai, ai_client_node_t
+static void handle_current_client(ai_client_node_t *current_ai, ai_client_node_t
     *client, updater_t *updater, char *arg)
 {
     char response[MAX_RESPONSE_SIZE];

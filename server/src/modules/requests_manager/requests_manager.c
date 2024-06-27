@@ -203,7 +203,7 @@ void requests_manager_handle_requests(
     gui_client_node_t *gui_current = NULL;
     team_node_t *team_current = NULL;
     client_t *client = NULL;
-    char **args;
+    char **args = NULL;
 
     handle_none_clients_requests(manager, updater->map);
     for (team_current = SLIST_FIRST(&manager->team_list); team_current;
